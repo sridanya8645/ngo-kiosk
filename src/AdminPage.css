@@ -1,0 +1,253 @@
+.admin-bg {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #222;
+  overflow: hidden;
+}
+
+.admin-aspect {
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  position: relative;
+  background: linear-gradient(135deg, #f9b233 0%, #c86d3a 100%);
+}
+
+.admin-header-centered {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 2vh 3vw;
+  background: none;
+  border-bottom: none;
+  flex-shrink: 0;
+}
+
+.admin-logo {
+  width: clamp(120px, 15vw, 200px);
+  height: clamp(120px, 15vw, 200px);
+  object-fit: contain;
+}
+
+.admin-org-info {
+  flex: 1;
+  text-align: center;
+  font-size: clamp(1rem, 2.5vw, 1.5rem);
+  color: #222;
+  font-weight: 700;
+  margin: 0 2vw;
+}
+
+.admin-nav-bar {
+  width: 100%;
+  background: #8B1C1C;
+  border-radius: 0 0 12px 12px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  margin: 0 0 1vh 0;
+  padding: 1vh 3vw 1vh 0;
+  flex-shrink: 0;
+}
+
+.admin-nav-home-btn {
+  background: none;
+  color: white;
+  border: none;
+  padding: clamp(6px, 1.5vw, 12px) clamp(12px, 3vw, 20px);
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: clamp(1.2rem, 3vw, 1.8rem);
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: background-color 0.3s ease;
+}
+
+.admin-nav-home-btn:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.admin-main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 2vh 3vw;
+  overflow-y: auto;
+}
+
+.admin-login-title {
+  font-size: clamp(2rem, 5vw, 3.5rem);
+  font-weight: bold;
+  color: #8B1C1C;
+  text-align: center;
+  margin-bottom: 3vh;
+  text-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.admin-lottie-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 3vh;
+}
+
+.admin-lottie {
+  width: clamp(200px, 40vw, 400px);
+  height: clamp(200px, 40vw, 400px);
+}
+
+.admin-login-form {
+  background: rgba(255, 255, 255, 0.95);
+  padding: clamp(25px, 4vh, 40px);
+  border-radius: 15px;
+  box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+  max-width: clamp(350px, 50vw, 500px);
+  width: 100%;
+}
+
+.admin-form-row {
+  margin-bottom: clamp(20px, 3vh, 30px);
+}
+
+.admin-form-row label {
+  display: block;
+  font-size: clamp(1.2rem, 3vw, 1.8rem);
+  font-weight: bold;
+  color: #8B1C1C;
+  margin-bottom: clamp(8px, 1.5vh, 12px);
+}
+
+.admin-input {
+  width: 100%;
+  padding: clamp(12px, 2vh, 18px) clamp(15px, 2vw, 20px);
+  font-size: clamp(1rem, 2.5vw, 1.4rem);
+  border: 3px solid #ddd;
+  border-radius: 10px;
+  background: white;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.admin-input:focus {
+  outline: none;
+  border-color: #8B1C1C;
+  box-shadow: 0 0 0 3px rgba(139, 28, 28, 0.1);
+}
+
+.admin-error {
+  color: #d32f2f;
+  font-size: clamp(0.9rem, 2vw, 1.1rem);
+  margin-top: clamp(5px, 1vh, 8px);
+  display: block;
+}
+
+.admin-login-btn {
+  width: 100%;
+  padding: clamp(15px, 3vh, 25px);
+  font-size: clamp(1.5rem, 4vw, 2.2rem);
+  font-weight: bold;
+  background: #8B1C1C;
+  color: white;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 6px 20px rgba(139, 28, 28, 0.3);
+}
+
+.admin-login-btn:hover {
+  background: #6B0F0F;
+  box-shadow: 0 8px 25px rgba(139, 28, 28, 0.4);
+  transform: translateY(-2px);
+}
+
+.admin-login-btn:disabled {
+  background: #ccc;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+/* Mobile and tablet responsive */
+@media (max-width: 768px) {
+  .admin-header-centered {
+    flex-direction: column;
+    gap: 1vh;
+    text-align: center;
+    padding: 1vh 2vw;
+  }
+  
+  .admin-logo {
+    width: clamp(80px, 20vw, 120px);
+    height: clamp(80px, 20vw, 120px);
+  }
+  
+  .admin-org-info {
+    font-size: clamp(0.8rem, 3vw, 1.2rem);
+    margin: 0;
+  }
+  
+  .admin-login-title {
+    font-size: clamp(1.5rem, 5vw, 2.5rem);
+    margin-bottom: 2vh;
+  }
+  
+  .admin-lottie {
+    width: clamp(150px, 50vw, 250px);
+    height: clamp(150px, 50vw, 250px);
+  }
+  
+  .admin-form-row {
+    margin-bottom: clamp(15px, 2.5vh, 25px);
+  }
+  
+  .admin-form-row label {
+    font-size: clamp(1rem, 3vw, 1.4rem);
+  }
+  
+  .admin-input {
+    font-size: clamp(0.9rem, 2.5vw, 1.2rem);
+  }
+  
+  .admin-login-btn {
+    font-size: clamp(1.3rem, 4vw, 1.8rem);
+    padding: clamp(12px, 2.5vh, 18px);
+  }
+}
+
+/* Large screens */
+@media (min-width: 1200px) {
+  .admin-aspect {
+    max-width: 1400px;
+    max-height: 900px;
+    margin: 2vh auto;
+    border-radius: 16px;
+  }
+  
+  .admin-header-centered {
+    padding: 3vh 4vw;
+  }
+  
+  .admin-main {
+    padding: 3vh 4vw;
+  }
+}
+
+/* Prevent zoom on mobile */
+@media (max-width: 768px) {
+  html, body {
+    touch-action: manipulation;
+    -webkit-text-size-adjust: 100%;
+    -ms-text-size-adjust: 100%;
+  }
+}

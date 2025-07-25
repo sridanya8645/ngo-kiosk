@@ -1,0 +1,489 @@
+.raffle-bg {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #222;
+  overflow: hidden;
+}
+
+.raffle-aspect {
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  position: relative;
+  background: linear-gradient(135deg, #f9b233 0%, #c86d3a 100%);
+}
+
+.raffle-header-centered {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 2vh 3vw;
+  background: none;
+  border-bottom: none;
+  flex-shrink: 0;
+}
+
+.raffle-logo {
+  width: clamp(120px, 15vw, 200px);
+  height: clamp(120px, 15vw, 200px);
+  object-fit: contain;
+}
+
+.raffle-org-info {
+  flex: 1;
+  text-align: center;
+  font-size: clamp(1rem, 2.5vw, 1.5rem);
+  color: #222;
+  font-weight: 700;
+  margin: 0 2vw;
+}
+
+.raffle-nav-bar {
+  width: 100%;
+  background: #8B1C1C;
+  border-radius: 0 0 12px 12px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0 0 1vh 0;
+  padding: 1vh 3vw;
+  flex-shrink: 0;
+  gap: clamp(10px, 2vw, 20px);
+}
+
+.raffle-nav-btn {
+  background: none;
+  color: white;
+  border: none;
+  padding: clamp(6px, 1.5vw, 12px) clamp(12px, 3vw, 20px);
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: clamp(1rem, 2.5vw, 1.5rem);
+  font-weight: bold;
+  transition: background-color 0.3s ease;
+}
+
+.raffle-nav-btn:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.raffle-nav-divider {
+  width: 2px;
+  height: clamp(20px, 4vh, 30px);
+  background: rgba(255, 255, 255, 0.3);
+  margin: 0 clamp(5px, 1vw, 10px);
+}
+
+.raffle-main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 2vh 3vw;
+  overflow-y: auto;
+}
+
+.raffle-welcome-msg {
+  font-size: clamp(2rem, 5vw, 3.5rem);
+  font-weight: bold;
+  color: #8B1C1C;
+  text-align: center;
+  margin-bottom: 2vh;
+  text-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.raffle-event-info {
+  font-size: clamp(1.2rem, 3vw, 1.8rem);
+  color: #8B1C1C;
+  text-align: center;
+  margin-bottom: 3vh;
+  font-weight: 600;
+}
+
+.wheel-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: clamp(20px, 4vh, 40px) 0;
+  position: relative;
+}
+
+.wheel-container > div {
+  width: clamp(300px, 60vw, 500px);
+  height: clamp(300px, 60vw, 500px);
+  max-width: 500px;
+  max-height: 500px;
+}
+
+.custom-wheel-wrapper {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: clamp(20px, 4vh, 40px) 0;
+}
+
+.custom-wheel {
+  width: clamp(300px, 60vw, 500px);
+  height: clamp(300px, 60vw, 500px);
+  border-radius: 50%;
+  position: relative;
+  background: conic-gradient(from 0deg, #ff6b6b, #4ecdc4, #45b7d1, #96ceb4, #feca57, #ff9ff3, #54a0ff, #5f27cd);
+  transition: transform 4s cubic-bezier(0.23, 1, 0.32, 1);
+  box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+}
+
+.wheel-segment {
+  position: absolute;
+  width: 50%;
+  height: 50%;
+  transform-origin: 100% 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.wheel-pointer {
+  position: absolute;
+  top: -20px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 0;
+  height: 0;
+  border-left: clamp(15px, 3vw, 25px) solid transparent;
+  border-right: clamp(15px, 3vw, 25px) solid transparent;
+  border-top: clamp(30px, 6vw, 50px) solid #8B1C1C;
+  z-index: 10;
+}
+
+.segment-text {
+  position: absolute;
+  top: 20%;
+  left: 50%;
+  transform: translateX(-50%) rotate(calc(var(--rotation) * 1deg));
+  font-size: clamp(0.8rem, 2vw, 1.2rem);
+  font-weight: bold;
+  color: white;
+  text-shadow: 1px 1px 2px rgba(0,0,0,0.8);
+  white-space: nowrap;
+}
+
+@media (min-width: 1200px) {
+  .wheel-container > div {
+    width: clamp(400px, 50vw, 600px);
+    height: clamp(400px, 50vw, 600px);
+  }
+}
+
+@media (min-width: 768px) and (max-width: 1199px) {
+  .wheel-container > div {
+    width: clamp(350px, 55vw, 450px);
+    height: clamp(350px, 55vw, 450px);
+  }
+}
+
+@media (max-width: 767px) {
+  .wheel-container > div {
+    width: clamp(280px, 70vw, 350px);
+    height: clamp(280px, 70vw, 350px);
+  }
+}
+
+@media (max-width: 480px) {
+  .wheel-container > div {
+    width: clamp(250px, 80vw, 300px);
+    height: clamp(250px, 80vw, 300px);
+  }
+}
+
+.winner-announcement {
+  background: rgba(255, 255, 255, 0.95);
+  padding: clamp(20px, 4vh, 30px);
+  border-radius: 15px;
+  box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+  text-align: center;
+  margin: clamp(20px, 4vh, 30px) 0;
+  border: 3px solid #f9b233;
+  animation: winnerPulse 2s ease-in-out infinite;
+  max-width: clamp(400px, 80vw, 600px);
+  width: 100%;
+}
+
+@keyframes winnerPulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+}
+
+.winner-announcement h3 {
+  font-size: clamp(1.5rem, 4vw, 2.5rem);
+  color: #8B1C1C;
+  margin-bottom: clamp(10px, 2vh, 15px);
+  font-weight: bold;
+}
+
+.winner-announcement .winner-name {
+  font-size: clamp(1.8rem, 5vw, 3rem);
+  color: #2E7D32;
+  font-weight: bold;
+  margin-bottom: clamp(8px, 1.5vh, 12px);
+}
+
+.winner-announcement .winner-id {
+  font-size: clamp(1.2rem, 3vw, 1.8rem);
+  color: #666;
+  margin-bottom: clamp(8px, 1.5vh, 12px);
+}
+
+.winner-announcement .winner-message {
+  font-size: clamp(1rem, 2.5vw, 1.4rem);
+  color: #333;
+  font-style: italic;
+}
+
+.raffle-buttons {
+  display: flex;
+  gap: clamp(15px, 3vw, 25px);
+  margin-top: clamp(20px, 4vh, 30px);
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.raffle-button {
+  padding: clamp(12px, 2.5vh, 18px) clamp(20px, 4vw, 30px);
+  font-size: clamp(1rem, 2.5vw, 1.5rem);
+  font-weight: bold;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  min-width: clamp(120px, 20vw, 180px);
+}
+
+.raffle-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0,0,0,0.2);
+}
+
+.raffle-button.primary {
+  background: #8B1C1C;
+  color: white;
+}
+
+.raffle-button.primary:hover {
+  background: #6B0F0F;
+}
+
+.raffle-button.primary:disabled {
+  background: #ccc;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+.raffle-button.secondary {
+  background: #666;
+  color: white;
+}
+
+.raffle-button.secondary:hover {
+  background: #555;
+}
+
+.no-registrations {
+  text-align: center;
+  padding: clamp(30px, 6vh, 50px);
+  background: rgba(255, 255, 255, 0.9);
+  border-radius: 15px;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+  margin: clamp(20px, 4vh, 30px) 0;
+}
+
+.no-registrations p {
+  font-size: clamp(1.2rem, 3vw, 1.8rem);
+  color: #666;
+  margin: 0;
+}
+
+/* Mobile and tablet responsive */
+@media (max-width: 768px) {
+  .raffle-header-centered {
+    flex-direction: column;
+    gap: 1vh;
+    text-align: center;
+    padding: 1vh 2vw;
+  }
+  
+  .raffle-logo {
+    width: clamp(80px, 20vw, 120px);
+    height: clamp(80px, 20vw, 120px);
+  }
+  
+  .raffle-org-info {
+    font-size: clamp(0.8rem, 3vw, 1.2rem);
+    margin: 0;
+  }
+  
+  .raffle-nav-bar {
+    flex-direction: column;
+    gap: 1vh;
+    padding: 1vh 2vw;
+  }
+  
+  .raffle-nav-divider {
+    width: clamp(30px, 8vw, 50px);
+    height: 2px;
+    margin: clamp(5px, 1vh, 10px) 0;
+  }
+  
+  .raffle-welcome-msg {
+    font-size: clamp(1.5rem, 5vw, 2.5rem);
+    margin-bottom: 2vh;
+  }
+  
+  .raffle-event-info {
+    font-size: clamp(1rem, 3vw, 1.4rem);
+    margin-bottom: 2vh;
+  }
+  
+  .winner-announcement {
+    padding: clamp(15px, 3vh, 25px);
+  }
+  
+  .winner-announcement h3 {
+    font-size: clamp(1.2rem, 4vw, 2rem);
+  }
+  
+  .winner-announcement .winner-name {
+    font-size: clamp(1.4rem, 5vw, 2.5rem);
+  }
+  
+  .winner-announcement .winner-id {
+    font-size: clamp(1rem, 3vw, 1.5rem);
+  }
+  
+  .winner-announcement .winner-message {
+    font-size: clamp(0.9rem, 2.5vw, 1.2rem);
+  }
+  
+  .raffle-buttons {
+    flex-direction: column;
+    gap: 2vh;
+  }
+  
+  .raffle-button {
+    width: 100%;
+    max-width: 300px;
+  }
+}
+
+@media (max-width: 1024px) {
+  .raffle-welcome-msg {
+    font-size: clamp(1.8rem, 4vw, 2.8rem);
+  }
+  
+  .raffle-event-info {
+    font-size: clamp(1.1rem, 2.5vw, 1.6rem);
+  }
+}
+
+@media (max-width: 768px) {
+  .raffle-welcome-msg {
+    font-size: clamp(1.5rem, 5vw, 2.2rem);
+  }
+  
+  .raffle-event-info {
+    font-size: clamp(1rem, 3vw, 1.3rem);
+  }
+  
+  .winner-announcement {
+    margin: clamp(15px, 3vh, 25px) 0;
+  }
+  
+  .winner-announcement h3 {
+    font-size: clamp(1.2rem, 4vw, 1.8rem);
+  }
+  
+  .winner-announcement .winner-name {
+    font-size: clamp(1.4rem, 5vw, 2.2rem);
+  }
+  
+  .winner-announcement .winner-id {
+    font-size: clamp(1rem, 3vw, 1.4rem);
+  }
+  
+  .winner-announcement .winner-message {
+    font-size: clamp(0.9rem, 2.5vw, 1.1rem);
+  }
+  
+  .raffle-buttons {
+    gap: 2vh;
+  }
+  
+  .raffle-button {
+    font-size: clamp(0.9rem, 2.5vw, 1.3rem);
+  }
+}
+
+@media (max-width: 480px) {
+  .raffle-welcome-msg {
+    font-size: clamp(1.3rem, 4vw, 1.8rem);
+  }
+  
+  .raffle-event-info {
+    font-size: clamp(0.9rem, 2.5vw, 1.2rem);
+  }
+  
+  .winner-announcement h3 {
+    font-size: clamp(1.1rem, 3vw, 1.5rem);
+  }
+  
+  .winner-announcement .winner-name {
+    font-size: clamp(1.2rem, 4vw, 1.8rem);
+  }
+  
+  .winner-announcement .winner-id {
+    font-size: clamp(0.9rem, 2.5vw, 1.2rem);
+  }
+  
+  .winner-announcement .winner-message {
+    font-size: clamp(0.8rem, 2vw, 1rem);
+  }
+  
+  .raffle-button {
+    font-size: clamp(0.8rem, 2.5vw, 1.1rem);
+  }
+}
+
+/* Large screens */
+@media (min-width: 1200px) {
+  .raffle-aspect {
+    max-width: 1400px;
+    max-height: 900px;
+    margin: 2vh auto;
+    border-radius: 16px;
+  }
+  
+  .raffle-header-centered {
+    padding: 3vh 4vw;
+  }
+  
+  .raffle-main {
+    padding: 3vh 4vw;
+  }
+}
+
+/* Prevent zoom on mobile */
+@media (max-width: 768px) {
+  html, body {
+    touch-action: manipulation;
+    -webkit-text-size-adjust: 100%;
+    -ms-text-size-adjust: 100%;
+  }
+} 
