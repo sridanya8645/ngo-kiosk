@@ -8,7 +8,16 @@ const path = require('path');
 const fs = require('fs');
 
 const app = express();
-app.use(cors());
+
+// Azure App Service configuration
+app.set('trust proxy', 1);
+
+// CORS configuration for Azure
+app.use(cors({
+  origin: true,
+  credentials: true
+}));
+
 app.use(express.json());
 
 // Serve static files from React build
@@ -26,6 +35,9 @@ const upload = multer({ storage });
 
 // Initialize database on startup
 initializeDatabase().catch(console.error);
+
+// Serve uploaded files
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 // Handle React routing - serve index.html for all non-API routes
 app.get('*', (req, res) => {
@@ -325,9 +337,6 @@ app.post('/api/upload-banner', upload.single('banner'), async (req, res) => {
     res.status(500).json({ success: false, message: "Upload failed" });
   }
 });
-
-// Serve uploaded files
-app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
