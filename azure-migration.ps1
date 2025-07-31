@@ -18,10 +18,10 @@ if (-not $rg) {
     Write-Host "Resource Group already exists" -ForegroundColor Green
 }
 
-Write-Host "Step 2: Checking if MySQL Server exists..." -ForegroundColor Yellow
+Write-Host "Step 2: Creating MySQL Flexible Server..." -ForegroundColor Yellow
 $mysqlServer = az mysql flexible-server show --resource-group $ResourceGroupName --name $MySqlServerName 2>$null
 if (-not $mysqlServer) {
-    Write-Host "Creating MySQL Server..." -ForegroundColor Yellow
+    Write-Host "Creating MySQL Flexible Server..." -ForegroundColor Yellow
     az mysql flexible-server create `
         --resource-group $ResourceGroupName `
         --name $MySqlServerName `
@@ -30,7 +30,7 @@ if (-not $mysqlServer) {
         --admin-password "MyApp2024!" `
         --sku-name Standard_B1ms `
         --version 8.0.21 `
-        --yes
+        --storage-size 20
 } else {
     Write-Host "MySQL Server already exists" -ForegroundColor Green
 }
@@ -76,7 +76,22 @@ if (-not $webapp) {
     Write-Host "Web App already exists" -ForegroundColor Green
 }
 
-Write-Host "Step 7: Setting Environment Variables..." -ForegroundColor Yellow
+Write-Host "Step 7: Building React frontend..." -ForegroundColor Yellow
+npm run build
+
+Write-Host "Step 8: Copying build files to backend..." -ForegroundColor Yellow
+if (Test-Path "build") {
+    if (Test-Path "backend/public") {
+        Remove-Item "backend/public" -Recurse -Force
+    }
+    Copy-Item -Recurse -Force "build\*" "backend\public\"
+    Write-Host "Frontend build copied to backend" -ForegroundColor Green
+} else {
+    Write-Host "Build folder not found, please run 'npm run build' first" -ForegroundColor Red
+    exit 1
+}
+
+Write-Host "Step 9: Setting environment variables..." -ForegroundColor Yellow
 az webapp config appsettings set `
     --resource-group $ResourceGroupName `
     --name $WebAppName `
@@ -84,20 +99,9 @@ az webapp config appsettings set `
     DB_HOST="$MySqlServerName.mysql.database.azure.com" `
     DB_USER="ngo_admin@$MySqlServerName" `
     DB_PASSWORD="MyApp2024!" `
-    DB_NAME=$DatabaseName `
-    DB_PORT=3306 `
-    NODE_ENV=production
-
-Write-Host "Step 8: Building Frontend..." -ForegroundColor Yellow
-npm run build
-
-Write-Host "Step 9: Copying Build to Backend..." -ForegroundColor Yellow
-if (Test-Path "build") {
-    Copy-Item -Recurse -Force "build\*" "backend\public\"
-    Write-Host "Frontend build copied to backend" -ForegroundColor Green
-} else {
-    Write-Host "Build folder not found, skipping..." -ForegroundColor Yellow
-}
+    DB_NAME="$DatabaseName" `
+    DB_PORT="3306" `
+    NODE_ENV="production"
 
 Write-Host "Step 10: Deploying to Azure..." -ForegroundColor Yellow
 az webapp deployment source config-zip `
@@ -105,7 +109,19 @@ az webapp deployment source config-zip `
     --name $WebAppName `
     --src "backend.zip"
 
-Write-Host "=== Migration Complete! ===" -ForegroundColor Green
+Write-Host "Step 11: Creating deployment ZIP..." -ForegroundColor Yellow
+if (Test-Path "backend.zip") {
+    Remove-Item "backend.zip" -Force
+}
+Compress-Archive -Path "backend\*" -DestinationPath "backend.zip"
+
+Write-Host "Step 12: Final deployment..." -ForegroundColor Yellow
+az webapp deployment source config-zip `
+    --resource-group $ResourceGroupName `
+    --name $WebAppName `
+    --src "backend.zip"
+
+Write-Host "=== Azure Migration Completed Successfully! ===" -ForegroundColor Green
 Write-Host "Your app is available at: https://$WebAppName.azurewebsites.net" -ForegroundColor Cyan
 Write-Host "MySQL Server: $MySqlServerName.mysql.database.azure.com" -ForegroundColor Cyan
 Write-Host "Database: $DatabaseName" -ForegroundColor Cyan

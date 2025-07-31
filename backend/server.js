@@ -1,6 +1,6 @@
 const express = require('express');
 const cors = require('cors');
-const db = require('./db');
+const { pool, initializeDatabase } = require('./db');
 const nodemailer = require('nodemailer');
 const QRCode = require('qrcode');
 const multer = require('multer');
@@ -24,11 +24,14 @@ const storage = multer.diskStorage({
 });
 const upload = multer({ storage });
 
+// Initialize database on startup
+initializeDatabase().catch(console.error);
+
 // Login endpoint
 app.post('/api/login', async (req, res) => {
   try {
     const { username, password } = req.body;
-    const [rows] = await db.execute(
+    const [rows] = await pool.execute(
       "SELECT * FROM users WHERE username = ? AND password = ?",
       [username, password]
     );
@@ -50,7 +53,7 @@ app.post('/api/register', async (req, res) => {
     const { name, phone, email, eventId, interested_to_volunteer } = req.body;
     
     // Get event details
-    const [eventRows] = await db.execute(
+    const [eventRows] = await pool.execute(
       "SELECT * FROM events WHERE id = ?",
       [eventId]
     );
@@ -62,7 +65,7 @@ app.post('/api/register', async (req, res) => {
     const event = eventRows[0];
     
     // Insert registration with correct column names
-    const [result] = await db.execute(
+    const [result] = await pool.execute(
       "INSERT INTO registrations (name, phone, email, event_id, event_name, event_date, interested_to_volunteer, registered_at) VALUES (?, ?, ?, ?, ?, ?, ?, NOW())",
       [name, phone, email, eventId, event.name, event.date, interested_to_volunteer]
     );
@@ -77,7 +80,7 @@ app.post('/api/register', async (req, res) => {
 // Get all events
 app.get('/api/events', async (req, res) => {
   try {
-    const [rows] = await db.execute("SELECT * FROM events ORDER BY date DESC");
+    const [rows] = await pool.execute("SELECT * FROM events ORDER BY date DESC");
     res.json(rows);
   } catch (error) {
     console.error('Get events error:', error);
@@ -91,12 +94,12 @@ app.post('/api/events', upload.single('banner'), async (req, res) => {
     const { name, date, time, location } = req.body;
     const banner = req.file ? `/uploads/${req.file.filename}` : null;
     
-    const [result] = await db.execute(
+    const [result] = await pool.execute(
       'INSERT INTO events (name, date, time, location, banner) VALUES (?, ?, ?, ?, ?)',
       [name, date, time, location, banner]
     );
     
-    const [rows] = await db.execute('SELECT * FROM events WHERE id = ?', [result.insertId]);
+    const [rows] = await pool.execute('SELECT * FROM events WHERE id = ?', [result.insertId]);
     res.json({ success: true, event: rows[0] });
   } catch (error) {
     console.error('Add event error:', error);
@@ -120,9 +123,9 @@ app.put('/api/events/:id', upload.single('banner'), async (req, res) => {
     sql += ' WHERE id = ?';
     params.push(id);
     
-    await db.execute(sql, params);
+    await pool.execute(sql, params);
     
-    const [rows] = await db.execute('SELECT * FROM events WHERE id = ?', [id]);
+    const [rows] = await pool.execute('SELECT * FROM events WHERE id = ?', [id]);
     res.json({ success: true, event: rows[0] });
   } catch (error) {
     console.error('Edit event error:', error);
@@ -134,7 +137,7 @@ app.put('/api/events/:id', upload.single('banner'), async (req, res) => {
 app.delete('/api/events/:id', async (req, res) => {
   try {
     const { id } = req.params;
-    await db.execute('DELETE FROM events WHERE id = ?', [id]);
+    await pool.execute('DELETE FROM events WHERE id = ?', [id]);
     res.json({ success: true });
   } catch (error) {
     console.error('Delete event error:', error);
@@ -146,7 +149,7 @@ app.delete('/api/events/:id', async (req, res) => {
 app.get('/api/todays-event', async (req, res) => {
   try {
     const today = new Date().toISOString().split('T')[0];
-    const [rows] = await db.execute(
+    const [rows] = await pool.execute(
       "SELECT * FROM events WHERE date = ? ORDER BY date DESC LIMIT 1",
       [today]
     );
@@ -160,7 +163,7 @@ app.get('/api/todays-event', async (req, res) => {
 // Get all registrations
 app.get('/api/registrations', async (req, res) => {
   try {
-    const [rows] = await db.execute("SELECT * FROM registrations ORDER BY id DESC");
+    const [rows] = await pool.execute("SELECT * FROM registrations ORDER BY id DESC");
     res.json(rows);
   } catch (error) {
     console.error('Get registrations error:', error);
@@ -172,7 +175,7 @@ app.get('/api/registrations', async (req, res) => {
 app.post('/api/checkin', async (req, res) => {
   try {
     const { phone } = req.body;
-    const [rows] = await db.execute(
+    const [rows] = await pool.execute(
       "SELECT * FROM registrations WHERE phone = ? AND checked_in = 0",
       [phone]
     );
@@ -181,7 +184,7 @@ app.post('/api/checkin', async (req, res) => {
       return res.status(404).json({ success: false, message: "Registration not found or already checked in" });
     }
     
-    await db.execute(
+    await pool.execute(
       "UPDATE registrations SET checked_in = 1, checkin_date = NOW() WHERE id = ?",
       [rows[0].id]
     );
@@ -197,7 +200,7 @@ app.post('/api/checkin', async (req, res) => {
 app.post('/api/registrations/:id/checkin', async (req, res) => {
   try {
     const { id } = req.params;
-    const [rows] = await db.execute(
+    const [rows] = await pool.execute(
       "SELECT * FROM registrations WHERE id = ?",
       [id]
     );
@@ -210,7 +213,7 @@ app.post('/api/registrations/:id/checkin', async (req, res) => {
       return res.status(400).json({ success: false, message: "Already checked in" });
     }
     
-    await db.execute(
+    await pool.execute(
       "UPDATE registrations SET checked_in = 1, checkin_date = NOW() WHERE id = ?",
       [id]
     );
@@ -225,7 +228,7 @@ app.post('/api/registrations/:id/checkin', async (req, res) => {
 // Reset check-ins
 app.post('/api/registrations/reset-checkins', async (req, res) => {
   try {
-    await db.execute("UPDATE registrations SET checked_in = 0, checkin_date = NULL");
+    await pool.execute("UPDATE registrations SET checked_in = 0, checkin_date = NULL");
     res.json({ success: true, message: "All check-ins reset" });
   } catch (error) {
     console.error('Reset check-ins error:', error);
@@ -236,7 +239,7 @@ app.post('/api/registrations/reset-checkins', async (req, res) => {
 // Raffle endpoints
 app.get('/api/raffle/eligible-users', async (req, res) => {
   try {
-    const [rows] = await db.execute(
+    const [rows] = await pool.execute(
       "SELECT * FROM registrations WHERE checked_in = 1"
     );
     res.json(rows);
@@ -249,7 +252,7 @@ app.get('/api/raffle/eligible-users', async (req, res) => {
 app.post('/api/raffle/save-winner', async (req, res) => {
   try {
     const { registrationId, prize } = req.body;
-    const [rows] = await db.execute(
+    const [rows] = await pool.execute(
       "SELECT * FROM registrations WHERE id = ?",
       [registrationId]
     );
@@ -260,7 +263,7 @@ app.post('/api/raffle/save-winner', async (req, res) => {
     
     const registration = rows[0];
     
-    await db.execute(
+    await pool.execute(
       "INSERT INTO raffle_winners (registration_id, name, phone, email, event_name, win_date, win_time) VALUES (?, ?, ?, ?, ?, NOW(), NOW())",
       [registrationId, registration.name, registration.phone, registration.email, registration.event_name]
     );
@@ -274,7 +277,7 @@ app.post('/api/raffle/save-winner', async (req, res) => {
 
 app.get('/api/raffle/winners', async (req, res) => {
   try {
-    const [rows] = await db.execute("SELECT * FROM raffle_winners ORDER BY won_at DESC");
+    const [rows] = await pool.execute("SELECT * FROM raffle_winners ORDER BY won_at DESC");
     res.json(rows);
   } catch (error) {
     console.error('Get winners error:', error);
@@ -285,7 +288,7 @@ app.get('/api/raffle/winners', async (req, res) => {
 // Get raffle winners
 app.get('/api/raffle-winners', async (req, res) => {
   try {
-    const [rows] = await db.execute("SELECT * FROM raffle_winners ORDER BY won_at DESC");
+    const [rows] = await pool.execute("SELECT * FROM raffle_winners ORDER BY won_at DESC");
     res.json(rows);
   } catch (error) {
     console.error('Get raffle winners error:', error);
@@ -303,7 +306,7 @@ app.post('/api/upload-banner', upload.single('banner'), async (req, res) => {
     const { eventId } = req.body;
     const bannerPath = `/uploads/${req.file.filename}`;
     
-    await db.execute(
+    await pool.execute(
       "UPDATE events SET banner = ? WHERE id = ?",
       [bannerPath, eventId]
     );

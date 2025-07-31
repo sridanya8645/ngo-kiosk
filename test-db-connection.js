@@ -22,21 +22,36 @@ async function testConnection() {
     const [rows] = await connection.execute('SELECT 1 as test');
     console.log('✅ Query test successful:', rows);
     
+    // Test table creation
+    console.log('Testing table creation...');
+    await connection.execute(`
+      CREATE TABLE IF NOT EXISTS test_table (
+        id INT AUTO_INCREMENT PRIMARY KEY,
+        name VARCHAR(255)
+      )
+    `);
+    console.log('✅ Table creation test successful');
+    
+    // Clean up test table
+    await connection.execute('DROP TABLE IF EXISTS test_table');
+    console.log('✅ Cleanup successful');
+    
     await connection.end();
     console.log('✅ Connection closed successfully');
     
-    console.log('\n🎉 Your Azure MySQL Database is ready!');
-    console.log('Server: ngo-kiosk-mysql.mysql.database.azure.com');
-    console.log('Database: ngo_kiosk');
-    console.log('Username: ngo_admin@ngo-kiosk-mysql');
+    console.log('\n🎉 Azure MySQL Database is ready for deployment!');
+    console.log('📋 Connection Details:');
+    console.log('   Host: ngo-kiosk-mysql.mysql.database.azure.com');
+    console.log('   Database: ngo_kiosk');
+    console.log('   Username: ngo_admin@ngo-kiosk-mysql');
+    console.log('   Password: MyApp2024!');
     
   } catch (error) {
     console.error('❌ Database connection failed:', error.message);
-    console.log('\nTroubleshooting tips:');
-    console.log('1. Make sure the MySQL database is created in Azure');
-    console.log('2. Check firewall rules allow Azure services (0.0.0.0/0)');
-    console.log('3. Verify the connection string is correct');
-    console.log('4. Ensure the database "ngo_kiosk" exists');
+    console.log('\n🔧 Troubleshooting:');
+    console.log('   1. Make sure Azure MySQL Database is created');
+    console.log('   2. Check firewall rules allow connections');
+    console.log('   3. Verify server name and credentials');
   }
 }
 

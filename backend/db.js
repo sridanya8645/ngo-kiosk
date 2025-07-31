@@ -1,19 +1,19 @@
 require('dotenv').config();
 const mysql = require('mysql2/promise');
 
-// Railway MySQL Database connection configuration
+// Azure MySQL Database connection configuration
 const dbConfig = {
-  host: process.env.DB_HOST || process.env.MYSQLHOST || 'localhost',
-  user: process.env.DB_USER || process.env.MYSQLUSER || 'root',
-  password: process.env.DB_PASSWORD || process.env.MYSQLPASSWORD || '',
-  database: process.env.DB_NAME || process.env.MYSQLDATABASE || 'ngo_kiosk',
-  port: process.env.DB_PORT || process.env.MYSQLPORT || 3306,
+  host: process.env.DB_HOST || 'ngo-kiosk-mysql.mysql.database.azure.com',
+  user: process.env.DB_USER || 'ngo_admin@ngo-kiosk-mysql',
+  password: process.env.DB_PASSWORD || 'MyApp2024!',
+  database: process.env.DB_NAME || 'ngo_kiosk',
+  port: process.env.DB_PORT || 3306,
   waitForConnections: true,
   connectionLimit: 10,
   queueLimit: 0,
-  ssl: process.env.NODE_ENV === 'production' ? {
+  ssl: {
     rejectUnauthorized: false
-  } : false
+  }
 };
 
 // Create connection pool
@@ -22,15 +22,15 @@ const pool = mysql.createPool(dbConfig);
 // Initialize database and create tables
 async function initializeDatabase() {
   try {
-    // Connect to the database
+    // Connect to the database (Azure MySQL requires database to exist)
     const connection = await pool.getConnection();
     
     // Create users table
     await connection.execute(`
       CREATE TABLE IF NOT EXISTS users (
         id INT AUTO_INCREMENT PRIMARY KEY,
-        username VARCHAR(255) UNIQUE,
-        password VARCHAR(255)
+        username VARCHAR(255) UNIQUE NOT NULL,
+        password VARCHAR(255) NOT NULL
       )
     `);
 
@@ -39,10 +39,10 @@ async function initializeDatabase() {
       CREATE TABLE IF NOT EXISTS events (
         id INT AUTO_INCREMENT PRIMARY KEY,
         name VARCHAR(255) NOT NULL,
-        date VARCHAR(255) NOT NULL,
-        time VARCHAR(255) NOT NULL,
+        date DATE NOT NULL,
+        time TIME NOT NULL,
         location VARCHAR(255) NOT NULL,
-        banner VARCHAR(255)
+        banner VARCHAR(500)
       )
     `);
 
@@ -50,17 +50,17 @@ async function initializeDatabase() {
     await connection.execute(`
       CREATE TABLE IF NOT EXISTS registrations (
         id INT AUTO_INCREMENT PRIMARY KEY,
-        name VARCHAR(255),
-        phone VARCHAR(255),
-        email VARCHAR(255),
+        name VARCHAR(255) NOT NULL,
+        phone VARCHAR(20) NOT NULL,
+        email VARCHAR(255) NOT NULL,
         event_id INT,
-        checked_in INT DEFAULT 0,
-        checkin_date VARCHAR(255),
         event_name VARCHAR(255),
-        event_date VARCHAR(255),
-        registered_at VARCHAR(255),
-        interested_to_volunteer VARCHAR(255),
-        FOREIGN KEY(event_id) REFERENCES events(id) ON DELETE SET NULL
+        event_date DATE,
+        interested_to_volunteer BOOLEAN DEFAULT FALSE,
+        checked_in BOOLEAN DEFAULT FALSE,
+        checkin_date DATETIME,
+        registered_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        FOREIGN KEY (event_id) REFERENCES events(id) ON DELETE SET NULL
       )
     `);
 
@@ -69,49 +69,41 @@ async function initializeDatabase() {
       CREATE TABLE IF NOT EXISTS raffle_winners (
         id INT AUTO_INCREMENT PRIMARY KEY,
         registration_id INT,
-        name VARCHAR(255),
-        email VARCHAR(255),
+        name VARCHAR(255) NOT NULL,
+        phone VARCHAR(20) NOT NULL,
+        email VARCHAR(255) NOT NULL,
         event_name VARCHAR(255),
-        win_date VARCHAR(255),
-        win_time VARCHAR(255),
-        phone VARCHAR(255),
+        win_date DATE,
+        win_time TIME,
         won_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-        FOREIGN KEY(registration_id) REFERENCES registrations(id) ON DELETE SET NULL
+        FOREIGN KEY (registration_id) REFERENCES registrations(id) ON DELETE SET NULL
       )
     `);
 
-    // Insert admin user if not exists
-    const [adminUsers] = await connection.execute("SELECT * FROM users WHERE username = ?", ["admin"]);
-    if (adminUsers.length === 0) {
-      await connection.execute("INSERT INTO users (username, password) VALUES (?, ?)", ["admin", "password123"]);
-    }
+    // Insert default admin user if not exists
+    await connection.execute(`
+      INSERT IGNORE INTO users (username, password) 
+      VALUES ('admin', 'admin123')
+    `);
 
-    // Insert user if not exists
-    const [users] = await connection.execute("SELECT * FROM users WHERE username = ?", ["user"]);
-    if (users.length === 0) {
-      await connection.execute("INSERT INTO users (username, password) VALUES (?, ?)", ["user", "passw0rd123"]);
-    }
-
-    // Insert sample events if they don't exist
-    const [eventCount] = await connection.execute("SELECT COUNT(*) as count FROM events");
-    if (eventCount[0].count === 0) {
-      await connection.execute(`
-        INSERT INTO events (name, date, time, location) VALUES 
-        ('Register for Newsletter and General Events', '2024-12-15', '10:00 AM', 'Non-Governmental Organization'),
-        ('Community Service Day', '2024-12-20', '9:00 AM', 'Non-Governmental Organization'),
-        ('Charity Fundraiser', '2024-12-25', '2:00 PM', 'Non-Governmental Organization')
-      `);
-    }
+    // Insert sample events if not exists
+    await connection.execute(`
+      INSERT IGNORE INTO events (name, date, time, location, banner) VALUES
+      ('Diwali Celebration', '2024-11-12', '18:00:00', 'Community Center', 'diwali-banner.jpg'),
+      ('Christmas Party', '2024-12-25', '19:00:00', 'Town Hall', 'christmas-banner.jpg'),
+      ('New Year Event', '2025-01-01', '20:00:00', 'City Park', 'newyear-banner.jpg')
+    `);
 
     connection.release();
-    console.log('Database initialized successfully');
+    console.log('✅ Database initialized successfully');
   } catch (error) {
-    console.error('Error initializing database:', error);
+    console.error('❌ Database initialization error:', error);
     throw error;
   }
 }
 
-// Initialize database on module load
-initializeDatabase().catch(console.error);
-
-module.exports = pool;
+// Export the pool and initialization function
+module.exports = {
+  pool,
+  initializeDatabase
+};
