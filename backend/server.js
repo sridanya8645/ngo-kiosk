@@ -27,6 +27,14 @@ const upload = multer({ storage });
 // Initialize database on startup
 initializeDatabase().catch(console.error);
 
+// Handle React routing - serve index.html for all non-API routes
+app.get('*', (req, res) => {
+  if (req.path.startsWith('/api/')) {
+    return; // Let API routes be handled normally
+  }
+  res.sendFile(path.join(__dirname, 'public', 'index.html'));
+});
+
 // Login endpoint
 app.post('/api/login', async (req, res) => {
   try {
@@ -320,11 +328,6 @@ app.post('/api/upload-banner', upload.single('banner'), async (req, res) => {
 
 // Serve uploaded files
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
-
-// Catch-all handler: send back React's index.html file for any non-API routes
-app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'index.html'));
-});
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
