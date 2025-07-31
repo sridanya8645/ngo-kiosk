@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>API Test</title>
+</head>
+<body>
+    <h1>Testing Raffle Winners API</h1>
+    <div id="result"></div>
+    
+    <script>
+        fetch('/api/raffle-winners')
+            .then(res => {
+                console.log('Response status:', res.status);
+                return res.json();
+            })
+            .then(data => {
+                console.log('Data received:', data);
+                document.getElementById('result').innerHTML = 
+                    '<h2>Success!</h2><p>Data: ' + JSON.stringify(data, null, 2) + '</p>';
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                document.getElementById('result').innerHTML = 
+                    '<h2>Error!</h2><p>' + error.message + '</p>';
+            });
+    </script>
+</body>
+</html> 
