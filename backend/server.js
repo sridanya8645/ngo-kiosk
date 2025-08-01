@@ -18,6 +18,13 @@ app.use(cors({
   credentials: true
 }));
 
+// Handle host header issue for Azure App Service
+app.use((req, res, next) => {
+  // Remove host header validation - allow all hosts
+  delete req.headers.host;
+  next();
+});
+
 app.use(express.json());
 
 // Serve static files from React build
