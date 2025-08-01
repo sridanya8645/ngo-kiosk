@@ -430,20 +430,6 @@ app.get('/health', (req, res) => {
   });
 });
 
-// Root endpoint
-app.get('/', (req, res) => {
-  res.json({
-    message: 'NGO Kiosk API is running!',
-    endpoints: {
-      health: '/health',
-      test: '/test',
-      events: '/api/events',
-      register: '/api/register',
-      checkin: '/api/checkin'
-    }
-  });
-});
-
 // Handle React routing - serve index.html for all non-API routes (MUST BE LAST)
 app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'index.html'));
