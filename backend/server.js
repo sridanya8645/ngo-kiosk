@@ -12,12 +12,23 @@ const app = express();
 // Azure App Service configuration
 app.set('trust proxy', 1);
 
+// Set Azure App Service specific environment variables
+process.env.WEBSITES_PORT = process.env.PORT || 5000;
+process.env.WEBSITE_SITE_NAME = 'ngo-kiosk-app';
+
 // CORS configuration for Azure - allow all origins
 app.use(cors());
 
-// Azure App Service host header fix - simplified
+// Bypass all host header validation
 app.use((req, res, next) => {
-  // Allow all hosts for Azure App Service
+  // Remove any host header restrictions
+  delete req.headers.host;
+  delete req.headers['x-forwarded-host'];
+  delete req.headers['x-forwarded-proto'];
+  
+  // Set a default host
+  req.headers.host = 'localhost';
+  
   next();
 });
 
@@ -65,6 +76,14 @@ app.get('/bypass', (req, res) => {
     message: 'Bypass endpoint working!',
     timestamp: new Date().toISOString(),
     headers: req.headers
+  });
+});
+
+// Simple test endpoint
+app.get('/simple', (req, res) => {
+  res.json({
+    message: 'Simple endpoint working!',
+    timestamp: new Date().toISOString()
   });
 });
 
