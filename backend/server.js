@@ -18,10 +18,19 @@ app.use(cors({
   credentials: true
 }));
 
-// Handle host header issue for Azure App Service
+// Remove host header validation completely
 app.use((req, res, next) => {
-  // Allow all hosts - remove host header validation
-  req.headers.host = req.headers.host || 'localhost';
+  // Remove any host header restrictions
+  delete req.headers.host;
+  next();
+});
+
+// Additional middleware for Azure App Service
+app.use((req, res, next) => {
+  // Set default host if missing
+  if (!req.headers.host) {
+    req.headers.host = 'localhost';
+  }
   next();
 });
 
@@ -36,6 +45,29 @@ app.get('/api/test', (req, res) => {
     message: 'Server is working!', 
     timestamp: new Date().toISOString(),
     host: req.headers.host 
+  });
+});
+
+// Health check endpoint
+app.get('/health', (req, res) => {
+  res.json({ 
+    status: 'OK', 
+    message: 'NGO Kiosk is running!',
+    timestamp: new Date().toISOString()
+  });
+});
+
+// Root endpoint
+app.get('/', (req, res) => {
+  res.json({ 
+    message: 'NGO Kiosk API is running!',
+    endpoints: {
+      health: '/health',
+      test: '/api/test',
+      events: '/api/events',
+      register: '/api/register',
+      checkin: '/api/checkin'
+    }
   });
 });
 
