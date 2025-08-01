@@ -20,8 +20,8 @@ app.use(cors({
 
 // Handle host header issue for Azure App Service
 app.use((req, res, next) => {
-  // Remove host header validation - allow all hosts
-  delete req.headers.host;
+  // Allow all hosts - remove host header validation
+  req.headers.host = req.headers.host || 'localhost';
   next();
 });
 
@@ -29,6 +29,15 @@ app.use(express.json());
 
 // Serve static files from React build
 app.use(express.static(path.join(__dirname, 'public')));
+
+// Test endpoint
+app.get('/api/test', (req, res) => {
+  res.json({ 
+    message: 'Server is working!', 
+    timestamp: new Date().toISOString(),
+    host: req.headers.host 
+  });
+});
 
 // Set up storage for banner images
 const uploadDir = path.join(__dirname, 'uploads');
