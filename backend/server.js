@@ -7,17 +7,45 @@ const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
 
+// Azure App Service specific environment variables
+process.env.WEBSITES_PORT = process.env.PORT || 8080;
+process.env.WEBSITE_SITE_NAME = 'ngo-kiosk-app';
+process.env.WEBSITE_HOSTNAME = 'ngo-kiosk-app-fmh6acaxd4czgyh4.centralus-01.azurewebsites.net';
+process.env.WEBSITE_DISABLE_HOST_HEADER_VALIDATION = 'true';
+
 const app = express();
+
+// Azure App Service configuration
+app.set('trust proxy', 1);
 
 // Minimal configuration for Azure App Service
 app.use(express.json());
 app.use(cors());
+
+// Azure App Service host header bypass
+app.use((req, res, next) => {
+  // Set permissive headers for Azure App Service
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Methods', '*');
+  res.setHeader('Access-Control-Allow-Headers', '*');
+  next();
+});
 
 // Simple test endpoint
 app.get('/test', (req, res) => {
   res.json({
     message: 'Server is working!',
     timestamp: new Date().toISOString()
+  });
+});
+
+// Bypass endpoint - completely ignores host headers
+app.get('/bypass', (req, res) => {
+  res.json({
+    status: 'SUCCESS',
+    message: 'Bypass endpoint working!',
+    timestamp: new Date().toISOString(),
+    headers: req.headers
   });
 });
 
@@ -37,6 +65,7 @@ app.get('/', (req, res) => {
     endpoints: {
       health: '/health',
       test: '/test',
+      bypass: '/bypass',
       events: '/api/events',
       register: '/api/register',
       checkin: '/api/checkin'
