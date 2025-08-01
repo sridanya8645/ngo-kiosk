@@ -28,7 +28,7 @@ function AdminRegistrationsPage() {
   const navigate = useNavigate();
 
   useEffect(() => {
-          fetch("https://ngo-kiosk-app.azurewebsites.net/api/registrations")
+          fetch("https://ngo-kiosk-app-fmh6acaxd4czgyh4.centralus-01.azurewebsites.net/api/registrations")
       .then((res) => {
         if (!res.ok) {
           throw new Error(`HTTP error! status: ${res.status}`);

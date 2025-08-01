@@ -32,7 +32,7 @@ export default function RaffleWinnersPage() {
     setLoading(true);
     setError('');
     
-    fetch("https://ngo-kiosk-app.azurewebsites.net/api/raffle-winners")
+    fetch("https://ngo-kiosk-app-fmh6acaxd4czgyh4.centralus-01.azurewebsites.net/api/raffle-winners")
       .then(res => {
         console.log('RaffleWinnersPage: Response status:', res.status);
         if (!res.ok) {

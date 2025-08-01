@@ -35,8 +35,8 @@ const RaffleSpinPage = () => {
   const fetchTodayRegistrations = async () => {
     try {
       const [registrationsResponse, winnersResponse] = await Promise.all([
-              fetch('https://ngo-kiosk-app.azurewebsites.net/api/registrations'),
-      fetch('https://ngo-kiosk-app.azurewebsites.net/api/raffle-winners')
+              fetch('https://ngo-kiosk-app-fmh6acaxd4czgyh4.centralus-01.azurewebsites.net/api/registrations'),
+              fetch('https://ngo-kiosk-app-fmh6acaxd4czgyh4.centralus-01.azurewebsites.net/api/raffle-winners')
       ]);
       
       if (registrationsResponse.ok && winnersResponse.ok) {
@@ -87,7 +87,7 @@ const RaffleSpinPage = () => {
 
   const fetchEventInfo = async () => {
     try {
-      const response = await fetch('https://ngo-kiosk-app.azurewebsites.net/api/events');
+      const response = await fetch('https://ngo-kiosk-app-fmh6acaxd4czgyh4.centralus-01.azurewebsites.net/api/events');
       if (response.ok) {
         const events = await response.json();
         const newsletterEvent = events.find(ev => ev.name === "Register for Newsletter and General Events");
@@ -119,7 +119,7 @@ const RaffleSpinPage = () => {
       
       console.log('Winner data being sent:', winnerData);
       
-      const response = await fetch('https://ngo-kiosk-app.azurewebsites.net/api/raffle-winners', {
+      const response = await fetch('https://ngo-kiosk-app-fmh6acaxd4czgyh4.centralus-01.azurewebsites.net/api/raffle-winners', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

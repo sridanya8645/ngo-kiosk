@@ -22,7 +22,7 @@ export default function CheckinPage() {
     testImage.src = '/sai-baba.png';
     console.log('Testing image path:', '/sai-baba.png');
     
-    fetch("https://ngo-kiosk-app.azurewebsites.net/api/todays-event")
+    fetch("https://ngo-kiosk-app-fmh6acaxd4czgyh4.centralus-01.azurewebsites.net/api/todays-event")
       .then(res => {
         if (!res.ok) {
           throw new Error(`HTTP error! status: ${res.status}`);
@@ -43,7 +43,7 @@ export default function CheckinPage() {
         // Don't show error to user, just log it
       });
     // Fetch all events to find the newsletter/general event (always show it)
-    fetch("https://ngo-kiosk-app.azurewebsites.net/api/events")
+    fetch("https://ngo-kiosk-app-fmh6acaxd4czgyh4.centralus-01.azurewebsites.net/api/events")
       .then(res => {
         if (!res.ok) {
           throw new Error(`HTTP error! status: ${res.status}`);
@@ -150,7 +150,7 @@ export default function CheckinPage() {
     setErrorMsg("");
     
     try {
-      const response = await fetch("https://ngo-kiosk-app.azurewebsites.net/api/checkin", {
+      const response = await fetch("https://ngo-kiosk-app-fmh6acaxd4czgyh4.centralus-01.azurewebsites.net/api/checkin", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -251,7 +251,7 @@ export default function CheckinPage() {
               {todaysEvent.banner ? (
                 <div className="event-banner">
                   <img 
-                    src={`https://ngo-kiosk-app.azurewebsites.net${todaysEvent.banner}`} 
+                    src={`https://ngo-kiosk-app-fmh6acaxd4czgyh4.centralus-01.azurewebsites.net${todaysEvent.banner}`} 
                     alt="Event Banner" 
                     className="event-banner-img" 
                     onLoad={() => console.log('Event banner loaded successfully')}
@@ -279,7 +279,7 @@ export default function CheckinPage() {
               {newsletterEvent.banner ? (
                 <div className="newsletter-banner">
                   <img 
-                    src={`https://ngo-kiosk-app.azurewebsites.net${newsletterEvent.banner}`} 
+                    src={`https://ngo-kiosk-app-fmh6acaxd4czgyh4.centralus-01.azurewebsites.net${newsletterEvent.banner}`} 
                     alt="Newsletter Banner" 
                     className="newsletter-banner-img" 
                     onLoad={() => console.log('Newsletter banner loaded successfully')}

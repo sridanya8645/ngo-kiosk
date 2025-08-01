@@ -47,7 +47,7 @@ function EventDetailsPage() {
         // Find the newsletter event in the database
         const newsletterEventFromDB = events.find(ev => ev.name === newsletterEvent.name);
         if (newsletterEventFromDB) {
-          const res = await fetch(`https://ngo-kiosk-app.azurewebsites.net/api/events/${newsletterEventFromDB.id}`, { method: "DELETE" });
+          const res = await fetch(`https://ngo-kiosk-app-fmh6acaxd4czgyh4.centralus-01.azurewebsites.net/api/events/${newsletterEventFromDB.id}`, { method: "DELETE" });
           
           if (!res.ok) {
             throw new Error(`HTTP error! status: ${res.status}`);
@@ -88,7 +88,7 @@ function EventDetailsPage() {
       formData.append("location", newsletterEvent.location);
       if (newsletterEvent.banner) formData.append("banner", newsletterEvent.banner);
 
-      const res = await fetch("https://ngo-kiosk-app.azurewebsites.net/api/events", {
+      const res = await fetch("https://ngo-kiosk-app-fmh6acaxd4czgyh4.centralus-01.azurewebsites.net/api/events", {
         method: "POST",
         body: formData,
       });
@@ -117,7 +117,7 @@ function EventDetailsPage() {
   // Fetch all events on mount
   useEffect(() => {
     console.log('Fetching events...');
-    fetch("https://ngo-kiosk-app.azurewebsites.net/api/events")
+    fetch("https://ngo-kiosk-app-fmh6acaxd4czgyh4.centralus-01.azurewebsites.net/api/events")
       .then(res => {
         if (!res.ok) {
           throw new Error(`HTTP error! status: ${res.status}`);
@@ -176,8 +176,8 @@ function EventDetailsPage() {
     if (newEvent.banner) formData.append("banner", newEvent.banner);
 
     try {
-      console.log('Making API call to https://ngo-kiosk-app.azurewebsites.net/api/events');
-      const res = await fetch("https://ngo-kiosk-app.azurewebsites.net/api/events", {
+      console.log('Making API call to https://ngo-kiosk-app-fmh6acaxd4czgyh4.centralus-01.azurewebsites.net/api/events');
+      const res = await fetch("https://ngo-kiosk-app-fmh6acaxd4czgyh4.centralus-01.azurewebsites.net/api/events", {
         method: "POST",
         body: formData,
       });
@@ -218,7 +218,7 @@ function EventDetailsPage() {
     if (editingEvent.banner) formData.append("banner", editingEvent.banner);
 
     try {
-      const res = await fetch(`https://ngo-kiosk-app.azurewebsites.net/api/events/${editingEvent.id}`, {
+      const res = await fetch(`https://ngo-kiosk-app-fmh6acaxd4czgyh4.centralus-01.azurewebsites.net/api/events/${editingEvent.id}`, {
         method: "PUT",
         body: formData,
       });
@@ -246,7 +246,7 @@ function EventDetailsPage() {
     console.log('Delete event handler called for id:', id);
     if (window.confirm("Are you sure you want to delete this event?")) {
       try {
-        const res = await fetch(`https://ngo-kiosk-app.azurewebsites.net/api/events/${id}`, { method: "DELETE" });
+        const res = await fetch(`https://ngo-kiosk-app-fmh6acaxd4czgyh4.centralus-01.azurewebsites.net/api/events/${id}`, { method: "DELETE" });
         
         if (!res.ok) {
           throw new Error(`HTTP error! status: ${res.status}`);
@@ -294,7 +294,7 @@ function EventDetailsPage() {
     if (newEvent.banner) formData.append("banner", newEvent.banner);
 
     try {
-      const res = await fetch("https://ngo-kiosk-app.azurewebsites.net/api/events", {
+      const res = await fetch("https://ngo-kiosk-app-fmh6acaxd4czgyh4.centralus-01.azurewebsites.net/api/events", {
         method: "POST",
         body: formData,
       });
