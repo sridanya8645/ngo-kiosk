@@ -13,6 +13,8 @@ const RaffleSpinPage = () => {
   const [eventInfo, setEventInfo] = useState(null);
   const [allEligibleRegistrations, setAllEligibleRegistrations] = useState([]);
   const [currentEligibleIndex, setCurrentEligibleIndex] = useState(500);
+  const [eligibleUsers, setEligibleUsers] = useState([]);
+  const [todaysEvent, setTodaysEvent] = useState(null);
   const navigate = useNavigate();
 
   // Function to generate 500 different colors
@@ -125,11 +127,13 @@ const RaffleSpinPage = () => {
 
   const resetWheel = () => {
     setWinner(null);
-    fetchTodayRegistrations();
+    // Refresh the data
+    window.location.reload();
   };
 
   const refreshRegistrations = () => {
-    fetchTodayRegistrations();
+    // Refresh the data
+    window.location.reload();
   };
 
   const goToWinnersPage = () => {

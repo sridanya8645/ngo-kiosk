@@ -126,7 +126,7 @@ export default function CheckinPage() {
   }, []);
 
   const handleCheckin = useCallback(async (registrationId, name) => {
-    if (scanComplete) return; // Prevent multiple scans
+    console.log('Handling check-in for:', registrationId, name);
     
     setScanComplete(true);
     setSuccessMsg("");
@@ -139,7 +139,7 @@ export default function CheckinPage() {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          phone: phoneNumber
+          registrationId: registrationId
         })
       });
 
