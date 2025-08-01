@@ -5,8 +5,30 @@ import './HomePage.css';
 const HomePage = () => {
   const navigate = useNavigate();
 
+  // Debug logging
+  console.log('HomePage component is rendering');
+  
+  // Test API call
+  React.useEffect(() => {
+    console.log('HomePage useEffect running');
+    fetch('/api/events')
+      .then(response => response.json())
+      .then(data => {
+        console.log('API call successful:', data);
+      })
+      .catch(error => {
+        console.error('API call failed:', error);
+      });
+  }, []);
+
   return (
     <div className="home-container">
+      {/* Debug info */}
+      <div style={{ padding: '20px', backgroundColor: '#f0f0f0', textAlign: 'center' }}>
+        <h2>NGO Kiosk App is Loading...</h2>
+        <p>If you see this, React is working!</p>
+      </div>
+
       {/* Header Section */}
       <header className="home-header">
         <div className="header-content">
