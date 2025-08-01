@@ -7,35 +7,62 @@ const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
 
-// Azure App Service specific environment variables
-process.env.WEBSITES_PORT = process.env.PORT || 8080;
-process.env.WEBSITE_SITE_NAME = 'ngo-kiosk-app';
-process.env.WEBSITE_HOSTNAME = 'ngo-kiosk-app-fmh6acaxd4czgyh4.centralus-01.azurewebsites.net';
-process.env.WEBSITE_DISABLE_HOST_HEADER_VALIDATION = 'true';
-
 const app = express();
 
-// Azure App Service configuration
+// Azure App Service specific configuration
 app.set('trust proxy', 1);
 
-// Minimal configuration for Azure App Service
-app.use(express.json());
-app.use(cors());
-
-// Azure App Service host header bypass
+// Comprehensive CORS and header configuration
 app.use((req, res, next) => {
-  // Set permissive headers for Azure App Service
+  // Set permissive CORS headers
   res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Methods', '*');
-  res.setHeader('Access-Control-Allow-Headers', '*');
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Requested-With');
+  res.setHeader('Access-Control-Allow-Credentials', 'true');
+  
+  // Handle preflight requests
+  if (req.method === 'OPTIONS') {
+    return res.status(200).end();
+  }
+  
+  // Azure App Service host header handling
+  const allowedHosts = [
+    'ngo-kiosk-app-fmh6acaxd4czgyh4.centralus-01.azurewebsites.net',
+    'ngo-kiosk-app.azurewebsites.net',
+    'localhost',
+    '127.0.0.1'
+  ];
+  
+  const host = req.headers.host || req.headers['x-forwarded-host'];
+  
+  // Allow all hosts for now to bypass the issue
+  if (host && !allowedHosts.some(allowed => host.includes(allowed))) {
+    console.log('Host header:', host, 'not in allowed list, but allowing anyway');
+  }
+  
   next();
+});
+
+app.use(express.json());
+app.use(cors({
+  origin: '*',
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With']
+}));
+
+// Error handling middleware
+app.use((err, req, res, next) => {
+  console.error('Error:', err);
+  res.status(500).json({ error: 'Internal server error' });
 });
 
 // Simple test endpoint
 app.get('/test', (req, res) => {
   res.json({
     message: 'Server is working!',
-    timestamp: new Date().toISOString()
+    timestamp: new Date().toISOString(),
+    host: req.headers.host,
+    userAgent: req.headers['user-agent']
   });
 });
 
