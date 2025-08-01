@@ -18,6 +18,17 @@ app.use(cors({
   credentials: true
 }));
 
+// Handle host header for Azure App Service
+app.use((req, res, next) => {
+  // Allow requests from Azure App Service
+  if (req.headers.host && req.headers.host.includes('azurewebsites.net')) {
+    next();
+  } else {
+    // For local development or other cases
+    next();
+  }
+});
+
 app.use(express.json());
 
 // Serve static files from React build
