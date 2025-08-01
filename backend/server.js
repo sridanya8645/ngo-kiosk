@@ -41,6 +41,9 @@ app.use(express.json());
 // Serve static files from React build
 app.use(express.static(path.join(__dirname, 'public')));
 
+// Serve uploaded files
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+
 // Set up storage for banner images
 const uploadDir = path.join(__dirname, 'uploads');
 if (!fs.existsSync(uploadDir)) fs.mkdirSync(uploadDir);
@@ -60,9 +63,6 @@ initializeDatabase()
     console.error('❌ Database initialization failed:', error);
     // Don't exit - let the server start and we'll handle errors in endpoints
   });
-
-// Serve uploaded files
-app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 // Login endpoint
 app.post('/api/login', async (req, res) => {
@@ -432,6 +432,7 @@ app.get('/health', (req, res) => {
 
 // Handle React routing - serve index.html for all non-API routes (MUST BE LAST)
 app.get('*', (req, res) => {
+  console.log('Serving React app for path:', req.path);
   res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
