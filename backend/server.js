@@ -9,9 +9,21 @@ const fs = require('fs');
 
 const app = express();
 
+// Azure App Service configuration
+app.set('trust proxy', 1);
+
 // Basic Express configuration for Azure App Service
 app.use(express.json());
 app.use(cors());
+
+// Azure App Service host header fix
+app.use((req, res, next) => {
+  // Allow all hosts for Azure App Service
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+  next();
+});
 
 // Simple test endpoint that should work
 app.get('/test', (req, res) => {
@@ -142,7 +154,7 @@ app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 8080;
 app.listen(PORT, '0.0.0.0', () => {
   console.log(`Server running on port ${PORT}`);
 });
