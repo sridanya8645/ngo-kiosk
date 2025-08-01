@@ -1,78 +1,21 @@
 const express = require('express');
 const cors = require('cors');
 const { pool, initializeDatabase } = require('./db');
-const nodemailer = require('nodemailer');
-const QRCode = require('qrcode');
 const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
 
 const app = express();
 
-// Azure App Service specific configuration
-app.set('trust proxy', 1);
-
-// Comprehensive CORS and header configuration
-app.use((req, res, next) => {
-  // Set permissive CORS headers
-  res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Requested-With');
-  res.setHeader('Access-Control-Allow-Credentials', 'true');
-  
-  // Handle preflight requests
-  if (req.method === 'OPTIONS') {
-    return res.status(200).end();
-  }
-  
-  // Azure App Service host header handling
-  const allowedHosts = [
-    'ngo-kiosk-app-fmh6acaxd4czgyh4.centralus-01.azurewebsites.net',
-    'ngo-kiosk-app.azurewebsites.net',
-    'localhost',
-    '127.0.0.1'
-  ];
-  
-  const host = req.headers.host || req.headers['x-forwarded-host'];
-  
-  // Allow all hosts for now to bypass the issue
-  if (host && !allowedHosts.some(allowed => host.includes(allowed))) {
-    console.log('Host header:', host, 'not in allowed list, but allowing anyway');
-  }
-  
-  next();
-});
-
+// Minimal configuration - no host header handling
 app.use(express.json());
-app.use(cors({
-  origin: '*',
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With']
-}));
-
-// Error handling middleware
-app.use((err, req, res, next) => {
-  console.error('Error:', err);
-  res.status(500).json({ error: 'Internal server error' });
-});
+app.use(cors());
 
 // Simple test endpoint
 app.get('/test', (req, res) => {
   res.json({
     message: 'Server is working!',
-    timestamp: new Date().toISOString(),
-    host: req.headers.host,
-    userAgent: req.headers['user-agent']
-  });
-});
-
-// Bypass endpoint - completely ignores host headers
-app.get('/bypass', (req, res) => {
-  res.json({
-    status: 'SUCCESS',
-    message: 'Bypass endpoint working!',
-    timestamp: new Date().toISOString(),
-    headers: req.headers
+    timestamp: new Date().toISOString()
   });
 });
 
@@ -92,7 +35,6 @@ app.get('/', (req, res) => {
     endpoints: {
       health: '/health',
       test: '/test',
-      bypass: '/bypass',
       events: '/api/events',
       register: '/api/register',
       checkin: '/api/checkin'
@@ -139,19 +81,19 @@ app.get('/api/events', async (req, res) => {
 app.post('/api/register', async (req, res) => {
   try {
     const { name, phone, email, eventId, interested_to_volunteer } = req.body;
-    
+
     const [eventRows] = await pool.execute("SELECT * FROM events WHERE id = ?", [eventId]);
     if (eventRows.length === 0) {
       return res.status(400).json({ success: false, message: "Event not found" });
     }
-    
+
     const event = eventRows[0];
-    
+
     await pool.execute(
       "INSERT INTO registrations (name, phone, email, event_id, event_name, event_date, interested_to_volunteer, registered_at) VALUES (?, ?, ?, ?, ?, ?, ?, NOW())",
       [name, phone, email, eventId, event.name, event.date, interested_to_volunteer]
     );
-    
+
     res.json({ success: true, message: "Registration successful" });
   } catch (error) {
     console.error('Registration error:', error);
@@ -162,9 +104,9 @@ app.post('/api/register', async (req, res) => {
 app.post('/api/checkin', async (req, res) => {
   try {
     const { phone, registrationId } = req.body;
-    
+
     let query, params;
-    
+
     if (registrationId) {
       query = "SELECT * FROM registrations WHERE id = ? AND checked_in = 0";
       params = [registrationId];
@@ -174,18 +116,18 @@ app.post('/api/checkin', async (req, res) => {
     } else {
       return res.status(400).json({ success: false, message: "Phone number or registration ID required" });
     }
-    
+
     const [rows] = await pool.execute(query, params);
-    
+
     if (rows.length === 0) {
       return res.status(404).json({ success: false, message: "Registration not found or already checked in" });
     }
-    
+
     await pool.execute(
       "UPDATE registrations SET checked_in = 1, checkin_date = NOW() WHERE id = ?",
       [rows[0].id]
     );
-    
+
     res.json({ success: true, message: "Check-in successful", name: rows[0].name });
   } catch (error) {
     console.error('Check-in error:', error);
@@ -198,7 +140,7 @@ app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
-const PORT = process.env.PORT || 8080;
+const PORT = process.env.PORT || 5000;
 app.listen(PORT, '0.0.0.0', () => {
   console.log(`Server running on port ${PORT}`);
 });
