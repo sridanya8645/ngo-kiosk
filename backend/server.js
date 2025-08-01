@@ -12,6 +12,24 @@ const app = express();
 // Azure App Service configuration
 app.set('trust proxy', 1);
 
+// CRITICAL: Handle host header issue at the very beginning
+app.use((req, res, next) => {
+  // Set headers that should bypass host header validation
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Requested-With');
+  
+  // Handle preflight requests
+  if (req.method === 'OPTIONS') {
+    return res.status(200).end();
+  }
+  
+  // Log the request for debugging
+  console.log(`${req.method} ${req.path} - Host: ${req.headers.host}`);
+  
+  next();
+});
+
 // CORS configuration for Azure
 app.use(cors({
   origin: true,
@@ -390,6 +408,16 @@ app.get('/test', (req, res) => {
   res.json({
     message: 'Server is working!',
     timestamp: new Date().toISOString()
+  });
+});
+
+// Simple working endpoint - no host header validation
+app.get('/working', (req, res) => {
+  res.json({
+    status: 'SUCCESS',
+    message: 'This endpoint should work!',
+    timestamp: new Date().toISOString(),
+    server: 'NGO Kiosk Backend'
   });
 });
 
