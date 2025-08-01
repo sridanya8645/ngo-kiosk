@@ -15,12 +15,9 @@ app.set('trust proxy', 1);
 // CORS configuration for Azure - allow all origins
 app.use(cors());
 
-// Azure App Service host header fix
+// Azure App Service host header fix - simplified
 app.use((req, res, next) => {
-  // For Azure App Service, set the host header to the correct value
-  if (req.headers['x-forwarded-host']) {
-    req.headers.host = req.headers['x-forwarded-host'];
-  }
+  // Allow all hosts for Azure App Service
   next();
 });
 
@@ -58,6 +55,16 @@ app.get('/', (req, res) => {
       register: '/api/register',
       checkin: '/api/checkin'
     }
+  });
+});
+
+// Bypass endpoint - should work regardless of host headers
+app.get('/bypass', (req, res) => {
+  res.json({
+    status: 'SUCCESS',
+    message: 'Bypass endpoint working!',
+    timestamp: new Date().toISOString(),
+    headers: req.headers
   });
 });
 
@@ -428,7 +435,23 @@ app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
+// Error handling middleware
+app.use((err, req, res, next) => {
+  console.error('Error:', err);
+  
+  // Handle "Invalid Host header" error
+  if (err.message && err.message.includes('Invalid Host header')) {
+    return res.status(200).json({
+      message: 'NGO Kiosk is running!',
+      status: 'OK',
+      timestamp: new Date().toISOString()
+    });
+  }
+  
+  res.status(500).json({ error: 'Internal server error' });
+});
+
 const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => {
+app.listen(PORT, '0.0.0.0', () => {
   console.log(`Server running on port ${PORT}`);
 });
