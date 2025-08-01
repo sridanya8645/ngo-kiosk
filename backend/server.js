@@ -12,24 +12,14 @@ const app = express();
 // Azure App Service configuration
 app.set('trust proxy', 1);
 
-// CORS configuration for Azure
-app.use(cors({
-  origin: true,
-  credentials: true
-}));
+// CORS configuration for Azure - allow all origins
+app.use(cors());
 
-// Remove host header validation completely
+// Azure App Service host header fix
 app.use((req, res, next) => {
-  // Remove any host header restrictions
-  delete req.headers.host;
-  next();
-});
-
-// Additional middleware for Azure App Service
-app.use((req, res, next) => {
-  // Set default host if missing
-  if (!req.headers.host) {
-    req.headers.host = 'localhost';
+  // For Azure App Service, set the host header to the correct value
+  if (req.headers['x-forwarded-host']) {
+    req.headers.host = req.headers['x-forwarded-host'];
   }
   next();
 });
