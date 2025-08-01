@@ -7,50 +7,17 @@ const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
 
-// Azure App Service specific environment variables
-process.env.WEBSITES_PORT = process.env.PORT || 8080;
-process.env.WEBSITE_SITE_NAME = 'ngo-kiosk-app';
-process.env.WEBSITE_HOSTNAME = 'ngo-kiosk-app-fmh6acaxd4czgyh4.centralus-01.azurewebsites.net';
-
 const app = express();
 
-// Azure App Service configuration - completely permissive
-app.set('trust proxy', 1);
-
-// Remove all host header validation
-app.use((req, res, next) => {
-  // Remove any host header restrictions completely
-  delete req.headers.host;
-  delete req.headers['x-forwarded-host'];
-  delete req.headers['x-forwarded-proto'];
-  delete req.headers['x-forwarded-for'];
-  
-  // Set permissive headers
-  res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Methods', '*');
-  res.setHeader('Access-Control-Allow-Headers', '*');
-  
-  next();
-});
-
+// Minimal configuration for Azure App Service
 app.use(express.json());
 app.use(cors());
 
-// Simple test endpoint that should work
+// Simple test endpoint
 app.get('/test', (req, res) => {
   res.json({
     message: 'Server is working!',
     timestamp: new Date().toISOString()
-  });
-});
-
-// Bypass endpoint - completely ignores host headers
-app.get('/bypass', (req, res) => {
-  res.json({
-    status: 'SUCCESS',
-    message: 'Bypass endpoint working!',
-    timestamp: new Date().toISOString(),
-    headers: req.headers
   });
 });
 
@@ -70,7 +37,6 @@ app.get('/', (req, res) => {
     endpoints: {
       health: '/health',
       test: '/test',
-      bypass: '/bypass',
       events: '/api/events',
       register: '/api/register',
       checkin: '/api/checkin'
