@@ -28,70 +28,37 @@ const RaffleSpinPage = () => {
   };
 
   useEffect(() => {
-    fetchTodayRegistrations();
-    fetchEventInfo();
-  }, []);
-
-  const fetchTodayRegistrations = async () => {
-    try {
-      const [registrationsResponse, winnersResponse] = await Promise.all([
-              fetch('https://ngo-kiosk-app-fmh6acaxd4czgyh4.centralus-01.azurewebsites.net/api/registrations'),
-              fetch('https://ngo-kiosk-app-fmh6acaxd4czgyh4.centralus-01.azurewebsites.net/api/raffle-winners')
-      ]);
+    // Fetch registrations and winners
+    Promise.all([
+      fetch('/api/registrations'),
+      fetch('/api/raffle-winners')
+    ])
+    .then(responses => Promise.all(responses.map(res => res.json())))
+    .then(([registrations, winners]) => {
+      console.log('Registrations:', registrations);
+      console.log('Winners:', winners);
       
-      if (registrationsResponse.ok && winnersResponse.ok) {
-        const registrationsData = await registrationsResponse.json();
-        const winnersData = await winnersResponse.json();
-        // Get today's date in YYYY-MM-DD format
-        const today = new Date().toISOString().split('T')[0];
-        console.log('Today\'s date in YYYY-MM-DD format:', today);
-        
-        // Get today's winners registration IDs
-        const todayWinnersIds = winnersData
-          .filter(winner => winner.win_date === today)
-          .map(winner => winner.registration_id);
-        
-        // Filter for checked-in registrations from today that haven't won today
-        const eligibleRegistrations = registrationsData.filter(reg => 
-          reg.checked_in === 1 && 
-          reg.checkin_date === today &&
-          !todayWinnersIds.includes(reg.id)
-        );
-        
-        // Store all eligible registrations for future use
-        setAllEligibleRegistrations(eligibleRegistrations);
-        
-        // Reset the current eligible index
-        setCurrentEligibleIndex(500);
-        
-        // Limit to first 500 participants for better wheel display
-        const limitedRegistrations = eligibleRegistrations.slice(0, 500);
-        
-        console.log(`Found ${eligibleRegistrations.length} eligible participants for today's raffle`);
-        console.log(`Limited to ${limitedRegistrations.length} participants for wheel display`);
-        console.log(`Total registrations: ${registrationsData.length}`);
-        console.log(`Checked-in registrations: ${registrationsData.filter(reg => reg.checked_in === 1).length}`);
-        console.log(`Today's check-ins: ${registrationsData.filter(reg => reg.checkin_date === today).length}`);
-        console.log(`Excluded ${todayWinnersIds.length} previous winners from today`);
-        console.log(`Today's date: ${today}`);
-        console.log(`Sample registration:`, registrationsData[0]);
-        console.log(`Sample checkin_date:`, registrationsData[0]?.checkin_date);
-        console.log(`Date comparison test:`, registrationsData[0]?.checkin_date === today);
-        
-        setRegistrations(limitedRegistrations);
-      }
-    } catch (error) {
-      console.error('Error fetching registrations:', error);
-    }
-  };
+      // Filter out already won users
+      const eligibleUsers = registrations.filter(reg => 
+        reg.checked_in && !winners.some(winner => winner.registration_id === reg.id)
+      );
+      
+      console.log('Eligible users:', eligibleUsers);
+      setEligibleUsers(eligibleUsers);
+    })
+    .catch(error => {
+      console.error('Error fetching data:', error);
+    });
+  }, []);
 
   const fetchEventInfo = async () => {
     try {
-      const response = await fetch('https://ngo-kiosk-app-fmh6acaxd4czgyh4.centralus-01.azurewebsites.net/api/events');
+      const response = await fetch('/api/events');
       if (response.ok) {
         const events = await response.json();
-        const newsletterEvent = events.find(ev => ev.name === "Register for Newsletter and General Events");
-        setEventInfo(newsletterEvent);
+        const today = new Date().toISOString().split('T')[0];
+        const todaysEvent = events.find(event => event.date === today);
+        setTodaysEvent(todaysEvent);
       }
     } catch (error) {
       console.error('Error fetching event info:', error);
@@ -103,40 +70,25 @@ const RaffleSpinPage = () => {
     setTimeout(() => setShowConfetti(false), 5000);
   };
 
-  const saveWinnerToDatabase = async (winner) => {
+  const saveWinner = async (winner) => {
     try {
-      console.log('Saving winner to database:', winner);
-      
-      const winnerData = {
-        registration_id: winner.id,
-        name: winner.name,
-        email: winner.email,
-        phone: winner.phone,
-        event_name: winner.event_name || 'Register for Newsletter and General Events',
-        win_date: new Date().toISOString().split('T')[0],
-        win_time: new Date().toLocaleTimeString()
-      };
-      
-      console.log('Winner data being sent:', winnerData);
-      
-      const response = await fetch('https://ngo-kiosk-app-fmh6acaxd4czgyh4.centralus-01.azurewebsites.net/api/raffle-winners', {
+      const response = await fetch('/api/raffle-winners', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(winnerData),
+        body: JSON.stringify({
+          registrationId: winner.id,
+          prize: 'Raffle Prize'
+        })
       });
-
-      console.log('Response status:', response.status);
       
       if (response.ok) {
-        const result = await response.json();
-        console.log('Winner saved to database successfully:', result);
-        // Refresh registrations to update the list
-        fetchTodayRegistrations();
+        console.log('Winner saved successfully');
+        // Refresh the eligible users list
+        window.location.reload();
       } else {
-        const errorData = await response.json();
-        console.error('Failed to save winner to database:', errorData);
+        console.error('Failed to save winner');
       }
     } catch (error) {
       console.error('Error saving winner:', error);
@@ -157,7 +109,7 @@ const RaffleSpinPage = () => {
     setWinner(selectedWinner);
     
     // Save winner to database
-    saveWinnerToDatabase(selectedWinner);
+    saveWinner(selectedWinner);
     
     // Trigger confetti
     triggerConfetti();

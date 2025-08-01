@@ -22,43 +22,26 @@ export default function CheckinPage() {
     testImage.src = '/sai-baba.png';
     console.log('Testing image path:', '/sai-baba.png');
     
-    fetch("https://ngo-kiosk-app-fmh6acaxd4czgyh4.centralus-01.azurewebsites.net/api/todays-event")
-      .then(res => {
-        if (!res.ok) {
-          throw new Error(`HTTP error! status: ${res.status}`);
-        }
-        return res.json();
+    fetch("/api/todays-event")
+      .then(res => res.json())
+      .then(data => {
+        console.log('Today\'s event data:', data);
+        setTodaysEvent(data);
       })
-      .then(events => {
-        console.log('Today\'s events data received:', events);
-        if (Array.isArray(events) && events.length > 0) {
-          setTodaysEvent(events[0]);
-          console.log('Set today\'s event:', events[0]);
-        } else {
-          console.log('No events found for today');
-        }
-      })
-      .catch((error) => {
-        console.error('Error fetching today\'s events:', error);
-        // Don't show error to user, just log it
+      .catch(error => {
+        console.error('Error fetching today\'s event:', error);
       });
-    // Fetch all events to find the newsletter/general event (always show it)
-    fetch("https://ngo-kiosk-app-fmh6acaxd4czgyh4.centralus-01.azurewebsites.net/api/events")
-      .then(res => {
-        if (!res.ok) {
-          throw new Error(`HTTP error! status: ${res.status}`);
-        }
-        return res.json();
-      })
+
+    // Fetch all events for newsletter
+    fetch("/api/events")
+      .then(res => res.json())
       .then(events => {
-        console.log('All events data received:', events);
+        console.log('All events data:', events);
         const newsletterEvent = events.find(ev => ev.name === "Register for Newsletter and General Events");
         setNewsletterEvent(newsletterEvent);
-        console.log('Set newsletter event:', newsletterEvent);
       })
-      .catch((error) => {
-        console.error('Error fetching all events:', error);
-        // Don't show error to user, just log it
+      .catch(error => {
+        console.error('Error fetching events:', error);
       });
   }, []);
 
@@ -150,12 +133,14 @@ export default function CheckinPage() {
     setErrorMsg("");
     
     try {
-      const response = await fetch("https://ngo-kiosk-app-fmh6acaxd4czgyh4.centralus-01.azurewebsites.net/api/checkin", {
-        method: "POST",
+      const response = await fetch("/api/checkin", {
+        method: 'POST',
         headers: {
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ registrationId }),
+        body: JSON.stringify({
+          phone: phoneNumber
+        })
       });
 
       const data = await response.json();
@@ -248,26 +233,12 @@ export default function CheckinPage() {
           {todaysEvent && (
             <div className="event-section">
               <h2 className="event-title">Checkin {todaysEvent.name}</h2>
-              {todaysEvent.banner ? (
-                <div className="event-banner">
-                  <img 
-                    src={`https://ngo-kiosk-app-fmh6acaxd4czgyh4.centralus-01.azurewebsites.net${todaysEvent.banner}`} 
-                    alt="Event Banner" 
-                    className="event-banner-img" 
-                    onLoad={() => console.log('Event banner loaded successfully')}
-                    onError={(e) => console.error('Event banner failed to load:', e.target.src)}
-                  />
-                </div>
-              ) : (
-                <div className="event-banner">
-                  <img 
-                    src="/sai-baba.png" 
-                    alt="Default Event Banner" 
-                    className="event-banner-img" 
-                    onLoad={() => console.log('Default event banner loaded successfully')}
-                    onError={(e) => console.error('Default event banner failed to load:', e.target.src)}
-                  />
-                </div>
+              {todaysEvent && todaysEvent.banner && (
+                <img 
+                  src={`${todaysEvent.banner}`}
+                  alt="Event Banner" 
+                  className="event-banner"
+                />
               )}
             </div>
           )}
@@ -276,26 +247,12 @@ export default function CheckinPage() {
           {newsletterEvent && (
             <div className="newsletter-section">
               <h3 className="newsletter-title">Checkin Register for Newsletter and General Events</h3>
-              {newsletterEvent.banner ? (
-                <div className="newsletter-banner">
-                  <img 
-                    src={`https://ngo-kiosk-app-fmh6acaxd4czgyh4.centralus-01.azurewebsites.net${newsletterEvent.banner}`} 
-                    alt="Newsletter Banner" 
-                    className="newsletter-banner-img" 
-                    onLoad={() => console.log('Newsletter banner loaded successfully')}
-                    onError={(e) => console.error('Newsletter banner failed to load:', e.target.src)}
-                  />
-                </div>
-              ) : (
-                <div className="newsletter-banner">
-                  <img 
-                    src="/sai-baba.png" 
-                    alt="Default Newsletter Banner" 
-                    className="newsletter-banner-img" 
-                    onLoad={() => console.log('Default newsletter banner loaded successfully')}
-                    onError={(e) => console.error('Default newsletter banner failed to load:', e.target.src)}
-                  />
-                </div>
+              {newsletterEvent && newsletterEvent.banner && (
+                <img 
+                  src={`${newsletterEvent.banner}`}
+                  alt="Newsletter Event Banner" 
+                  className="event-banner"
+                />
               )}
             </div>
           )}

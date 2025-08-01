@@ -28,25 +28,14 @@ function AdminRegistrationsPage() {
   const navigate = useNavigate();
 
   useEffect(() => {
-          fetch("https://ngo-kiosk-app-fmh6acaxd4czgyh4.centralus-01.azurewebsites.net/api/registrations")
-      .then((res) => {
-        if (!res.ok) {
-          throw new Error(`HTTP error! status: ${res.status}`);
-        }
-        return res.json();
+    fetch("/api/registrations")
+      .then(res => res.json())
+      .then(data => {
+        console.log('Registrations data:', data);
+        setRegistrations(data);
       })
-      .then((data) => {
-        console.log('Registrations data received:', data);
-        if (Array.isArray(data)) {
-          setRegistrations(data);
-        } else {
-          console.error('Expected array but got:', typeof data);
-          setRegistrations([]);
-        }
-      })
-      .catch((error) => {
+      .catch(error => {
         console.error('Error fetching registrations:', error);
-        setRegistrations([]);
       });
   }, []);
 

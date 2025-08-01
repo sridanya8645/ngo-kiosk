@@ -19,7 +19,7 @@ const RegisterPage = () => {
 
   useEffect(() => {
     // Fetch the newsletter/general event (same as CheckinPage)
-    fetch("https://ngo-kiosk-app-fmh6acaxd4czgyh4.centralus-01.azurewebsites.net/api/events")
+    fetch("/api/events")
       .then(res => {
         if (!res.ok) {
           throw new Error(`HTTP error! status: ${res.status}`);
@@ -90,7 +90,7 @@ const RegisterPage = () => {
       if (!eventId) {
         console.log('No newsletter event found, using first available event');
         // If no newsletter event found, use the first event available
-        const eventsResponse = await fetch('https://ngo-kiosk-app-fmh6acaxd4czgyh4.centralus-01.azurewebsites.net/api/events');
+        const eventsResponse = await fetch('/api/events');
         if (eventsResponse.ok) {
           const events = await eventsResponse.json();
           if (events.length > 0) {
@@ -109,21 +109,18 @@ const RegisterPage = () => {
       }
 
       // Now register the user
-      const requestBody = {
-        name: formData.name,
-        phone: formData.phone,
-        email: formData.email,
-        eventId: eventId,
-        interested_to_volunteer: formData.volunteer
-      };
-      console.log('Sending registration request:', requestBody);
-      
-      const response = await fetch('https://ngo-kiosk-app-fmh6acaxd4czgyh4.centralus-01.azurewebsites.net/api/register', {
+      const response = await fetch('/api/register', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(requestBody),
+        body: JSON.stringify({
+          name: formData.name,
+          phone: formData.phone,
+          email: formData.email,
+          eventId: eventId,
+          interested_to_volunteer: formData.volunteer === 'Yes'
+        })
       });
 
       console.log('Registration response status:', response.status);
