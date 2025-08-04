@@ -9,8 +9,15 @@ const fs = require('fs');
 
 const app = express();
 
+// Debug middleware - log all requests
+app.use((req, res, next) => {
+  console.log(`${new Date().toISOString()} - ${req.method} ${req.path}`);
+  next();
+});
+
 // Simple test endpoint - FIRST THING
 app.get('/ping', (req, res) => {
+  console.log('Ping endpoint hit!');
   res.json({
     message: 'Server is responding!',
     timestamp: new Date().toISOString(),
