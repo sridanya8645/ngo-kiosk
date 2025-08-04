@@ -11,6 +11,7 @@ export default function CheckinPage() {
   const [scanComplete, setScanComplete] = useState(false);
   const [todaysEvent, setTodaysEvent] = useState(null);
   const [newsletterEvent, setNewsletterEvent] = useState(null);
+
   const navigate = useNavigate();
   const isRunning = useRef(false);
 
@@ -26,6 +27,14 @@ export default function CheckinPage() {
       .then(res => res.json())
       .then(data => {
         console.log('Today\'s event data:', data);
+        if (data && data.banner) {
+          console.log('Banner path:', data.banner);
+          // Test banner image loading
+          const bannerImage = new Image();
+          bannerImage.onload = () => console.log('Banner image loaded successfully');
+          bannerImage.onerror = () => console.error('Banner image failed to load:', data.banner);
+          bannerImage.src = data.banner;
+        }
         setTodaysEvent(data);
       })
       .catch(error => {
@@ -38,6 +47,14 @@ export default function CheckinPage() {
       .then(events => {
         console.log('All events data:', events);
         const newsletterEvent = events.find(ev => ev.name === "Register for Newsletter and General Events");
+        if (newsletterEvent && newsletterEvent.banner) {
+          console.log('Newsletter banner path:', newsletterEvent.banner);
+          // Test newsletter banner image loading
+          const newsletterBannerImage = new Image();
+          newsletterBannerImage.onload = () => console.log('Newsletter banner image loaded successfully');
+          newsletterBannerImage.onerror = () => console.error('Newsletter banner image failed to load:', newsletterEvent.banner);
+          newsletterBannerImage.src = newsletterEvent.banner;
+        }
         setNewsletterEvent(newsletterEvent);
       })
       .catch(error => {
@@ -72,36 +89,58 @@ export default function CheckinPage() {
       console.error('Reader container not found');
     }
 
-    html5QrCodeRef.current = new Html5Qrcode("reader");
-    html5QrCodeRef.current
-      .start(
-        { facingMode: "user" },
-        { fps: 10, qrbox: { width: 600, height: 600 } },
-        qrCodeMessage => {
-          console.log('QR Code detected:', qrCodeMessage); // Simple debug log
-          try {
-            const data = JSON.parse(qrCodeMessage);
-            const registrationId = data.registrationId;
-            if (!registrationId) throw new Error("No registrationId in QR code");
+    try {
+      html5QrCodeRef.current = new Html5Qrcode("reader");
+      console.log('QR Scanner initialized');
+      
+      // Check if camera is available
+      if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+        console.error('Camera not available');
+        setErrorMsg('Camera not available on this device');
+        return;
+      }
 
-            // Call the check-in endpoint
-            handleCheckin(registrationId, data.name);
-          } catch (e) {
-            setErrorMsg('Invalid QR code');
+      html5QrCodeRef.current
+        .start(
+          { facingMode: "environment" }, // Use back camera on mobile
+          { 
+            fps: 10, 
+            qrbox: { width: 250, height: 250 },
+            aspectRatio: 1.0
+          },
+          qrCodeMessage => {
+            console.log('QR Code detected:', qrCodeMessage);
+            try {
+              const data = JSON.parse(qrCodeMessage);
+              const registrationId = data.registrationId;
+              if (!registrationId) throw new Error("No registrationId in QR code");
+
+              // Call the check-in endpoint
+              handleCheckin(registrationId, data.name);
+            } catch (e) {
+              console.error('QR code parsing error:', e);
+              setErrorMsg('Invalid QR code format');
+            }
+          },
+          errorMessage => {
+            console.log('Scanner error:', errorMessage);
+            // Don't show error for normal scanning process
           }
-        },
-        errorMessage => {
-          console.log('Scanner error:', errorMessage); // Log scanner errors
-        }
-      )
-      .then(() => {
-        isRunning.current = true;
-        console.log('Scanner started successfully'); // Debug log
-      })
-      .catch((error) => {
-        isRunning.current = false;
-        console.log('Scanner failed to start:', error); // Debug log
-      });
+        )
+        .then(() => {
+          isRunning.current = true;
+          console.log('Scanner started successfully');
+          setErrorMsg(''); // Clear any previous errors
+        })
+        .catch((error) => {
+          isRunning.current = false;
+          console.error('Scanner failed to start:', error);
+          setErrorMsg('Failed to start camera. Please check permissions.');
+        });
+    } catch (error) {
+      console.error('QR Scanner initialization error:', error);
+      setErrorMsg('Camera initialization failed');
+    }
 
     return () => {
       if (html5QrCodeRef.current && isRunning.current) {
@@ -188,6 +227,8 @@ export default function CheckinPage() {
     }
   }, [scanComplete]);
 
+
+
   return (
     <div className="checkin-container">
       {/* Header Section */}
@@ -238,6 +279,11 @@ export default function CheckinPage() {
                   src={`${todaysEvent.banner}`}
                   alt="Event Banner" 
                   className="event-banner"
+                  onLoad={() => console.log('Today\'s event banner loaded successfully:', todaysEvent.banner)}
+                  onError={(e) => {
+                    console.error('Today\'s event banner failed to load:', todaysEvent.banner);
+                    console.error('Error details:', e);
+                  }}
                 />
               )}
             </div>
@@ -252,6 +298,11 @@ export default function CheckinPage() {
                   src={`${newsletterEvent.banner}`}
                   alt="Newsletter Event Banner" 
                   className="event-banner"
+                  onLoad={() => console.log('Newsletter banner loaded successfully:', newsletterEvent.banner)}
+                  onError={(e) => {
+                    console.error('Newsletter banner failed to load:', newsletterEvent.banner);
+                    console.error('Error details:', e);
+                  }}
                 />
               )}
             </div>
@@ -261,6 +312,8 @@ export default function CheckinPage() {
           <div className="scanner-section">
             <h3 className="scanner-title">Scan QR Code to Check-In</h3>
             <div id="reader-container" className="scanner-container"></div>
+            
+
             
             {/* Status Messages */}
             {successMsg && (

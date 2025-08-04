@@ -241,12 +241,17 @@ app.get('/api/test-db', async (req, res) => {
     const [events] = await connection.execute('SELECT COUNT(*) as count FROM events');
     console.log('Events count:', events[0].count);
     
+    // Test banner files
+    const [bannerEvents] = await connection.execute('SELECT id, name, banner FROM events WHERE banner IS NOT NULL');
+    console.log('Events with banners:', bannerEvents);
+    
     connection.release();
     
     res.json({ 
       success: true, 
       tables: tables.map(t => Object.values(t)[0]),
-      eventsCount: events[0].count
+      eventsCount: events[0].count,
+      bannerEvents: bannerEvents
     });
   } catch (error) {
     console.error('❌ Database test failed:', error);
@@ -264,6 +269,14 @@ app.get('/api/events', async (req, res) => {
     console.log('🔍 Fetching events from database...');
     const [rows] = await pool.execute("SELECT * FROM events ORDER BY date DESC");
     console.log(`✅ Found ${rows.length} events`);
+    
+    // Debug: Log banner paths
+    rows.forEach((event, index) => {
+      if (event.banner) {
+        console.log(`Event ${index + 1}: ${event.name} - Banner: ${event.banner}`);
+      }
+    });
+    
     res.json(rows);
   } catch (error) {
     console.error('❌ Get events error:', error);
@@ -295,7 +308,23 @@ function convertTo24Hour(timeStr) {
 app.post('/api/events', upload.single('banner'), async (req, res) => {
   try {
     const { name, date, time, location } = req.body;
-    const banner = req.file ? `/uploads/${req.file.filename}` : null;
+    
+    // Generate unique banner filename with event name
+    let banner = null;
+    if (req.file) {
+      const eventNameSlug = name.replace(/[^a-zA-Z0-9]/g, '_').toLowerCase();
+      const timestamp = Date.now();
+      const fileExtension = req.file.originalname.split('.').pop();
+      const newFilename = `${eventNameSlug}_${timestamp}.${fileExtension}`;
+      
+      // Rename the uploaded file
+      const oldPath = req.file.path;
+      const newPath = path.join(uploadDir, newFilename);
+      fs.renameSync(oldPath, newPath);
+      
+      banner = `/uploads/${newFilename}`;
+      console.log(`Banner uploaded: ${banner}`);
+    }
     
     // Convert time to 24-hour format
     const convertedTime = convertTo24Hour(time);
@@ -326,8 +355,22 @@ app.put('/api/events/:id', upload.single('banner'), async (req, res) => {
     let params = [name, date, convertedTime, location];
     
     if (req.file) {
+      // Generate unique banner filename with event name
+      const eventNameSlug = name.replace(/[^a-zA-Z0-9]/g, '_').toLowerCase();
+      const timestamp = Date.now();
+      const fileExtension = req.file.originalname.split('.').pop();
+      const newFilename = `${eventNameSlug}_${timestamp}.${fileExtension}`;
+      
+      // Rename the uploaded file
+      const oldPath = req.file.path;
+      const newPath = path.join(uploadDir, newFilename);
+      fs.renameSync(oldPath, newPath);
+      
+      const banner = `/uploads/${newFilename}`;
+      console.log(`Banner updated: ${banner}`);
+      
       sql += ', banner = ?';
-      params.push(`/uploads/${req.file.filename}`);
+      params.push(banner);
     }
     sql += ' WHERE id = ?';
     params.push(id);
@@ -338,6 +381,48 @@ app.put('/api/events/:id', upload.single('banner'), async (req, res) => {
     res.json({ success: true, event: rows[0] });
   } catch (error) {
     console.error('Edit event error:', error);
+    res.status(500).json({ error: 'Database error' });
+  }
+});
+
+// Update banner for an event
+app.put('/api/events/:id/banner', upload.single('banner'), async (req, res) => {
+  try {
+    const { id } = req.params;
+    
+    if (!req.file) {
+      return res.status(400).json({ error: 'No banner file uploaded' });
+    }
+    
+    // Get current event name
+    const [eventRows] = await pool.execute('SELECT name FROM events WHERE id = ?', [id]);
+    if (eventRows.length === 0) {
+      return res.status(404).json({ error: 'Event not found' });
+    }
+    
+    const eventName = eventRows[0].name;
+    
+    // Generate unique banner filename with event name
+    const eventNameSlug = eventName.replace(/[^a-zA-Z0-9]/g, '_').toLowerCase();
+    const timestamp = Date.now();
+    const fileExtension = req.file.originalname.split('.').pop();
+    const newFilename = `${eventNameSlug}_${timestamp}.${fileExtension}`;
+    
+    // Rename the uploaded file
+    const oldPath = req.file.path;
+    const newPath = path.join(uploadDir, newFilename);
+    fs.renameSync(oldPath, newPath);
+    
+    const banner = `/uploads/${newFilename}`;
+    console.log(`Banner updated for event ${id}: ${banner}`);
+    
+    // Update the banner in database
+    await pool.execute('UPDATE events SET banner = ? WHERE id = ?', [banner, id]);
+    
+    const [rows] = await pool.execute('SELECT * FROM events WHERE id = ?', [id]);
+    res.json({ success: true, event: rows[0] });
+  } catch (error) {
+    console.error('Update banner error:', error);
     res.status(500).json({ error: 'Database error' });
   }
 });
@@ -358,10 +443,23 @@ app.delete('/api/events/:id', async (req, res) => {
 app.get('/api/todays-event', async (req, res) => {
   try {
     const today = new Date().toISOString().split('T')[0];
+    console.log('🔍 Fetching today\'s event for date:', today);
     const [rows] = await pool.execute(
       "SELECT * FROM events WHERE date = ? ORDER BY date DESC LIMIT 1",
       [today]
     );
+    
+    if (rows[0]) {
+      console.log('✅ Today\'s event found:', rows[0].name);
+      if (rows[0].banner) {
+        console.log('📸 Banner path:', rows[0].banner);
+      } else {
+        console.log('❌ No banner for today\'s event');
+      }
+    } else {
+      console.log('❌ No event found for today');
+    }
+    
     res.json(rows[0] || null);
   } catch (error) {
     console.error('Get today\'s event error:', error);
