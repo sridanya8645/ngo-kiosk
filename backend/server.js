@@ -38,8 +38,16 @@ app.use(cors({
 
 app.use(express.json());
 
-// Serve static files from React build
-app.use(express.static(path.join(__dirname, 'public')));
+// Serve static files from React build with proper MIME types
+app.use(express.static(path.join(__dirname, 'public'), {
+  setHeaders: (res, path) => {
+    if (path.endsWith('.js')) {
+      res.setHeader('Content-Type', 'application/javascript');
+    } else if (path.endsWith('.css')) {
+      res.setHeader('Content-Type', 'text/css');
+    }
+  }
+}));
 
 // Serve uploaded files
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
