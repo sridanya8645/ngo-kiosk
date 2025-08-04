@@ -62,35 +62,7 @@ const AdminPage = () => {
         </div>
       </header>
 
-      {/* Admin Bar */}
-      <div className="admin-bar">
-        <div className="admin-nav-buttons">
-          <button 
-            onClick={() => navigate('/admin/registrations')}
-            className="admin-button"
-          >
-            Registration Details
-          </button>
-          <button 
-            onClick={() => navigate('/admin/raffle-spin')}
-            className="admin-button"
-          >
-            Raffle Spin
-          </button>
-          <button 
-            onClick={() => navigate('/admin/raffle-winners')}
-            className="admin-button"
-          >
-            Raffle Winners
-          </button>
-          <button 
-            onClick={() => navigate('/event-details')}
-            className="admin-button"
-          >
-            Event Details
-          </button>
-        </div>
-      </div>
+
 
       {/* Main Content */}
       <main className="admin-main">

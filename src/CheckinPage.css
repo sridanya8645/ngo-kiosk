@@ -260,13 +260,12 @@
 .event-banner {
   margin: 20px auto;
   display: block;
-  max-width: 250px;
-  max-height: 250px;
-  width: auto;
-  height: auto;
-  border-radius: 8px;
+  width: 400px;
+  height: 400px;
+  border-radius: 15px;
   box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-  object-fit: contain;
+  object-fit: cover;
+  border: 3px solid #8B1C1C;
 }
 
 /* Newsletter Section Styles */
@@ -1289,4 +1288,13 @@
   text-align: center;
   margin-bottom: 15px;
   font-style: italic;
+}
+
+/* Checkin for text styling */
+.checkin-for-text {
+  color: #8B1C1C;
+  font-size: 1.2rem;
+  text-align: center;
+  margin-bottom: 20px;
+  font-weight: 600;
 }

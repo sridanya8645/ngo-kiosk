@@ -99,7 +99,7 @@ export default function CheckinPage() {
       // Request camera permissions first
       navigator.mediaDevices.getUserMedia({ 
         video: { 
-          facingMode: "environment",
+          facingMode: "user",
           width: { ideal: 640 },
           height: { ideal: 480 }
         } 
@@ -111,7 +111,7 @@ export default function CheckinPage() {
           // Now start the QR scanner
           html5QrCodeRef.current
             .start(
-              { facingMode: "environment" }, // Use back camera on mobile
+              { facingMode: "user" }, // Use front camera on mobile
               { 
                 fps: 10, 
                 qrbox: { width: 250, height: 250 },
@@ -283,6 +283,11 @@ export default function CheckinPage() {
       <main className="checkin-main">
         <div className="checkin-content">
           <h1 className="checkin-title">Check-In</h1>
+          {allEvents.filter(event => event.banner).length > 0 && (
+            <p className="checkin-for-text">
+              Checkin for {allEvents.filter(event => event.banner)[0].name}
+            </p>
+          )}
           
           {/* All Events with Banners Section */}
           {allEvents.filter(event => event.banner).map((event, index) => (
