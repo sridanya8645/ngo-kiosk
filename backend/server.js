@@ -430,8 +430,19 @@ app.get('/health', (req, res) => {
   });
 });
 
+// Root path - serve React app
+app.get('/', (req, res) => {
+  console.log('Serving React app for root path');
+  res.sendFile(path.join(__dirname, 'public', 'index.html'));
+});
+
 // Handle React routing - serve index.html for all non-API routes (MUST BE LAST)
 app.get('*', (req, res) => {
+  // Don't serve React app for API routes
+  if (req.path.startsWith('/api/')) {
+    return res.status(404).json({ error: 'API endpoint not found' });
+  }
+  
   console.log('Serving React app for path:', req.path);
   res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });

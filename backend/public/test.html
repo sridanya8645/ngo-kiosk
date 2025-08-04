@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>NGO Kiosk Test</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 40px; }
+        .success { color: green; }
+        .error { color: red; }
+        .info { color: blue; }
+    </style>
+</head>
+<body>
+    <h1>NGO Kiosk Test Page</h1>
+    <div id="status">Testing server connection...</div>
+    
+    <script>
+        async function testServer() {
+            const statusDiv = document.getElementById('status');
+            
+            try {
+                // Test basic endpoint
+                const response = await fetch('/test');
+                const data = await response.json();
+                
+                statusDiv.innerHTML = `
+                    <div class="success">✅ Server is working!</div>
+                    <div class="info">Message: ${data.message}</div>
+                    <div class="info">Timestamp: ${data.timestamp}</div>
+                `;
+                
+                // Test API endpoint
+                const apiResponse = await fetch('/api/events');
+                const apiData = await apiResponse.json();
+                
+                statusDiv.innerHTML += `
+                    <div class="success">✅ API is working!</div>
+                    <div class="info">Events found: ${apiData.length}</div>
+                `;
+                
+            } catch (error) {
+                statusDiv.innerHTML = `
+                    <div class="error">❌ Server test failed</div>
+                    <div class="error">Error: ${error.message}</div>
+                `;
+            }
+        }
+        
+        testServer();
+    </script>
+</body>
+</html> 
