@@ -487,6 +487,12 @@ app.get('*', (req, res) => {
     return res.status(404).json({ error: 'API endpoint not found' });
   }
   
+  // Don't serve React app for static files that exist
+  const filePath = path.join(__dirname, 'public', req.path);
+  if (require('fs').existsSync(filePath)) {
+    return res.sendFile(filePath);
+  }
+  
   console.log('Serving React app for path:', req.path);
   res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
