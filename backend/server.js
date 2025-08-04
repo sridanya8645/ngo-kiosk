@@ -35,14 +35,10 @@ app.get('/health', (req, res) => {
   });
 });
 
-// Root health check
+// Root path - serve React app
 app.get('/', (req, res) => {
-  console.log('Root endpoint hit!');
-  res.json({
-    status: 'OK',
-    message: 'NGO Kiosk Server is running!',
-    timestamp: new Date().toISOString()
-  });
+  console.log('Serving React app for root path');
+  res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
 // Azure App Service configuration
