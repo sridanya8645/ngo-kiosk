@@ -25,6 +25,26 @@ app.get('/ping', (req, res) => {
   });
 });
 
+// Health check for Azure
+app.get('/health', (req, res) => {
+  console.log('Health check hit!');
+  res.status(200).json({
+    status: 'OK',
+    message: 'NGO Kiosk is running!',
+    timestamp: new Date().toISOString()
+  });
+});
+
+// Root health check
+app.get('/', (req, res) => {
+  console.log('Root endpoint hit!');
+  res.json({
+    status: 'OK',
+    message: 'NGO Kiosk Server is running!',
+    timestamp: new Date().toISOString()
+  });
+});
+
 // Azure App Service configuration
 app.set('trust proxy', 1);
 
@@ -460,15 +480,6 @@ app.get('/working', (req, res) => {
   });
 });
 
-// Health check
-app.get('/health', (req, res) => {
-  res.json({
-    status: 'OK',
-    message: 'NGO Kiosk is running!',
-    timestamp: new Date().toISOString()
-  });
-});
-
 // Debug endpoint to check static files
 app.get('/debug-static', (req, res) => {
   const fs = require('fs');
@@ -488,12 +499,6 @@ app.get('/debug-static', (req, res) => {
   } catch (error) {
     res.json({ error: error.message });
   }
-});
-
-// Root path - serve React app
-app.get('/', (req, res) => {
-  console.log('Serving React app for root path');
-  res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
 // Handle React routing - serve index.html for all non-API routes (MUST BE LAST)
@@ -518,4 +523,9 @@ app.listen(PORT, '0.0.0.0', () => {
   console.log(`Server running on port ${PORT}`);
   console.log(`Environment: ${process.env.NODE_ENV}`);
   console.log(`Process ID: ${process.pid}`);
+  
+  // Keep the server alive
+  setInterval(() => {
+    console.log('Server heartbeat - keeping alive');
+  }, 30000); // Every 30 seconds
 });
