@@ -264,12 +264,15 @@
 }
 
 .event-banner-img {
-  max-width: 100%;
-  max-height: 300px;
+  max-width: 250px;
+  max-height: 250px;
+  width: auto;
+  height: auto;
   border-radius: 8px;
   box-shadow: 0 4px 12px rgba(0,0,0,0.2);
   display: block !important;
   visibility: visible !important;
+  object-fit: contain;
 }
 
 /* Newsletter Section Styles */
@@ -1283,4 +1286,13 @@
   .pits-logo {
     height: 25px;
   }
+}
+
+/* Event date styling */
+.event-date {
+  color: #666;
+  font-size: 1rem;
+  text-align: center;
+  margin-bottom: 15px;
+  font-style: italic;
 }

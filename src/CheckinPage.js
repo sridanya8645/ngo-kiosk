@@ -11,6 +11,7 @@ export default function CheckinPage() {
   const [scanComplete, setScanComplete] = useState(false);
   const [todaysEvent, setTodaysEvent] = useState(null);
   const [newsletterEvent, setNewsletterEvent] = useState(null);
+  const [allEvents, setAllEvents] = useState([]);
 
   const navigate = useNavigate();
   const isRunning = useRef(false);
@@ -41,21 +42,16 @@ export default function CheckinPage() {
         console.error('Error fetching today\'s event:', error);
       });
 
-    // Fetch all events for newsletter
+    // Fetch all events for banners and newsletter
     fetch("/api/events")
       .then(res => res.json())
       .then(events => {
         console.log('All events data:', events);
-        const newsletterEvent = events.find(ev => ev.name === "Register for Newsletter and General Events");
-        if (newsletterEvent && newsletterEvent.banner) {
-          console.log('Newsletter banner path:', newsletterEvent.banner);
-          // Test newsletter banner image loading
-          const newsletterBannerImage = new Image();
-          newsletterBannerImage.onload = () => console.log('Newsletter banner image loaded successfully');
-          newsletterBannerImage.onerror = () => console.error('Newsletter banner image failed to load:', newsletterEvent.banner);
-          newsletterBannerImage.src = newsletterEvent.banner;
-        }
-        setNewsletterEvent(newsletterEvent);
+        
+        // Set all events for banner display
+        setAllEvents(events);
+        
+
       })
       .catch(error => {
         console.error('Error fetching events:', error);
@@ -100,14 +96,21 @@ export default function CheckinPage() {
         return;
       }
 
-      html5QrCodeRef.current
-        .start(
-          { facingMode: "environment" }, // Use back camera on mobile
-          { 
-            fps: 10, 
-            qrbox: { width: 250, height: 250 },
-            aspectRatio: 1.0
-          },
+      // Request camera permissions first
+      navigator.mediaDevices.getUserMedia({ video: true })
+        .then(stream => {
+          console.log('Camera permission granted');
+          stream.getTracks().forEach(track => track.stop()); // Stop the test stream
+          
+          // Now start the QR scanner
+          html5QrCodeRef.current
+            .start(
+              { facingMode: "environment" }, // Use back camera on mobile
+              { 
+                fps: 10, 
+                qrbox: { width: 250, height: 250 },
+                aspectRatio: 1.0
+              },
           qrCodeMessage => {
             console.log('QR Code detected:', qrCodeMessage);
             try {
@@ -136,6 +139,11 @@ export default function CheckinPage() {
           isRunning.current = false;
           console.error('Scanner failed to start:', error);
           setErrorMsg('Failed to start camera. Please check permissions.');
+        });
+        })
+        .catch((error) => {
+          console.error('Camera permission denied:', error);
+          setErrorMsg('Camera permission denied. Please allow camera access.');
         });
     } catch (error) {
       console.error('QR Scanner initialization error:', error);
@@ -270,43 +278,25 @@ export default function CheckinPage() {
         <div className="checkin-content">
           <h1 className="checkin-title">Check-In</h1>
           
-          {/* Today's Event Section */}
-          {todaysEvent && (
-            <div className="event-section">
-              <h2 className="event-title">Checkin {todaysEvent.name}</h2>
-              {todaysEvent && todaysEvent.banner && (
-                <img 
-                  src={`${todaysEvent.banner}`}
-                  alt="Event Banner" 
-                  className="event-banner"
-                  onLoad={() => console.log('Today\'s event banner loaded successfully:', todaysEvent.banner)}
-                  onError={(e) => {
-                    console.error('Today\'s event banner failed to load:', todaysEvent.banner);
-                    console.error('Error details:', e);
-                  }}
-                />
-              )}
+          {/* All Events with Banners Section */}
+          {allEvents.filter(event => event.banner).map((event, index) => (
+            <div key={event.id || index} className="event-section">
+              <h2 className="event-title">Event: {event.name}</h2>
+              <p className="event-date">Date: {event.date} at {event.time}</p>
+              <img 
+                src={`${event.banner}`}
+                alt={`${event.name} Banner`}
+                className="event-banner"
+                onLoad={() => console.log(`Event banner loaded successfully: ${event.name} - ${event.banner}`)}
+                onError={(e) => {
+                  console.error(`Event banner failed to load: ${event.name} - ${event.banner}`);
+                  console.error('Error details:', e);
+                }}
+              />
             </div>
-          )}
+          ))}
 
-          {/* Newsletter Event Section */}
-          {newsletterEvent && (
-            <div className="newsletter-section">
-              <h3 className="newsletter-title">Checkin Register for Newsletter and General Events</h3>
-              {newsletterEvent && newsletterEvent.banner && (
-                <img 
-                  src={`${newsletterEvent.banner}`}
-                  alt="Newsletter Event Banner" 
-                  className="event-banner"
-                  onLoad={() => console.log('Newsletter banner loaded successfully:', newsletterEvent.banner)}
-                  onError={(e) => {
-                    console.error('Newsletter banner failed to load:', newsletterEvent.banner);
-                    console.error('Error details:', e);
-                  }}
-                />
-              )}
-            </div>
-          )}
+
 
           {/* QR Scanner Section */}
           <div className="scanner-section">

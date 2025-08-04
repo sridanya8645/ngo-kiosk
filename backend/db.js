@@ -89,7 +89,7 @@ async function initializeDatabase() {
       VALUES ('admin', 'admin123')
     `);
 
-    // Insert sample events if not exists
+    // Insert sample events if not exists (removed newsletter event)
     await connection.execute(`
       INSERT IGNORE INTO events (name, date, time, location, banner) VALUES
       ('Diwali Celebration', '2024-11-12', '18:00:00', 'Community Center', 'diwali-banner.jpg'),
