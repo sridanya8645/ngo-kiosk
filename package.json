@@ -37,7 +37,8 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "postbuild": "xcopy /E /I /Y build\\* backend\\public\\",
+    "postbuild": "cp -r build/* backend/public/",
+    "postbuild:windows": "xcopy /E /I /Y build\\* backend\\public\\",
     "deploy": "npm run build && npm run postbuild"
   },
   "eslintConfig": {
