@@ -23,13 +23,6 @@ const HomePage = () => {
 
   return (
     <div className="home-container">
-      {/* Debug info */}
-      <div style={{ padding: '20px', backgroundColor: '#f0f0f0', textAlign: 'center' }}>
-        <h2>NGO Kiosk App is Loading...</h2>
-        <p>If you see this, React is working!</p>
-        <p>Deployment Time: {new Date().toLocaleString()}</p>
-      </div>
-
       {/* Header Section */}
       <header className="home-header">
         <div className="header-content">

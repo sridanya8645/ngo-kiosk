@@ -162,7 +162,62 @@ app.post('/api/register', async (req, res) => {
       [name, phone, email, eventId, event.name, event.date, interested_to_volunteer]
     );
     
-    res.json({ success: true, message: "Registration successful" });
+    const registrationId = result.insertId;
+    
+    // Generate QR code data
+    const qrData = JSON.stringify({
+      registrationId: registrationId,
+      name: name,
+      phone: phone,
+      email: email
+    });
+    
+    // Generate QR code
+    const qrCodeDataUrl = await QRCode.toDataURL(qrCodeData);
+    
+    // Send email with QR code
+    try {
+      const transporter = nodemailer.createTransporter({
+        service: 'gmail',
+        auth: {
+          user: process.env.EMAIL_USER || 'your-email@gmail.com',
+          pass: process.env.EMAIL_PASS || 'your-app-password'
+        }
+      });
+      
+      const mailOptions = {
+        from: process.env.EMAIL_USER || 'your-email@gmail.com',
+        to: email,
+        subject: 'Registration Confirmation - Shirdi Sai Dham',
+        html: `
+          <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+            <h2 style="color: #8B1C1C;">Registration Confirmation</h2>
+            <p>Dear ${name},</p>
+            <p>Thank you for registering with Shirdi Sai Dham!</p>
+            <p><strong>Event:</strong> ${event.name}</p>
+            <p><strong>Date:</strong> ${event.date}</p>
+            <p><strong>Registration ID:</strong> ${registrationId}</p>
+            <p>Please find your QR code below for check-in:</p>
+            <img src="${qrCodeDataUrl}" alt="QR Code" style="max-width: 200px; margin: 20px 0;">
+            <p>Please present this QR code at the event for check-in.</p>
+            <p>Best regards,<br>Shirdi Sai Dham Team</p>
+          </div>
+        `
+      };
+      
+      await transporter.sendMail(mailOptions);
+      console.log('Email sent successfully to:', email);
+    } catch (emailError) {
+      console.error('Email sending failed:', emailError);
+      // Don't fail the registration if email fails
+    }
+    
+    res.json({ 
+      success: true, 
+      message: "Registration successful", 
+      registrationId: registrationId,
+      qrCode: qrCodeDataUrl
+    });
   } catch (error) {
     console.error('Registration error:', error);
     res.status(500).json({ success: false, message: "Registration failed" });
