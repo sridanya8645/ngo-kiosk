@@ -176,7 +176,7 @@ function EventDetailsPage() {
     if (newEvent.banner) formData.append("banner", newEvent.banner);
 
     try {
-      console.log('Making API call to https://ngo-kiosk-app-fmh6acaxd4czgyh4.centralus-01.azurewebsites.net/api/events');
+      console.log('Making API call to /api/events');
       const res = await fetch("/api/events", {
         method: "POST",
         body: formData,
