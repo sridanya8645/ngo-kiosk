@@ -97,7 +97,13 @@ export default function CheckinPage() {
       }
 
       // Request camera permissions first
-      navigator.mediaDevices.getUserMedia({ video: true })
+      navigator.mediaDevices.getUserMedia({ 
+        video: { 
+          facingMode: "environment",
+          width: { ideal: 640 },
+          height: { ideal: 480 }
+        } 
+      })
         .then(stream => {
           console.log('Camera permission granted');
           stream.getTracks().forEach(track => track.stop()); // Stop the test stream
@@ -143,7 +149,7 @@ export default function CheckinPage() {
         })
         .catch((error) => {
           console.error('Camera permission denied:', error);
-          setErrorMsg('Camera permission denied. Please allow camera access.');
+          setErrorMsg('Camera access needed for QR scanning. Please allow camera permissions in your browser settings.');
         });
     } catch (error) {
       console.error('QR Scanner initialization error:', error);
@@ -281,8 +287,6 @@ export default function CheckinPage() {
           {/* All Events with Banners Section */}
           {allEvents.filter(event => event.banner).map((event, index) => (
             <div key={event.id || index} className="event-section">
-              <h2 className="event-title">Event: {event.name}</h2>
-              <p className="event-date">Date: {event.date} at {event.time}</p>
               <img 
                 src={`${event.banner}`}
                 alt={`${event.name} Banner`}

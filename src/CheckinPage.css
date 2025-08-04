@@ -258,20 +258,14 @@
 }
 
 .event-banner {
-  margin: 20px 0;
-  display: flex;
-  justify-content: center;
-}
-
-.event-banner-img {
+  margin: 20px auto;
+  display: block;
   max-width: 250px;
   max-height: 250px;
   width: auto;
   height: auto;
   border-radius: 8px;
   box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-  display: block !important;
-  visibility: visible !important;
   object-fit: contain;
 }
 
