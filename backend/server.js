@@ -173,7 +173,7 @@ app.post('/api/register', async (req, res) => {
     });
     
     // Generate QR code
-    const qrCodeDataUrl = await QRCode.toDataURL(qrCodeData);
+    const qrCodeDataUrl = await QRCode.toDataURL(qrData);
     
     // Send email with QR code
     try {
@@ -271,15 +271,38 @@ app.get('/api/events', async (req, res) => {
   }
 });
 
+// Helper function to convert 12-hour time to 24-hour format
+function convertTo24Hour(timeStr) {
+  if (!timeStr) return null;
+  
+  // If already in 24-hour format, return as is
+  if (timeStr.includes(':')) {
+    const parts = timeStr.split(':');
+    if (parts.length === 2 && !timeStr.toLowerCase().includes('am') && !timeStr.toLowerCase().includes('pm')) {
+      return timeStr + ':00';
+    }
+  }
+  
+  // Convert 12-hour format to 24-hour
+  const time = new Date(`2000-01-01 ${timeStr}`);
+  if (isNaN(time.getTime())) {
+    return null; // Invalid time format
+  }
+  return time.toTimeString().slice(0, 8); // Returns HH:MM:SS
+}
+
 // Add event
 app.post('/api/events', upload.single('banner'), async (req, res) => {
   try {
     const { name, date, time, location } = req.body;
     const banner = req.file ? `/uploads/${req.file.filename}` : null;
     
+    // Convert time to 24-hour format
+    const convertedTime = convertTo24Hour(time);
+    
     const [result] = await pool.execute(
       'INSERT INTO events (name, date, time, location, banner) VALUES (?, ?, ?, ?, ?)',
-      [name, date, time, location, banner]
+      [name, date, convertedTime, location, banner]
     );
     
     const [rows] = await pool.execute('SELECT * FROM events WHERE id = ?', [result.insertId]);
@@ -296,8 +319,11 @@ app.put('/api/events/:id', upload.single('banner'), async (req, res) => {
     const { name, date, time, location } = req.body;
     const { id } = req.params;
     
+    // Convert time to 24-hour format
+    const convertedTime = convertTo24Hour(time);
+    
     let sql = 'UPDATE events SET name = ?, date = ?, time = ?, location = ?';
-    let params = [name, date, time, location];
+    let params = [name, date, convertedTime, location];
     
     if (req.file) {
       sql += ', banner = ?';
