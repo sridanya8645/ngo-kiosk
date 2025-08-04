@@ -15,10 +15,10 @@ const RegisterPage = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitSuccess, setSubmitSuccess] = useState(false);
   const [errors, setErrors] = useState({});
-  const [newsletterEvent, setNewsletterEvent] = useState(null);
+  const [allEvents, setAllEvents] = useState([]);
 
   useEffect(() => {
-    // Fetch the newsletter/general event (same as CheckinPage)
+    // Fetch all events (same as CheckinPage)
     fetch("/api/events")
       .then(res => {
         if (!res.ok) {
@@ -28,8 +28,7 @@ const RegisterPage = () => {
       })
       .then(events => {
         console.log('Events data received in RegisterPage:', events);
-        const newsletterEvent = events.find(ev => ev.name === "Register for Newsletter and General Events");
-        setNewsletterEvent(newsletterEvent);
+        setAllEvents(events);
       })
       .catch((error) => {
         console.error('Error fetching events in RegisterPage:', error);
@@ -83,29 +82,19 @@ const RegisterPage = () => {
     setIsSubmitting(true);
     
     try {
-      // Use the newsletter event ID if available
-      let eventId = newsletterEvent ? newsletterEvent.id : null;
-      console.log('Initial eventId:', eventId);
-      
-      if (!eventId) {
-        console.log('No newsletter event found, using first available event');
-        // If no newsletter event found, use the first event available
-        const eventsResponse = await fetch('/api/events');
-        if (eventsResponse.ok) {
-          const events = await eventsResponse.json();
-          if (events.length > 0) {
-            eventId = events[0].id;
-            console.log('Using first event with ID:', eventId);
-          } else {
-            console.error('No events found');
-            setErrors({ submit: 'No events available for registration.' });
-            return;
-          }
-        } else {
-          console.error('Failed to fetch events');
-          setErrors({ submit: 'Failed to fetch events. Please try again.' });
-          return;
-        }
+      // Use the first event with a banner, or first available event
+      let eventId = null;
+      const eventWithBanner = allEvents.find(event => event.banner);
+      if (eventWithBanner) {
+        eventId = eventWithBanner.id;
+        console.log('Using event with banner:', eventWithBanner.name, 'ID:', eventId);
+      } else if (allEvents.length > 0) {
+        eventId = allEvents[0].id;
+        console.log('Using first available event:', allEvents[0].name, 'ID:', eventId);
+      } else {
+        console.error('No events found');
+        setErrors({ submit: 'No events available for registration.' });
+        return;
       }
 
       // Now register the user
@@ -157,6 +146,17 @@ const RegisterPage = () => {
     </div>
   );
 
+  // Get the event name to display
+  const getEventName = () => {
+    const eventWithBanner = allEvents.find(event => event.banner);
+    if (eventWithBanner) {
+      return eventWithBanner.name;
+    } else if (allEvents.length > 0) {
+      return allEvents[0].name;
+    }
+    return 'Newsletter and General Events';
+  };
+
   return (
     <div className="register-container">
       {/* Header Section */}
@@ -181,18 +181,20 @@ const RegisterPage = () => {
         </div>
       </header>
 
-
-
       {/* Main Content */}
       <main className="register-main">
         <div className="register-form-container">
+          {/* Heading first */}
+          <h1 className="register-title">
+            Register for {getEventName()}
+          </h1>
+          
+          {/* Lottie animation second */}
           <div className="lottie-container">
             <Lottie animationData={registerLottie} style={{ width: 200, height: 200 }} />
           </div>
-          <h1 className="register-title">
-            Register for {newsletterEvent ? newsletterEvent.name : 'Newsletter and General Events'}
-          </h1>
           
+          {/* Form third */}
           <form onSubmit={handleSubmit} className="register-form">
             <div className="form-group">
               <label htmlFor="name" className="form-label">Full Name *</label>
