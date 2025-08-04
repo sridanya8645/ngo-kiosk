@@ -32,14 +32,16 @@ app.use((req, res, next) => {
 
 // CORS configuration for Azure
 app.use(cors({
-  origin: true,
-  credentials: true
+  origin: '*',
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization']
 }));
 
 app.use(express.json());
 
 // Serve static files from React build with proper MIME types
-app.use(express.static(path.join(__dirname, 'public'), {
+app.use('/', express.static(path.join(__dirname, 'public'), {
   setHeaders: (res, path) => {
     if (path.endsWith('.js')) {
       res.setHeader('Content-Type', 'application/javascript');
@@ -51,6 +53,19 @@ app.use(express.static(path.join(__dirname, 'public'), {
 
 // Serve uploaded files
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+
+// Explicit routes for static files
+app.get('/static/js/*', (req, res) => {
+  const filePath = path.join(__dirname, 'public', req.path);
+  res.setHeader('Content-Type', 'application/javascript');
+  res.sendFile(filePath);
+});
+
+app.get('/static/css/*', (req, res) => {
+  const filePath = path.join(__dirname, 'public', req.path);
+  res.setHeader('Content-Type', 'text/css');
+  res.sendFile(filePath);
+});
 
 // Set up storage for banner images
 const uploadDir = path.join(__dirname, 'uploads');
@@ -436,6 +451,27 @@ app.get('/health', (req, res) => {
     message: 'NGO Kiosk is running!',
     timestamp: new Date().toISOString()
   });
+});
+
+// Debug endpoint to check static files
+app.get('/debug-static', (req, res) => {
+  const fs = require('fs');
+  const publicPath = path.join(__dirname, 'public');
+  const staticPath = path.join(publicPath, 'static');
+  const jsPath = path.join(staticPath, 'js');
+  
+  try {
+    const files = {
+      publicExists: fs.existsSync(publicPath),
+      staticExists: fs.existsSync(staticPath),
+      jsExists: fs.existsSync(jsPath),
+      jsFiles: fs.existsSync(jsPath) ? fs.readdirSync(jsPath) : [],
+      indexHtml: fs.existsSync(path.join(publicPath, 'index.html')) ? 'exists' : 'missing'
+    };
+    res.json(files);
+  } catch (error) {
+    res.json({ error: error.message });
+  }
 });
 
 // Root path - serve React app
