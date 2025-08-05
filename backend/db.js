@@ -89,13 +89,8 @@ async function initializeDatabase() {
       VALUES ('admin', 'admin123')
     `);
 
-    // Insert sample events if not exists (removed newsletter event)
-    await connection.execute(`
-      INSERT IGNORE INTO events (name, date, time, location, banner) VALUES
-      ('Diwali Celebration', '2024-11-12', '18:00:00', 'Community Center', 'diwali-banner.jpg'),
-      ('Christmas Party', '2024-12-25', '19:00:00', 'Town Hall', 'christmas-banner.jpg'),
-      ('New Year Event', '2025-01-01', '20:00:00', 'City Park', 'newyear-banner.jpg')
-    `);
+    // Removed sample events insertion - events should only be added through admin interface
+    // This prevents deleted events from reappearing after server restart
 
     connection.release();
     console.log('✅ Database initialized successfully');

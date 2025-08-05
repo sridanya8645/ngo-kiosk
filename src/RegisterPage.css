@@ -169,7 +169,7 @@
 .lottie-container {
   display: flex;
   justify-content: center;
-  margin-bottom: 15px;
+  margin-bottom: 10px;
 }
 
 .register-title {
@@ -177,14 +177,14 @@
   font-weight: bold;
   color: #8B1C1C;
   text-align: center;
-  margin-bottom: 15px;
+  margin-bottom: 10px;
   text-shadow: 0 2px 8px rgba(0,0,0,0.1);
 }
 
 .register-form {
   display: flex;
   flex-direction: column;
-  gap: 15px;
+  gap: 12px;
 }
 
 .form-group {
@@ -417,7 +417,7 @@
   
   .register-title {
     font-size: 2.8rem;
-    margin-bottom: 20px;
+    margin-bottom: 15px;
   }
   
   .register-form-container {
@@ -426,7 +426,7 @@
   }
   
   .form-group {
-    margin-bottom: 20px;
+    margin-bottom: 15px;
   }
   
   .form-label {
@@ -454,6 +454,7 @@
   .lottie-container {
     width: 400px;
     height: 400px;
+    margin-bottom: 10px;
   }
   
   .success-message-container {
@@ -549,7 +550,7 @@
   
   .register-title {
     font-size: 3.2rem;
-    margin-bottom: 25px;
+    margin-bottom: 20px;
   }
   
   .register-form-container {
@@ -558,7 +559,7 @@
   }
   
   .form-group {
-    margin-bottom: 25px;
+    margin-bottom: 18px;
   }
   
   .form-label {
@@ -584,6 +585,7 @@
   .lottie-container {
     width: 500px;
     height: 500px;
+    margin-bottom: 10px;
   }
   
   .success-message-container {
@@ -679,7 +681,7 @@
   
   .register-title {
     font-size: 2.8rem;
-    margin-bottom: 25px;
+    margin-bottom: 20px;
   }
   
   .register-form-container {
@@ -688,7 +690,7 @@
   }
   
   .form-group {
-    margin-bottom: 28px;
+    margin-bottom: 18px;
   }
   
   .form-label {
@@ -714,6 +716,7 @@
   .lottie-container {
     width: 450px;
     height: 450px;
+    margin-bottom: 10px;
   }
   
   .success-message-container {
@@ -809,7 +812,7 @@
   
   .register-title {
     font-size: 2.6rem;
-    margin-bottom: 25px;
+    margin-bottom: 20px;
   }
   
   .register-form-container {
@@ -818,7 +821,7 @@
   }
   
   .form-group {
-    margin-bottom: 26px;
+    margin-bottom: 15px;
   }
   
   .form-label {
@@ -844,6 +847,7 @@
   .lottie-container {
     width: 420px;
     height: 420px;
+    margin-bottom: 10px;
   }
   
   .success-message-container {
@@ -960,7 +964,7 @@
   
   .register-title {
     font-size: 2.4rem !important;
-    margin-bottom: 20px !important;
+    margin-bottom: 15px !important;
   }
   
   .register-form-container {
@@ -971,6 +975,7 @@
   .lottie-container {
     width: 400px !important;
     height: 400px !important;
+    margin-bottom: 10px !important;
   }
   
   .form-input, .form-select {
