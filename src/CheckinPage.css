@@ -6,6 +6,7 @@
   background: linear-gradient(135deg, #f9b233 0%, #c86d3a 100%);
   font-family: 'Arial', sans-serif;
   overflow: hidden;
+  /* Cache busting: Layout changes applied */
 }
 
 /* Custom Scrollbar Styles */
