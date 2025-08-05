@@ -136,13 +136,13 @@ const RegisterPage = () => {
 
   // Success message component
   const SuccessMessage = () => (
-    <div className="success-message-container">
+    <div className="registration-success">
       <div className="success-icon">✅</div>
       <h2 className="success-title">Registration Successful!</h2>
       <p className="success-message">
         Thank you for registering with Shirdi Sai Dham. You will receive an email with your QR code for check-in shortly.
       </p>
-      <p className="redirect-message">Redirecting to home page...</p>
+      <p style={{ fontSize: '0.9rem', color: '#666', marginTop: '10px' }}>Redirecting to home page...</p>
     </div>
   );
 

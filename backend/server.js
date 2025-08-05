@@ -180,27 +180,47 @@ app.post('/api/register', async (req, res) => {
       const transporter = nodemailer.createTransporter({
         service: 'gmail',
         auth: {
-          user: process.env.EMAIL_USER || 'your-email@gmail.com',
+          user: process.env.EMAIL_USER || 'ngo.kiosk@gmail.com',
           pass: process.env.EMAIL_PASS || 'your-app-password'
         }
       });
       
       const mailOptions = {
-        from: process.env.EMAIL_USER || 'your-email@gmail.com',
+        from: process.env.EMAIL_USER || 'ngo.kiosk@gmail.com',
         to: email,
-        subject: 'Registration Confirmation - Shirdi Sai Dham',
+        subject: `Registration Confirmed for ${event.name} at Non-Governmental Organization`,
         html: `
-          <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
-            <h2 style="color: #8B1C1C;">Registration Confirmation</h2>
-            <p>Dear ${name},</p>
-            <p>Thank you for registering with Shirdi Sai Dham!</p>
-            <p><strong>Event:</strong> ${event.name}</p>
-            <p><strong>Date:</strong> ${event.date}</p>
-            <p><strong>Registration ID:</strong> ${registrationId}</p>
-            <p>Please find your QR code below for check-in:</p>
-            <img src="${qrCodeDataUrl}" alt="QR Code" style="max-width: 200px; margin: 20px 0;">
-            <p>Please present this QR code at the event for check-in.</p>
-            <p>Best regards,<br>Shirdi Sai Dham Team</p>
+          <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
+            <div style="text-align: center; margin-bottom: 20px;">
+              <span style="color: #28a745; font-size: 24px;">✓</span>
+              <h2 style="color: #333; margin: 10px 0;">Registration Confirmed for ${event.name}</h2>
+            </div>
+            
+            <p style="font-size: 16px; color: #333;">Hello ${name},</p>
+            
+            <p style="font-size: 16px; color: #333;">You have successfully registered for the event <strong>${event.name}</strong> at Non-Governmental Organization.</p>
+            
+            <div style="background: #f8f9fa; padding: 20px; border-radius: 10px; margin: 20px 0;">
+              <h3 style="color: #333; margin-top: 0;">Event Details:</h3>
+              <p style="margin: 8px 0;"><span style="color: #666;">📅</span> <strong>Date:</strong> ${event.date}</p>
+              <p style="margin: 8px 0;"><span style="color: #666;">🕕</span> <strong>Time:</strong> ${event.time}</p>
+              <p style="margin: 8px 0;"><span style="color: #666;">📍</span> <strong>Venue:</strong> Non-Governmental Organization, 12 Perrine Road, Monmouth Junction, NJ 08852</p>
+              <p style="margin: 8px 0;"><span style="color: #666;">🆔</span> <strong>Registration ID:</strong> ${registrationId}</p>
+            </div>
+            
+            <p style="font-size: 16px; color: #333;">Please bring this email and scan the attached QR code at the kiosk during check-in. We look forward to welcoming you!</p>
+            
+            <div style="text-align: center; margin: 30px 0;">
+              <img src="${qrCodeDataUrl}" alt="QR Code for Check-in" style="max-width: 200px; border: 2px solid #ddd; border-radius: 10px;">
+              <p style="font-size: 14px; color: #666; margin-top: 10px;">Scan this QR code at the kiosk for check-in</p>
+            </div>
+            
+            <p style="font-size: 16px; color: #333;">Warm regards,<br><strong>Non-Governmental Organization Team</strong></p>
+            
+            <div style="border-top: 1px solid #ddd; margin-top: 30px; padding-top: 20px;">
+              <p style="margin: 5px 0;"><span style="color: #666;">📧</span> <a href="mailto:NGO@gmail.com" style="color: #8B1C1C;">NGO@gmail.com</a></p>
+              <p style="margin: 5px 0;"><span style="color: #666;">📞</span> <a href="tel:609-937-2800" style="color: #8B1C1C;">609-937-2800</a></p>
+            </div>
           </div>
         `
       };

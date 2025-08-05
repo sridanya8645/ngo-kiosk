@@ -32,7 +32,7 @@
 
 .admin-registrations-header {
   background: linear-gradient(135deg, #f9b233 0%, #c86d3a 100%);
-  padding: 15px 20px;
+  padding: 8px 20px; /* Reduced from 15px */
   border-bottom: 2px solid #8B1C1C;
   flex-shrink: 0;
 }
@@ -152,7 +152,7 @@
 /* Main Content */
 .admin-registrations-main {
   flex: 1;
-  padding: 5px;
+  padding: 3px; /* Reduced from 5px */
   overflow-y: auto;
   min-height: 0;
 }
@@ -163,10 +163,10 @@
 }
 
 .admin-registrations-title {
-  font-size: 1.6rem;
+  font-size: 1.4rem; /* Reduced from 1.6rem */
   font-weight: bold;
   color: #8B1C1C;
-  margin-bottom: 8px;
+  margin-bottom: 5px; /* Reduced from 8px */
   text-align: center;
 }
 
@@ -414,12 +414,12 @@
 /* Footer */
 .admin-registrations-footer {
   flex-shrink: 0;
-  padding: 6px 24px;
+  padding: 4px 24px; /* Reduced from 6px */
   background: rgba(255, 255, 255, 0.1);
   border-top: 1px solid rgba(255, 255, 255, 0.2);
   position: relative;
   z-index: 100;
-  min-height: 40px;
+  min-height: 35px; /* Reduced from 40px */
   display: flex;
   align-items: center;
   justify-content: center;
