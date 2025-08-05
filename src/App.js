@@ -23,7 +23,7 @@ function App() {
       }
     };
 
-    // Request full screen on app load
+    // Request full screen on app load (only once)
     const requestFullScreen = () => {
       if (document.documentElement.requestFullscreen) {
         document.documentElement.requestFullscreen();
@@ -34,8 +34,8 @@ function App() {
       }
     };
 
-    // Try to enter full screen after a short delay
-    setTimeout(requestFullScreen, 1000);
+    // Try to enter full screen after a short delay (only once)
+    setTimeout(requestFullScreen, 2000);
 
     // Add full screen button to header
     const addFullScreenButton = () => {
@@ -64,7 +64,7 @@ function App() {
     };
 
     // Add full screen button after components load
-    setTimeout(addFullScreenButton, 2000);
+    setTimeout(addFullScreenButton, 3000);
 
     // Check if we're in a private window and show message if not
     if (!isPrivateWindow()) {
@@ -100,20 +100,7 @@ function App() {
       setTimeout(showPrivateWindowMessage, 3000);
     }
 
-    // Monitor full screen state and re-enter if needed
-    const checkFullScreen = () => {
-      if (!document.fullscreenElement && !document.webkitFullscreenElement && !document.msFullscreenElement) {
-        setTimeout(requestFullScreen, 1000);
-      }
-    };
-
-    // Check full screen state every 10 seconds
-    const fullScreenInterval = setInterval(checkFullScreen, 10000);
-
-    // Cleanup
-    return () => {
-      clearInterval(fullScreenInterval);
-    };
+    // Removed aggressive full screen monitoring to prevent blocking form input
   }, []);
 
   return (

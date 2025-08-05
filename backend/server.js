@@ -177,6 +177,8 @@ app.post('/api/register', async (req, res) => {
     
     // Send email with QR code
     try {
+      console.log('🔍 Attempting to send email to:', email);
+      
       const transporter = nodemailer.createTransporter({
         service: 'gmail',
         auth: {
@@ -191,8 +193,9 @@ app.post('/api/register', async (req, res) => {
       });
       
       // Test the connection first
+      console.log('🔍 Testing email transporter connection...');
       await transporter.verify();
-      console.log('Email transporter verified successfully');
+      console.log('✅ Email transporter verified successfully');
       
       const mailOptions = {
         from: 'sridanyaravi07@gmail.com',
@@ -234,14 +237,21 @@ app.post('/api/register', async (req, res) => {
         `
       };
       
+      console.log('📧 Sending email with options:', {
+        from: mailOptions.from,
+        to: mailOptions.to,
+        subject: mailOptions.subject
+      });
+      
       await transporter.sendMail(mailOptions);
-      console.log('Email sent successfully to:', email);
+      console.log('✅ Email sent successfully to:', email);
     } catch (emailError) {
-      console.error('Email sending failed:', emailError);
+      console.error('❌ Email sending failed:', emailError);
       console.error('Email error details:', {
         message: emailError.message,
         code: emailError.code,
-        command: emailError.command
+        command: emailError.command,
+        response: emailError.response
       });
       // Don't fail the registration if email fails
     }
