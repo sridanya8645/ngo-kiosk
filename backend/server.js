@@ -179,7 +179,7 @@ app.post('/api/register', async (req, res) => {
     try {
       console.log('🔍 Attempting to send email to:', email);
       
-      const transporter = nodemailer.createTransporter({
+      const transporter = nodemailer.createTransport({
         service: 'gmail',
         auth: {
           user: 'sridanyaravi07@gmail.com',
@@ -189,7 +189,9 @@ app.post('/api/register', async (req, res) => {
           rejectUnauthorized: false
         },
         secure: true,
-        port: 465
+        port: 465,
+        debug: true, // Enable debug output
+        logger: true // Enable logging
       });
       
       // Test the connection first
@@ -784,6 +786,64 @@ app.get('/api/test-email', async (req, res) => {
       details: error.message,
       code: error.code,
       command: error.command
+    });
+  }
+});
+
+// Simple email test endpoint
+app.post('/api/test-email-simple', async (req, res) => {
+  try {
+    const { testEmail } = req.body;
+    
+    if (!testEmail) {
+      return res.status(400).json({ error: "Please provide testEmail in request body" });
+    }
+    
+    console.log('🔍 Testing simple email to:', testEmail);
+    
+    const transporter = nodemailer.createTransport({
+      service: 'gmail',
+      auth: {
+        user: 'sridanyaravi07@gmail.com',
+        pass: 'oqgebicylgtqjman'
+      },
+      tls: {
+        rejectUnauthorized: false
+      },
+      secure: true,
+      port: 465
+    });
+    
+    // Test the connection first
+    console.log('🔍 Testing email transporter connection...');
+    await transporter.verify();
+    console.log('✅ Email transporter verified successfully');
+    
+    const mailOptions = {
+      from: 'sridanyaravi07@gmail.com',
+      to: testEmail,
+      subject: 'Test Email from NGO Kiosk',
+      text: 'This is a test email to verify the email system is working.',
+      html: '<h1>Test Email</h1><p>This is a test email to verify the email system is working.</p>'
+    };
+    
+    console.log('📧 Sending test email...');
+    await transporter.sendMail(mailOptions);
+    console.log('✅ Test email sent successfully to:', testEmail);
+    
+    res.json({ 
+      success: true, 
+      message: "Test email sent successfully",
+      sentTo: testEmail
+    });
+  } catch (error) {
+    console.error('❌ Test email failed:', error);
+    res.status(500).json({ 
+      error: "Test email failed", 
+      details: error.message,
+      code: error.code,
+      command: error.command,
+      response: error.response
     });
   }
 });
