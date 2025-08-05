@@ -147,16 +147,16 @@
 /* Main Content */
 .raffle-winners-main {
   flex: 1;
-  padding: 5px;
+  padding: 20px;
   overflow-y: auto;
   min-height: 0;
-  max-height: calc(100vh - 5px); /* Reduced from 20px to 5px to bring footer up more */
+  max-height: calc(100vh - 120px); /* Reduced from 20px to 5px to bring footer up more */
 }
 
 .raffle-winners-content {
   background: white;
   border-radius: 12px;
-  padding: 30px;
+  padding: 20px;
   box-shadow: 0 4px 12px rgba(0,0,0,0.1);
 }
 
@@ -174,7 +174,7 @@
   justify-content: space-between;
   align-items: center;
   margin-bottom: 20px;
-  padding: 15px;
+  padding: 20px;
   background: #f8f9fa;
   border-radius: 8px;
 }
@@ -277,7 +277,7 @@
 .winner-row {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
-  padding: 12px;
+  padding: 20px;
   align-items: center;
   border-bottom: 1px solid #dee2e6;
 }
@@ -459,7 +459,7 @@
 
 @media screen and (max-width: 768px) {
   .raffle-winners-header {
-    padding: 15px;
+    padding: 20px;
   }
   
   .circular-logo {
@@ -478,7 +478,7 @@
   }
   
   .raffle-winners-main {
-    padding: 15px;
+    padding: 20px;
   }
   
   .raffle-winners-content {

@@ -119,16 +119,16 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 5px;
+  padding: 20px;
   overflow-y: auto;
   min-height: 0;
-  max-height: calc(100vh - 5px); /* Reduced from 20px to 5px to bring footer up more */
+  max-height: calc(100vh - 120px); /* Reduced from 20px to 5px to bring footer up more */
 }
 
 .admin-login-container {
   background: rgba(255, 255, 255, 0.95);
   border-radius: 12px;
-  padding: 30px;
+  padding: 20px;
   box-shadow: 0 6px 20px rgba(0,0,0,0.15);
   max-width: 500px;
   width: 100%;
@@ -174,7 +174,7 @@
 }
 
 .form-input {
-  padding: 12px;
+  padding: 20px;
   border: 2px solid #ddd;
   border-radius: 6px;
   font-size: 1rem;
@@ -334,7 +334,7 @@
   }
   
   .admin-login-container {
-    padding: 25px;
+    padding: 20px;
     max-width: 450px;
   }
   
@@ -372,7 +372,7 @@
   }
   
   .form-input {
-    padding: 10px;
+    padding: 20px;
     font-size: 0.9rem;
   }
   
@@ -423,7 +423,7 @@
   }
   
   .admin-login-container {
-    padding: 15px;
+    padding: 20px;
     margin: 0 8px;
   }
   
@@ -432,7 +432,7 @@
   }
   
   .form-input {
-    padding: 8px;
+    padding: 20px;
     font-size: 0.8rem;
   }
   
