@@ -183,7 +183,7 @@ app.post('/api/register', async (req, res) => {
         service: 'gmail',
         auth: {
           user: 'sridanyaravi07@gmail.com',
-          pass: 'tmelitcykiowoiiz'
+          pass: 'tmel itcy kiow oiiz'
         },
         tls: {
           rejectUnauthorized: false
@@ -681,6 +681,75 @@ app.post('/api/upload-banner', upload.single('banner'), async (req, res) => {
   }
 });
 
+// Test email sending with a simple test
+app.post('/api/test-email-send', async (req, res) => {
+  try {
+    const { testEmail } = req.body;
+    
+    if (!testEmail) {
+      return res.status(400).json({ error: "Please provide testEmail in request body" });
+    }
+    
+    console.log('🔍 Testing email sending to:', testEmail);
+    
+    const transporter = nodemailer.createTransporter({
+      service: 'gmail',
+      auth: {
+        user: 'sridanyaravi07@gmail.com',
+        pass: 'tmelitcykiowoiiz'
+      },
+      tls: {
+        rejectUnauthorized: false
+      },
+      secure: true,
+      port: 465
+    });
+    
+    // Test the connection first
+    console.log('🔍 Testing email transporter connection...');
+    await transporter.verify();
+    console.log('✅ Email transporter verified successfully');
+    
+    const mailOptions = {
+      from: 'sridanyaravi07@gmail.com',
+      to: testEmail,
+      subject: 'Test Email from NGO Kiosk App',
+      html: `
+        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
+          <h2 style="color: #333;">Test Email from NGO Kiosk App</h2>
+          <p style="font-size: 16px; color: #333;">This is a test email to verify that the email system is working correctly.</p>
+          <p style="font-size: 16px; color: #333;">If you received this email, the email configuration is working!</p>
+          <p style="font-size: 14px; color: #666;">Sent at: ${new Date().toISOString()}</p>
+        </div>
+      `
+    };
+    
+    console.log('📧 Sending test email with options:', {
+      from: mailOptions.from,
+      to: mailOptions.to,
+      subject: mailOptions.subject
+    });
+    
+    await transporter.sendMail(mailOptions);
+    console.log('✅ Test email sent successfully to:', testEmail);
+    
+    res.json({ 
+      success: true, 
+      message: "Test email sent successfully",
+      sentTo: testEmail
+    });
+  } catch (error) {
+    console.error('❌ Test email failed:', error);
+    res.status(500).json({ 
+      error: "Test email failed", 
+      details: error.message,
+      code: error.code,
+      command: error.command,
+      response: error.response
+    });
+  }
+});
+
 // Test email configuration
 app.get('/api/test-email', async (req, res) => {
   try {
@@ -690,7 +759,7 @@ app.get('/api/test-email', async (req, res) => {
       service: 'gmail',
       auth: {
         user: 'sridanyaravi07@gmail.com',
-        pass: 'tmelitcykiowoiiz'
+        pass: 'tmel itcy kiow oiiz'
       },
       tls: {
         rejectUnauthorized: false
