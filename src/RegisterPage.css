@@ -158,7 +158,7 @@
   padding: 20px;
   overflow-y: auto;
   min-height: 0;
-  max-height: calc(100vh - 120px); /* Give more space for footer */
+  max-height: calc(100vh - 200px); /* Give more space for footer */
 }
 
 .register-content {

@@ -172,10 +172,10 @@ app.post('/api/register', async (req, res) => {
       email: email
     });
     
-    // Generate QR code with smaller size for email compatibility
-    const qrCodeDataUrl = await QRCode.toDataURL(qrData, {
-      width: 150,
-      margin: 1,
+    // Generate QR code as buffer for attachment
+    const qrCodeBuffer = await QRCode.toBuffer(qrData, {
+      width: 200,
+      margin: 2,
       color: {
         dark: '#000000',
         light: '#FFFFFF'
@@ -183,7 +183,7 @@ app.post('/api/register', async (req, res) => {
       errorCorrectionLevel: 'L'
     });
     
-    console.log('🔍 QR code generated, length:', qrCodeDataUrl.length);
+    console.log('🔍 QR code generated as buffer');
     
     // Also generate a simple text version for fallback
     const qrText = `Registration ID: ${registrationId}\nEvent: ${event.name}\nDate: ${event.date}\nTime: ${event.time}`;
@@ -216,6 +216,13 @@ app.post('/api/register', async (req, res) => {
         from: 'sridanyaravi07@gmail.com',
         to: email,
         subject: `Registration Confirmed for ${event.name} at Non-Governmental Organization`,
+        attachments: [
+          {
+            filename: `qr-code-${registrationId}.png`,
+            content: qrCodeBuffer,
+            contentType: 'image/png'
+          }
+        ],
         html: `
           <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
             <div style="text-align: center; margin-bottom: 20px;">
@@ -238,14 +245,13 @@ app.post('/api/register', async (req, res) => {
             <p style="font-size: 16px; color: #333;">Please bring this email and scan the attached QR code at the kiosk during check-in. We look forward to welcoming you!</p>
             
             <div style="text-align: center; margin: 30px 0;">
-              <img src="${qrCodeDataUrl}" alt="QR Code for Check-in" width="150" height="150" style="border: 2px solid #ddd; border-radius: 10px; display: block; margin: 0 auto;">
-              <div style="background: #f8f9fa; padding: 15px; border-radius: 10px; margin: 15px 0; border: 1px solid #ddd;">
-                <p style="font-size: 14px; color: #666; margin: 0; font-weight: bold;">📱 <strong>Registration ID:</strong> ${registrationId}</p>
-                <p style="font-size: 12px; color: #999; margin: 5px 0 0 0;">Show this ID at check-in if QR code doesn't display</p>
-                <p style="font-size: 12px; color: #666; margin: 5px 0 0 0; font-family: monospace;">Event: ${event.name}</p>
-                <p style="font-size: 12px; color: #666; margin: 2px 0 0 0; font-family: monospace;">Date: ${event.date} | Time: ${event.time}</p>
+              <div style="background: #f8f9fa; padding: 20px; border-radius: 10px; margin: 15px 0; border: 2px solid #ddd;">
+                <p style="font-size: 16px; color: #333; margin: 0 0 15px 0; font-weight: bold;">📱 <strong>Registration ID:</strong> ${registrationId}</p>
+                <p style="font-size: 14px; color: #666; margin: 5px 0; font-family: monospace;">Event: ${event.name}</p>
+                <p style="font-size: 14px; color: #666; margin: 5px 0; font-family: monospace;">Date: ${event.date} | Time: ${event.time}</p>
+                <p style="font-size: 12px; color: #999; margin: 10px 0 0 0;">Show this ID at check-in</p>
               </div>
-              <p style="font-size: 14px; color: #666; margin-top: 10px;">Scan this QR code at the kiosk for check-in</p>
+              <p style="font-size: 14px; color: #666; margin-top: 10px;">QR code attached to this email</p>
             </div>
             
             <p style="font-size: 16px; color: #333;">Warm regards,<br><strong>Non-Governmental Organization Team</strong></p>
