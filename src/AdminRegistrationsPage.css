@@ -407,8 +407,12 @@
 
 /* Footer */
 .admin-registrations-footer {
-  padding: 20px;
-  border-top: 1px solid #8B1C1C;
+  padding: 12px 24px;
+  background: rgba(255, 255, 255, 0.1);
+  border-top: 1px solid rgba(255, 255, 255, 0.2);
+  flex-shrink: 0;
+  position: relative;
+  z-index: 100;
 }
 
 .footer-content {

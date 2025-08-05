@@ -176,10 +176,13 @@
 }
 
 .checkin-content {
-  max-width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
   width: 100%;
-  margin: 0 auto;
-  padding: 0 20px;
+  max-width: 500px;
+  text-align: center;
 }
 
 .checkin-title {
@@ -270,6 +273,9 @@
   overflow: hidden;
   box-shadow: 0 4px 12px rgba(0,0,0,0.15);
   border: 3px solid #8B1C1C;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .event-banner-img {
@@ -322,6 +328,9 @@
   box-shadow: 0 4px 12px rgba(0,0,0,0.15);
   border: 3px solid #8B1C1C;
   background: #f8f9fa;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 #reader {
@@ -446,6 +455,8 @@
   background: rgba(255, 255, 255, 0.1);
   border-top: 1px solid rgba(255, 255, 255, 0.2);
   flex-shrink: 0;
+  position: relative;
+  z-index: 100;
 }
 
 .footer-content {

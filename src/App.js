@@ -26,6 +26,23 @@ function App() {
     // Try to enter full screen after a short delay
     setTimeout(requestFullScreen, 1000);
 
+    // Prevent full screen exit on input focus
+    const preventFullScreenExit = (e) => {
+      if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA' || e.target.tagName === 'SELECT') {
+        e.stopPropagation();
+        // Re-enter full screen if it exits
+        setTimeout(() => {
+          if (!document.fullscreenElement && !document.webkitFullscreenElement && !document.msFullscreenElement) {
+            requestFullScreen();
+          }
+        }, 100);
+      }
+    };
+
+    // Add event listeners to prevent full screen exit
+    document.addEventListener('focusin', preventFullScreenExit);
+    document.addEventListener('click', preventFullScreenExit);
+
     // Add full screen button to header
     const addFullScreenButton = () => {
       const header = document.querySelector('.header-content');
@@ -54,11 +71,28 @@ function App() {
 
     // Add full screen button after components load
     setTimeout(addFullScreenButton, 2000);
+
+    // Monitor full screen state and re-enter if needed
+    const checkFullScreen = () => {
+      if (!document.fullscreenElement && !document.webkitFullscreenElement && !document.msFullscreenElement) {
+        setTimeout(requestFullScreen, 500);
+      }
+    };
+
+    // Check full screen state every 2 seconds
+    const fullScreenInterval = setInterval(checkFullScreen, 2000);
+
+    // Cleanup
+    return () => {
+      document.removeEventListener('focusin', preventFullScreenExit);
+      document.removeEventListener('click', preventFullScreenExit);
+      clearInterval(fullScreenInterval);
+    };
   }, []);
 
   return (
     <Router>
-      <div className="App">
+      <div className="App fullscreen-persistent">
         <Routes>
           <Route path="/" element={<HomePage />} />
           <Route path="/checkin" element={<CheckinPage />} />
