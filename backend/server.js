@@ -180,13 +180,16 @@ app.post('/api/register', async (req, res) => {
       const transporter = nodemailer.createTransporter({
         service: 'gmail',
         auth: {
-          user: process.env.EMAIL_USER || 'ngo.kiosk@gmail.com',
-          pass: process.env.EMAIL_PASS || 'your-app-password'
+          user: 'ngo.kiosk@gmail.com',
+          pass: 'your-app-password-here' // You need to set this up
+        },
+        tls: {
+          rejectUnauthorized: false
         }
       });
       
       const mailOptions = {
-        from: process.env.EMAIL_USER || 'ngo.kiosk@gmail.com',
+        from: 'ngo.kiosk@gmail.com',
         to: email,
         subject: `Registration Confirmed for ${event.name} at Non-Governmental Organization`,
         html: `

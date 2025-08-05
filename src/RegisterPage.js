@@ -142,7 +142,7 @@ const RegisterPage = () => {
       <p className="success-message">
         Thank you for registering with Shirdi Sai Dham. You will receive an email with your QR code for check-in shortly.
       </p>
-      <p style={{ fontSize: '0.9rem', color: '#666', marginTop: '10px' }}>Redirecting to home page...</p>
+      <p style={{ fontSize: '0.9rem', color: '#666', marginTop: '10px' }}>Redirecting to home page in 3 seconds...</p>
     </div>
   );
 
@@ -194,84 +194,86 @@ const RegisterPage = () => {
             <Lottie animationData={registerLottie} style={{ width: 200, height: 200 }} />
           </div>
           
-          {/* Form third */}
-          <form onSubmit={handleSubmit} className="register-form">
-            <div className="form-group">
-              <label htmlFor="name" className="form-label">Full Name *</label>
-              <input
-                type="text"
-                id="name"
-                name="name"
-                value={formData.name}
-                onChange={handleInputChange}
-                className={`form-input ${errors.name ? 'error' : ''}`}
-                placeholder="Enter your full name"
-              />
-              {errors.name && <span className="error-message">{errors.name}</span>}
-            </div>
+          {/* Form third - only show if not submitted */}
+          {!submitSuccess && (
+            <form onSubmit={handleSubmit} className="register-form">
+              <div className="form-group">
+                <label htmlFor="name" className="form-label">Full Name *</label>
+                <input
+                  type="text"
+                  id="name"
+                  name="name"
+                  value={formData.name}
+                  onChange={handleInputChange}
+                  className={`form-input ${errors.name ? 'error' : ''}`}
+                  placeholder="Enter your full name"
+                />
+                {errors.name && <span className="error-message">{errors.name}</span>}
+              </div>
 
-            <div className="form-group">
-              <label htmlFor="phone" className="form-label">Phone Number *</label>
-              <input
-                type="tel"
-                id="phone"
-                name="phone"
-                value={formData.phone}
-                onChange={handleInputChange}
-                className={`form-input ${errors.phone ? 'error' : ''}`}
-                placeholder="Enter your phone number"
-              />
-              {errors.phone && <span className="error-message">{errors.phone}</span>}
-            </div>
+              <div className="form-group">
+                <label htmlFor="phone" className="form-label">Phone Number *</label>
+                <input
+                  type="tel"
+                  id="phone"
+                  name="phone"
+                  value={formData.phone}
+                  onChange={handleInputChange}
+                  className={`form-input ${errors.phone ? 'error' : ''}`}
+                  placeholder="Enter your phone number"
+                />
+                {errors.phone && <span className="error-message">{errors.phone}</span>}
+              </div>
 
-            <div className="form-group">
-              <label htmlFor="email" className="form-label">Email Address *</label>
-              <input
-                type="email"
-                id="email"
-                name="email"
-                value={formData.email}
-                onChange={handleInputChange}
-                className={`form-input ${errors.email ? 'error' : ''}`}
-                placeholder="Enter your email address"
-              />
-              {errors.email && <span className="error-message">{errors.email}</span>}
-            </div>
+              <div className="form-group">
+                <label htmlFor="email" className="form-label">Email Address *</label>
+                <input
+                  type="email"
+                  id="email"
+                  name="email"
+                  value={formData.email}
+                  onChange={handleInputChange}
+                  className={`form-input ${errors.email ? 'error' : ''}`}
+                  placeholder="Enter your email address"
+                />
+                {errors.email && <span className="error-message">{errors.email}</span>}
+              </div>
 
-            <div className="form-group">
-              <label htmlFor="volunteer" className="form-label">Interested in Volunteering?</label>
-              <select
-                id="volunteer"
-                name="volunteer"
-                value={formData.volunteer}
-                onChange={handleInputChange}
-                className="form-select"
-              >
-                <option value="No">No</option>
-                <option value="Yes">Yes</option>
-              </select>
-            </div>
+              <div className="form-group">
+                <label htmlFor="volunteer" className="form-label">Interested in Volunteering?</label>
+                <select
+                  id="volunteer"
+                  name="volunteer"
+                  value={formData.volunteer}
+                  onChange={handleInputChange}
+                  className="form-select"
+                >
+                  <option value="No">No</option>
+                  <option value="Yes">Yes</option>
+                </select>
+              </div>
 
-            <div className="form-actions">
-              <button
-                type="button"
-                onClick={() => navigate('/')}
-                className="cancel-button"
-                disabled={isSubmitting}
-              >
-                Cancel
-              </button>
-              <button
-                type="submit"
-                className="submit-button"
-                disabled={isSubmitting}
-              >
-                {isSubmitting ? 'Registering...' : 'Register'}
-              </button>
-            </div>
-          </form>
+              <div className="form-actions">
+                <button
+                  type="button"
+                  onClick={() => navigate('/')}
+                  className="cancel-button"
+                  disabled={isSubmitting}
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  className="submit-button"
+                  disabled={isSubmitting}
+                >
+                  {isSubmitting ? 'Registering...' : 'Register'}
+                </button>
+              </div>
+            </form>
+          )}
           
-          {/* Show success message below the form */}
+          {/* Show success message when submitted */}
           {submitSuccess && <SuccessMessage />}
         </div>
       </main>

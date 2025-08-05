@@ -158,7 +158,7 @@
   padding: 5px;
   overflow-y: auto;
   min-height: 0;
-  max-height: calc(100vh - 120px); /* Reduced to bring footer up */
+  max-height: calc(100vh - 100px); /* Reduced from 120px to 100px */
 }
 
 .register-content {
@@ -181,7 +181,7 @@
 .lottie-container {
   display: flex;
   justify-content: center;
-  margin-bottom: 8px; /* Reduced margin */
+  margin-bottom: 5px; /* Reduced from 8px to 5px */
 }
 
 .register-title {
@@ -195,9 +195,10 @@
 .register-form {
   display: flex;
   flex-direction: column;
-  gap: 8px; /* Reduced gap */
+  gap: 6px;
   width: 100%;
   max-width: 400px;
+  margin-top: 5px; /* Added small margin to bring form closer to lottie */
 }
 
 .form-group {

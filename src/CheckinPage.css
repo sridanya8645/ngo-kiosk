@@ -172,7 +172,7 @@
   padding: 5px; /* Reduced padding */
   overflow-y: auto;
   min-height: 0;
-  max-height: calc(100vh - 120px); /* Reduced to bring footer up */
+  max-height: calc(100vh - 100px); /* Reduced from 120px to 100px */
 }
 
 .checkin-content {
