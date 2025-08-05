@@ -231,10 +231,13 @@ export default function CheckinPage() {
           }
         }, 3000);
       } else {
-        if (data.message && data.message.includes("already checked in")) {
+        console.log('Check-in failed:', data);
+        if (data.message && (data.message.includes("already checked in") || data.message.includes("already been scanned"))) {
           setErrorMsg(`❌ QR already scanned! This registration has already been checked in.`);
+        } else if (data.error) {
+          setErrorMsg(`❌ ${data.error}`);
         } else {
-          setErrorMsg(data.error || "❌ Check-in failed");
+          setErrorMsg("❌ Check-in failed");
         }
         setScanComplete(false);
       }

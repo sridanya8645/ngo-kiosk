@@ -118,7 +118,9 @@ const RegisterPage = () => {
       if (response.ok) {
         const responseData = await response.json();
         console.log('Registration response data:', responseData);
+        console.log('Setting submitSuccess to true');
         setSubmitSuccess(true);
+        console.log('submitSuccess state should now be true');
         setTimeout(() => {
           navigate('/');
         }, 3000);
@@ -274,7 +276,15 @@ const RegisterPage = () => {
           )}
           
           {/* Show success message when submitted */}
-          {submitSuccess && <SuccessMessage />}
+          {submitSuccess && (
+            <div>
+              <div style={{color: 'red', fontSize: '12px'}}>DEBUG: submitSuccess is true</div>
+              <SuccessMessage />
+            </div>
+          )}
+          {!submitSuccess && (
+            <div style={{color: 'blue', fontSize: '12px'}}>DEBUG: submitSuccess is false</div>
+          )}
         </div>
       </main>
 
