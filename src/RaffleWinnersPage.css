@@ -1,6 +1,6 @@
 /* Raffle Winners Page Styles */
 .raffle-winners-bg {
-  min-height: 100vh;
+  height: 100vh;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -148,9 +148,9 @@
 .raffle-winners-main {
   flex: 1;
   padding: 20px;
-  max-width: 1200px;
-  margin: 0 auto;
-  width: 100%;
+  font-family: 'Arial', sans-serif;
+  overflow-y: auto;
+  max-height: calc(100vh - 200px);
 }
 
 .raffle-winners-content {

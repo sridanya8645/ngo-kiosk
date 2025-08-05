@@ -1,6 +1,6 @@
 /* Main Container */
 .admin-registrations-bg {
-  min-height: 100vh;
+  height: 100vh;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -143,8 +143,10 @@
 /* Main Content */
 .admin-registrations-main {
   flex: 1;
-  padding: 30px 20px;
+  padding: 20px;
   font-family: 'Arial', sans-serif;
+  overflow-y: auto;
+  max-height: calc(100vh - 200px);
 }
 
 .admin-registrations-content {

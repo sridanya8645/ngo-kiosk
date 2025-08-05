@@ -1,10 +1,11 @@
 /* Main Container */
 .admin-container {
-  min-height: 100vh;
+  height: 100vh;
   display: flex;
   flex-direction: column;
   background: linear-gradient(135deg, #f9b233 0%, #c86d3a 100%);
   font-family: 'Arial', sans-serif;
+  overflow: hidden;
 }
 
 /* Header Section */
@@ -118,7 +119,9 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 30px 20px;
+  padding: 20px;
+  overflow-y: auto;
+  max-height: calc(100vh - 200px);
 }
 
 .admin-login-container {
