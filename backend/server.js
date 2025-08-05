@@ -180,7 +180,7 @@ app.post('/api/register', async (req, res) => {
       const transporter = nodemailer.createTransporter({
         service: 'gmail',
         auth: {
-          user: 'ngo.kiosk@gmail.com',
+          user: 'sridanyaravi07@gmail.com',
           pass: 'tmelitcykiowoiiz'
         },
         tls: {
@@ -195,7 +195,7 @@ app.post('/api/register', async (req, res) => {
       console.log('Email transporter verified successfully');
       
       const mailOptions = {
-        from: 'ngo.kiosk@gmail.com',
+        from: 'sridanyaravi07@gmail.com',
         to: email,
         subject: `Registration Confirmed for ${event.name} at Non-Governmental Organization`,
         html: `
@@ -679,7 +679,7 @@ app.get('/api/test-email', async (req, res) => {
     const transporter = nodemailer.createTransporter({
       service: 'gmail',
       auth: {
-        user: 'ngo.kiosk@gmail.com',
+        user: 'sridanyaravi07@gmail.com',
         pass: 'tmelitcykiowoiiz'
       },
       tls: {
