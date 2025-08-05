@@ -51,9 +51,13 @@
 
 /* Header Section */
 .register-header {
-  background: linear-gradient(135deg, #f9b233 0%, #c86d3a 100%);
-  padding: 20px;
-  border-bottom: 2px solid #8B1C1C;
+  flex-shrink: 0;
+  padding: 5px 20px; /* Reduced padding */
+  background: rgba(139, 28, 28, 0.9);
+  color: white;
+  text-align: center;
+  position: relative;
+  z-index: 100;
 }
 
 .header-content {
@@ -154,12 +158,22 @@
 .register-main {
   flex: 1;
   display: flex;
-  align-items: center;
+  align-items: flex-start; /* Changed from center to flex-start */
   justify-content: center;
-  padding: 20px;
+  padding: 5px; /* Reduced padding */
   overflow-y: auto;
-  max-height: calc(100vh - 200px);
-  scroll-behavior: smooth;
+  min-height: 0;
+}
+
+.register-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start; /* Changed from center to flex-start */
+  width: 100%;
+  max-width: 500px;
+  text-align: center;
+  margin-top: 10px; /* Small margin from top */
 }
 
 .register-form-container {
@@ -171,22 +185,23 @@
 .lottie-container {
   display: flex;
   justify-content: center;
-  margin-bottom: 10px;
+  margin-bottom: 10px; /* Reduced margin */
 }
 
 .register-title {
-  font-size: 2.2rem;
+  font-size: 1.8rem; /* Reduced font size */
   font-weight: bold;
   color: #8B1C1C;
-  text-align: center;
-  margin-bottom: 10px;
+  margin-bottom: 10px; /* Reduced margin */
   text-shadow: 0 2px 8px rgba(0,0,0,0.1);
 }
 
 .register-form {
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 10px; /* Reduced gap */
+  width: 100%;
+  max-width: 400px;
 }
 
 .form-group {
@@ -318,12 +333,16 @@
 
 /* Footer */
 .register-footer {
-  padding: 12px 24px;
+  flex-shrink: 0;
+  padding: 8px 24px; /* Reduced padding */
   background: rgba(255, 255, 255, 0.1);
   border-top: 1px solid rgba(255, 255, 255, 0.2);
-  flex-shrink: 0;
   position: relative;
   z-index: 100;
+  min-height: 50px; /* Reduced minimum height */
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .footer-content {

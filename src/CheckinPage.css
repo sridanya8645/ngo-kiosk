@@ -51,10 +51,13 @@
 
 /* Header Section */
 .checkin-header {
-  background: linear-gradient(135deg, #f9b233 0%, #c86d3a 100%);
-  padding: 15px 20px;
-  border-bottom: 2px solid #8B1C1C;
   flex-shrink: 0;
+  padding: 5px 20px; /* Reduced padding */
+  background: rgba(139, 28, 28, 0.9);
+  color: white;
+  text-align: center;
+  position: relative;
+  z-index: 100;
 }
 
 .header-content {
@@ -168,29 +171,29 @@
 .checkin-main {
   flex: 1;
   display: flex;
-  align-items: center;
+  align-items: flex-start; /* Changed from center to flex-start */
   justify-content: center;
-  padding: 10px;
+  padding: 5px; /* Reduced padding */
   overflow-y: auto;
-  max-height: calc(100vh - 160px);
+  min-height: 0;
 }
 
 .checkin-content {
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start; /* Changed from center to flex-start */
   width: 100%;
   max-width: 500px;
   text-align: center;
+  margin-top: 10px; /* Small margin from top */
 }
 
 .checkin-title {
-  font-size: 2.2rem;
+  font-size: 1.8rem; /* Reduced font size */
   font-weight: bold;
   color: #8B1C1C;
-  text-align: center;
-  margin-bottom: 15px;
+  margin-bottom: 10px; /* Reduced margin */
   text-shadow: 0 2px 8px rgba(0,0,0,0.1);
 }
 
@@ -268,7 +271,7 @@
 .event-banner {
   width: 300px;
   height: 300px;
-  margin: 10px auto;
+  margin: 5px auto; /* Reduced margin */
   border-radius: 15px;
   overflow: hidden;
   box-shadow: 0 4px 12px rgba(0,0,0,0.15);
@@ -322,7 +325,7 @@
 .scanner-container {
   width: 300px;
   height: 300px;
-  margin: 10px auto;
+  margin: 5px auto; /* Reduced margin */
   border-radius: 15px;
   overflow: hidden;
   box-shadow: 0 4px 12px rgba(0,0,0,0.15);
@@ -449,14 +452,32 @@
   box-shadow: 0 2px 4px rgba(40, 167, 69, 0.3);
 }
 
+.checkin-button {
+  background: #8B1C1C;
+  color: white;
+  border: none;
+  padding: 12px 30px; /* Reduced padding */
+  border-radius: 25px;
+  font-size: 1.1rem; /* Reduced font size */
+  font-weight: bold;
+  cursor: pointer;
+  margin: 10px 0; /* Reduced margin */
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+}
+
 /* Footer */
 .checkin-footer {
-  padding: 12px 24px;
+  flex-shrink: 0;
+  padding: 8px 24px; /* Reduced padding */
   background: rgba(255, 255, 255, 0.1);
   border-top: 1px solid rgba(255, 255, 255, 0.2);
-  flex-shrink: 0;
   position: relative;
   z-index: 100;
+  min-height: 50px; /* Reduced minimum height */
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .footer-content {
@@ -508,6 +529,13 @@
   height: 12rem;
   width: 20rem;
   object-fit: contain;
+}
+
+.scanner-text {
+  font-size: 1.2rem; /* Reduced font size */
+  color: #8B1C1C;
+  margin: 5px 0; /* Reduced margin */
+  font-weight: 500;
 }
 
 /* Enhanced iPad Pro Responsive Design */

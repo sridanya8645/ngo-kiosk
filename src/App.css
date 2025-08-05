@@ -31,10 +31,10 @@
   }
 }
 
-/* Full screen button styles */
+/* Full screen button styles - repositioned */
 .fullscreen-btn {
   position: absolute;
-  right: 20px;
+  right: 80px; /* Moved away from logo */
   top: 50%;
   transform: translateY(-50%);
   background: #8B1C1C;
@@ -73,15 +73,17 @@ html, body {
   background: linear-gradient(135deg, #f9b233 0%, #c86d3a 100%);
 }
 
-/* Prevent full screen exit on input focus */
+/* Allow input interaction - remove blocking */
 input, textarea, select {
   -webkit-user-select: text;
   -moz-user-select: text;
   -ms-user-select: text;
   user-select: text;
+  pointer-events: auto !important;
+  z-index: 1001 !important;
 }
 
-/* Force full screen persistence */
+/* Remove full screen persistence that blocks interaction */
 .fullscreen-persistent {
   position: fixed !important;
   top: 0 !important;
@@ -89,6 +91,7 @@ input, textarea, select {
   width: 100vw !important;
   height: 100vh !important;
   z-index: 9999 !important;
+  pointer-events: auto !important;
 }
 
 /* Remove any white space */

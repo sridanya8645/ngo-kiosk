@@ -24,9 +24,13 @@
 
 /* Header Section */
 .admin-registrations-header {
-  background: linear-gradient(135deg, #f9b233 0%, #c86d3a 100%);
-  padding: 20px;
-  border-bottom: 2px solid #8B1C1C;
+  flex-shrink: 0;
+  padding: 5px 20px; /* Reduced padding */
+  background: rgba(139, 28, 28, 0.9);
+  color: white;
+  text-align: center;
+  position: relative;
+  z-index: 100;
 }
 
 .header-content {
@@ -144,10 +148,9 @@
 /* Main Content */
 .admin-registrations-main {
   flex: 1;
-  padding: 20px;
-  font-family: 'Arial', sans-serif;
+  padding: 5px; /* Reduced padding */
   overflow-y: auto;
-  max-height: calc(100vh - 200px);
+  min-height: 0;
 }
 
 .admin-registrations-content {
@@ -156,12 +159,11 @@
 }
 
 .admin-registrations-title {
-  font-size: 2.2rem;
+  font-size: 1.8rem; /* Reduced font size */
   font-weight: bold;
   color: #8B1C1C;
+  margin-bottom: 10px; /* Reduced margin */
   text-align: center;
-  margin-bottom: 30px;
-  text-shadow: 0 2px 8px rgba(0,0,0,0.1);
 }
 
 /* Stats Section */
@@ -407,12 +409,16 @@
 
 /* Footer */
 .admin-registrations-footer {
-  padding: 12px 24px;
+  flex-shrink: 0;
+  padding: 8px 24px; /* Reduced padding */
   background: rgba(255, 255, 255, 0.1);
   border-top: 1px solid rgba(255, 255, 255, 0.2);
-  flex-shrink: 0;
   position: relative;
   z-index: 100;
+  min-height: 50px; /* Reduced minimum height */
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .footer-content {
