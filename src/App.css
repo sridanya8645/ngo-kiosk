@@ -1,10 +1,73 @@
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@700&family=Poppins:wght@400;500&display=swap');
 
-body, html, #root {
-  height: 100%;
+/* Full Screen App Styles */
+.App {
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 9999;
+}
+
+/* Hide browser UI when in full screen */
+@media screen and (display-mode: fullscreen) {
+  .App {
+    width: 100vw;
+    height: 100vh;
+  }
+}
+
+/* Force full screen on mobile */
+@media screen and (max-width: 768px) {
+  .App {
+    width: 100vw;
+    height: 100vh;
+    position: fixed;
+    top: 0;
+    left: 0;
+  }
+}
+
+/* Full screen button styles */
+.fullscreen-btn {
+  position: absolute;
+  right: 20px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: #8B1C1C;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  padding: 8px 12px;
+  font-size: 16px;
+  cursor: pointer;
+  z-index: 1000;
+  transition: all 0.3s ease;
+}
+
+.fullscreen-btn:hover {
+  background: #6B0F0F;
+  transform: translateY(-50%) scale(1.1);
+}
+
+/* Hide scrollbars globally */
+* {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+*::-webkit-scrollbar {
+  display: none;
+}
+
+/* Ensure body and html take full screen */
+html, body {
   margin: 0;
   padding: 0;
-  background: #000;
+  width: 100vw;
+  height: 100vh;
   overflow: hidden;
 }
 

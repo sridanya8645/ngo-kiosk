@@ -52,8 +52,9 @@
 /* Header Section */
 .checkin-header {
   background: linear-gradient(135deg, #f9b233 0%, #c86d3a 100%);
-  padding: 20px;
+  padding: 15px 20px;
   border-bottom: 2px solid #8B1C1C;
+  flex-shrink: 0;
 }
 
 .header-content {
@@ -169,9 +170,9 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 20px;
+  padding: 10px;
   overflow-y: auto;
-  max-height: calc(100vh - 200px);
+  max-height: calc(100vh - 160px);
 }
 
 .checkin-content {
@@ -262,14 +263,20 @@
 }
 
 .event-banner {
+  width: 300px;
+  height: 300px;
   margin: 10px auto;
-  display: block;
-  width: 400px;
-  height: 400px;
   border-radius: 15px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-  object-fit: cover;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
   border: 3px solid #8B1C1C;
+}
+
+.event-banner-img {
+  width: 300px;
+  height: 300px;
+  object-fit: cover;
+  border-radius: 12px;
 }
 
 /* Newsletter Section Styles */
@@ -307,11 +314,14 @@
 }
 
 .scanner-container {
-  display: flex;
-  justify-content: center;
-  margin: 10px 0;
-  border: none;
-  background: none;
+  width: 300px;
+  height: 300px;
+  margin: 10px auto;
+  border-radius: 15px;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  border: 3px solid #8B1C1C;
+  background: #f8f9fa;
 }
 
 #reader {
@@ -432,8 +442,9 @@
 
 /* Footer */
 .checkin-footer {
-  padding: 16px 24px;
-  margin-top: auto;
+  padding: 12px 24px;
+  background: rgba(255, 255, 255, 0.1);
+  border-top: 1px solid rgba(255, 255, 255, 0.2);
   flex-shrink: 0;
 }
 

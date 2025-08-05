@@ -1,30 +1,75 @@
-import React from "react";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import HomePage from "./HomePage";
-import AdminPage from "./AdminPage";
-import RegisterPage from "./RegisterPage";
-import CheckinPage from "./CheckinPage";
-import EventDetailsPage from "./EventDetailsPage";
+import React, { useEffect } from 'react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import './App.css';
+import HomePage from './HomePage';
+import CheckinPage from './CheckinPage';
+import RegisterPage from './RegisterPage';
+import AdminPage from './AdminPage';
+import EventDetailsPage from './EventDetailsPage';
+import RaffleSpinPage from './RaffleSpinPage';
+import RaffleWinnersPage from './RaffleWinnersPage';
 import AdminRegistrationsPage from './AdminRegistrationsPage';
-import RaffleSpinPage from "./RaffleSpinPage";
-import RaffleWinnersPage from "./RaffleWinnersPage";
 
 function App() {
+  useEffect(() => {
+    // Request full screen on app load
+    const requestFullScreen = () => {
+      if (document.documentElement.requestFullscreen) {
+        document.documentElement.requestFullscreen();
+      } else if (document.documentElement.webkitRequestFullscreen) {
+        document.documentElement.webkitRequestFullscreen();
+      } else if (document.documentElement.msRequestFullscreen) {
+        document.documentElement.msRequestFullscreen();
+      }
+    };
+
+    // Try to enter full screen after a short delay
+    setTimeout(requestFullScreen, 1000);
+
+    // Add full screen button to header
+    const addFullScreenButton = () => {
+      const header = document.querySelector('.header-content');
+      if (header && !document.querySelector('.fullscreen-btn')) {
+        const fullScreenBtn = document.createElement('button');
+        fullScreenBtn.className = 'fullscreen-btn';
+        fullScreenBtn.innerHTML = '⛶';
+        fullScreenBtn.style.cssText = `
+          position: absolute;
+          right: 20px;
+          top: 50%;
+          transform: translateY(-50%);
+          background: #8B1C1C;
+          color: white;
+          border: none;
+          border-radius: 5px;
+          padding: 8px 12px;
+          font-size: 16px;
+          cursor: pointer;
+          z-index: 1000;
+        `;
+        fullScreenBtn.onclick = requestFullScreen;
+        header.appendChild(fullScreenBtn);
+      }
+    };
+
+    // Add full screen button after components load
+    setTimeout(addFullScreenButton, 2000);
+  }, []);
+
   return (
     <Router>
-      <Routes>
-        <Route path="/" element={<HomePage />} />
-        <Route path="/admin" element={<AdminPage />} />
-        <Route path="/register" element={<RegisterPage />} />
-        <Route path="/checkin" element={<CheckinPage />} />
-        <Route path="/event-details" element={<EventDetailsPage />} />
-        <Route path="/admin/registrations" element={<AdminRegistrationsPage />} />
-        <Route path="/admin/raffle-spin" element={<RaffleSpinPage />} />
-        <Route path="/admin/raffle-winners" element={<RaffleWinnersPage />} />
-        <Route path="/raffle-winners" element={<RaffleWinnersPage />} />
-        <Route path="/raffle-spin" element={<RaffleSpinPage />} />
-        <Route path="/registration-details" element={<AdminRegistrationsPage />} />
-      </Routes>
+      <div className="App">
+        <Routes>
+          <Route path="/" element={<HomePage />} />
+          <Route path="/checkin" element={<CheckinPage />} />
+          <Route path="/register" element={<RegisterPage />} />
+          <Route path="/admin" element={<AdminPage />} />
+          <Route path="/event-details" element={<EventDetailsPage />} />
+          <Route path="/admin/raffle-spin" element={<RaffleSpinPage />} />
+          <Route path="/admin/raffle-winners" element={<RaffleWinnersPage />} />
+          <Route path="/admin/registrations" element={<AdminRegistrationsPage />} />
+        </Routes>
+      </div>
     </Router>
   );
 }
