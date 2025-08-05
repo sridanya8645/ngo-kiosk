@@ -30,23 +30,23 @@ const RaffleSpinPage = () => {
   };
 
   useEffect(() => {
-    // Fetch registrations and winners
+    // Fetch eligible users (checked in TODAY) and winners
     Promise.all([
-      fetch('/api/registrations'),
+      fetch('/api/raffle/eligible-users'),
       fetch('/api/raffle-winners')
     ])
     .then(responses => Promise.all(responses.map(res => res.json())))
-    .then(([registrations, winners]) => {
-      console.log('Registrations:', registrations);
+    .then(([eligibleUsers, winners]) => {
+      console.log('Eligible users (checked in today):', eligibleUsers);
       console.log('Winners:', winners);
       
       // Filter out already won users
-      const eligibleUsers = registrations.filter(reg => 
-        reg.checked_in && !winners.some(winner => winner.registration_id === reg.id)
+      const availableUsers = eligibleUsers.filter(user => 
+        !winners.some(winner => winner.registration_id === user.id)
       );
       
-      console.log('Eligible users:', eligibleUsers);
-      setEligibleUsers(eligibleUsers);
+      console.log('Available users for wheel:', availableUsers);
+      setEligibleUsers(availableUsers);
     })
     .catch(error => {
       console.error('Error fetching data:', error);
@@ -87,8 +87,10 @@ const RaffleSpinPage = () => {
       
       if (response.ok) {
         console.log('Winner saved successfully');
-        // Refresh the eligible users list
-        window.location.reload();
+        // Remove winner from the wheel immediately
+        setEligibleUsers(prevUsers => prevUsers.filter(user => user.id !== winner.id));
+        setWinner(null);
+        setMustSpin(false);
       } else {
         console.error('Failed to save winner');
       }
@@ -131,9 +133,29 @@ const RaffleSpinPage = () => {
     window.location.reload();
   };
 
-  const refreshRegistrations = () => {
-    // Refresh the data
-    window.location.reload();
+  const refreshRegistrations = async () => {
+    try {
+      // Fetch updated eligible users and winners
+      const [eligibleResponse, winnersResponse] = await Promise.all([
+        fetch('/api/raffle/eligible-users'),
+        fetch('/api/raffle-winners')
+      ]);
+      
+      const [eligibleUsers, winners] = await Promise.all([
+        eligibleResponse.json(),
+        winnersResponse.json()
+      ]);
+      
+      // Filter out already won users
+      const availableUsers = eligibleUsers.filter(user => 
+        !winners.some(winner => winner.registration_id === user.id)
+      );
+      
+      setEligibleUsers(availableUsers);
+      console.log('Wheel refreshed with', availableUsers.length, 'available users');
+    } catch (error) {
+      console.error('Error refreshing registrations:', error);
+    }
   };
 
   const goToWinnersPage = () => {

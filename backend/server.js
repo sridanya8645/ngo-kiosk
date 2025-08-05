@@ -629,8 +629,9 @@ app.post('/api/registrations/reset-checkins', async (req, res) => {
 // Raffle endpoints
 app.get('/api/raffle/eligible-users', async (req, res) => {
   try {
+    // Get users who checked in TODAY only
     const [rows] = await pool.execute(
-      "SELECT * FROM registrations WHERE checked_in = 1"
+      "SELECT * FROM registrations WHERE checked_in = 1 AND DATE(checkin_date) = CURDATE()"
     );
     res.json(rows);
   } catch (error) {
