@@ -199,7 +199,7 @@ export default function CheckinPage() {
       const data = await response.json();
 
       if (response.ok && data.success) {
-        setSuccessMsg(`Successfully checked in ${data.name}!`);
+        setSuccessMsg(`✅ Successfully scanned! ${data.name} is now checked in.`);
         
         // Restart scanner after 3 seconds
         setTimeout(() => {
@@ -217,7 +217,7 @@ export default function CheckinPage() {
                   if (!registrationId) throw new Error("No registrationId in QR code");
                   handleCheckin(registrationId, data.name);
                 } catch (e) {
-                  setErrorMsg('Invalid QR code');
+                  setErrorMsg('❌ Invalid QR code');
                 }
               },
               errorMessage => {
@@ -231,12 +231,16 @@ export default function CheckinPage() {
           }
         }, 3000);
       } else {
-        setErrorMsg(data.error || "Check-in failed");
+        if (data.message && data.message.includes("already checked in")) {
+          setErrorMsg(`❌ QR already scanned! This registration has already been checked in.`);
+        } else {
+          setErrorMsg(data.error || "❌ Check-in failed");
+        }
         setScanComplete(false);
       }
     } catch (error) {
       console.error("Check-in error:", error);
-      setErrorMsg("Network error. Please try again.");
+      setErrorMsg("❌ Network error. Please try again.");
       setScanComplete(false);
     }
   }, [scanComplete]);

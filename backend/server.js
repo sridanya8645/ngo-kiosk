@@ -571,7 +571,25 @@ app.post('/api/checkin', async (req, res) => {
     const [rows] = await pool.execute(query, params);
     
     if (rows.length === 0) {
-      return res.status(404).json({ success: false, message: "Registration not found or already checked in" });
+      // Check if registration exists but is already checked in
+      const [existingRows] = await pool.execute(
+        "SELECT * FROM registrations WHERE id = ?",
+        [registrationId]
+      );
+      
+      if (existingRows.length > 0 && existingRows[0].checked_in) {
+        return res.status(400).json({ 
+          success: false, 
+          message: "Registration already checked in",
+          error: "This QR code has already been scanned"
+        });
+      } else {
+        return res.status(404).json({ 
+          success: false, 
+          message: "Registration not found",
+          error: "Invalid QR code"
+        });
+      }
     }
     
     await pool.execute(

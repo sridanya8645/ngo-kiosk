@@ -172,7 +172,7 @@
   padding: 20px; /* Reduced from 5px */
   overflow-y: auto;
   min-height: 0;
-  max-height: calc(100vh - 120px); /* Reduced from 20px to 5px to bring footer up more */
+  max-height: calc(100vh - 200px); /* Reduced from 20px to 5px to bring footer up more */
 }
 
 .checkin-content {
@@ -575,7 +575,7 @@
     justify-content: center;
     align-items: center;
     overflow-y: auto;
-    max-height: calc(100vh - 120px);
+    max-height: calc(100vh - 200px);
   }
   
   .checkin-content {
@@ -702,7 +702,7 @@
     justify-content: center;
     align-items: center;
     overflow-y: auto;
-    max-height: calc(100vh - 120px);
+    max-height: calc(100vh - 200px);
   }
   
   .checkin-content {
@@ -825,7 +825,7 @@
     justify-content: center;
     align-items: center;
     overflow-y: auto;
-    max-height: calc(100vh - 120px);
+    max-height: calc(100vh - 200px);
   }
   
   .checkin-content {
@@ -948,7 +948,7 @@
     justify-content: center;
     align-items: center;
     overflow-y: auto;
-    max-height: calc(100vh - 120px);
+    max-height: calc(100vh - 200px);
   }
   
   .checkin-content {
@@ -1093,7 +1093,7 @@
   }
   
   .checkin-main {
-    max-height: calc(100vh - 120px) !important;
+    max-height: calc(100vh - 200px) !important;
     overflow-y: auto !important;
   }
   

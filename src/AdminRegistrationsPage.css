@@ -155,7 +155,7 @@
   padding: 20px;
   overflow-y: auto;
   min-height: 0;
-  max-height: calc(100vh - 120px); /* Reduced from 20px to 5px to bring footer up more */
+  max-height: calc(100vh - 200px); /* Reduced from 20px to 5px to bring footer up more */
 }
 
 .admin-registrations-content {
