@@ -527,7 +527,7 @@
   flex-direction: row !important;
   justify-content: space-between;
   align-items: center;
-  margin-top: -100px; /* Match home page style */
+  margin-top: 0; /* Match home page style */
   gap: 20px;
   font-size: 1.9rem;
   color: #000;
@@ -535,6 +535,8 @@
   width: 100%;
   max-width: 100%;
   padding: 0 20px;
+  position: relative;
+  z-index: 10;
 }
 
 .footer-section {
@@ -805,7 +807,9 @@ select.table-input:focus {
   .footer-content {
     flex-direction: column;
     gap: 12px;
-  }
+    position: relative;
+  z-index: 10;
+}
   
   .footer-section {
     justify-content: center;
@@ -943,7 +947,9 @@ select.table-input:focus {
   
   .footer-content {
     gap: 8px;
-  }
+    position: relative;
+  z-index: 10;
+}
   
   .footer-text {
     font-size: 0.7rem;

@@ -471,7 +471,9 @@
   
   .footer-content {
     font-size: 1.5rem;
-  }
+    position: relative;
+  z-index: 10;
+}
   
   .footer-text {
     font-size: 1.5rem;
@@ -544,7 +546,7 @@
   flex-direction: row !important;
   justify-content: space-between;
   align-items: center;
-  margin-top: -100px; /* Match home page style */
+  margin-top: 0; /* Match home page style */
   gap: 20px;
   font-size: 1.9rem;
   color: #000;
@@ -552,6 +554,8 @@
   width: 100%;
   max-width: 100%;
   padding: 0 20px;
+  position: relative;
+  z-index: 10;
 }
 
 .footer-section {
@@ -595,7 +599,9 @@
   .footer-content {
     flex-direction: column;
     gap: 12px;
-  }
+    position: relative;
+  z-index: 10;
+}
   
   .footer-section {
     justify-content: center;
@@ -619,7 +625,9 @@
   .footer-content {
     flex-direction: column;
     gap: 12px;
-  }
+    position: relative;
+  z-index: 10;
+}
   
   .footer-section {
     justify-content: center;
