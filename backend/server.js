@@ -183,7 +183,7 @@ app.post('/api/register', async (req, res) => {
         service: 'gmail',
         auth: {
           user: 'sridanyaravi07@gmail.com',
-          pass: 'tmel itcy kiow oiiz'
+          pass: 'oqgebicylgtqjman'
         },
         tls: {
           rejectUnauthorized: false
@@ -759,7 +759,7 @@ app.get('/api/test-email', async (req, res) => {
       service: 'gmail',
       auth: {
         user: 'sridanyaravi07@gmail.com',
-        pass: 'tmel itcy kiow oiiz'
+        pass: 'oqgebicylgtqjman'
       },
       tls: {
         rejectUnauthorized: false
