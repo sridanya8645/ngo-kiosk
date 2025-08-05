@@ -174,15 +174,19 @@ app.post('/api/register', async (req, res) => {
     
     // Generate QR code with smaller size for email compatibility
     const qrCodeDataUrl = await QRCode.toDataURL(qrData, {
-      width: 200,
-      margin: 2,
+      width: 150,
+      margin: 1,
       color: {
         dark: '#000000',
         light: '#FFFFFF'
-      }
+      },
+      errorCorrectionLevel: 'L'
     });
     
     console.log('🔍 QR code generated, length:', qrCodeDataUrl.length);
+    
+    // Also generate a simple text version for fallback
+    const qrText = `Registration ID: ${registrationId}\nEvent: ${event.name}\nDate: ${event.date}\nTime: ${event.time}`;
     
     // Send email with QR code
     try {
@@ -234,10 +238,12 @@ app.post('/api/register', async (req, res) => {
             <p style="font-size: 16px; color: #333;">Please bring this email and scan the attached QR code at the kiosk during check-in. We look forward to welcoming you!</p>
             
             <div style="text-align: center; margin: 30px 0;">
-              <img src="${qrCodeDataUrl}" alt="QR Code for Check-in" style="max-width: 200px; border: 2px solid #ddd; border-radius: 10px;" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
-              <div style="display: none; background: #f8f9fa; padding: 15px; border-radius: 10px; margin: 10px 0;">
-                <p style="font-size: 14px; color: #666; margin: 0;">📱 <strong>Registration ID:</strong> ${registrationId}</p>
+              <img src="${qrCodeDataUrl}" alt="QR Code for Check-in" width="150" height="150" style="border: 2px solid #ddd; border-radius: 10px; display: block; margin: 0 auto;">
+              <div style="background: #f8f9fa; padding: 15px; border-radius: 10px; margin: 15px 0; border: 1px solid #ddd;">
+                <p style="font-size: 14px; color: #666; margin: 0; font-weight: bold;">📱 <strong>Registration ID:</strong> ${registrationId}</p>
                 <p style="font-size: 12px; color: #999; margin: 5px 0 0 0;">Show this ID at check-in if QR code doesn't display</p>
+                <p style="font-size: 12px; color: #666; margin: 5px 0 0 0; font-family: monospace;">Event: ${event.name}</p>
+                <p style="font-size: 12px; color: #666; margin: 2px 0 0 0; font-family: monospace;">Date: ${event.date} | Time: ${event.time}</p>
               </div>
               <p style="font-size: 14px; color: #666; margin-top: 10px;">Scan this QR code at the kiosk for check-in</p>
             </div>
