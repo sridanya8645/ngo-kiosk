@@ -134,9 +134,10 @@
 /* Main Content */
 .event-details-main {
   flex: 1;
-  padding: 20px;
+  padding: 5px;
   overflow-y: auto;
-  max-height: calc(100vh - 200px);
+  min-height: 0;
+  max-height: calc(100vh - 80px); /* Reduced from 100px to 80px to bring footer up more */
 }
 
 .event-details-content {

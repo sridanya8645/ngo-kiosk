@@ -152,9 +152,10 @@
 /* Main Content */
 .admin-registrations-main {
   flex: 1;
-  padding: 3px; /* Reduced from 5px */
+  padding: 5px;
   overflow-y: auto;
   min-height: 0;
+  max-height: calc(100vh - 80px); /* Reduced from 100px to 80px to bring footer up more */
 }
 
 .admin-registrations-content {

@@ -181,12 +181,18 @@ app.post('/api/register', async (req, res) => {
         service: 'gmail',
         auth: {
           user: 'ngo.kiosk@gmail.com',
-          pass: 'your-app-password-here' // You need to set this up
+          pass: 'tmelitcykiowoiiz'
         },
         tls: {
           rejectUnauthorized: false
-        }
+        },
+        secure: true,
+        port: 465
       });
+      
+      // Test the connection first
+      await transporter.verify();
+      console.log('Email transporter verified successfully');
       
       const mailOptions = {
         from: 'ngo.kiosk@gmail.com',
@@ -232,6 +238,11 @@ app.post('/api/register', async (req, res) => {
       console.log('Email sent successfully to:', email);
     } catch (emailError) {
       console.error('Email sending failed:', emailError);
+      console.error('Email error details:', {
+        message: emailError.message,
+        code: emailError.code,
+        command: emailError.command
+      });
       // Don't fail the registration if email fails
     }
     
@@ -657,6 +668,44 @@ app.post('/api/upload-banner', upload.single('banner'), async (req, res) => {
   } catch (error) {
     console.error('Upload banner error:', error);
     res.status(500).json({ success: false, message: "Upload failed" });
+  }
+});
+
+// Test email configuration
+app.get('/api/test-email', async (req, res) => {
+  try {
+    console.log('🔍 Testing email configuration...');
+    
+    const transporter = nodemailer.createTransporter({
+      service: 'gmail',
+      auth: {
+        user: 'ngo.kiosk@gmail.com',
+        pass: 'tmelitcykiowoiiz'
+      },
+      tls: {
+        rejectUnauthorized: false
+      },
+      secure: true,
+      port: 465
+    });
+    
+    // Test the connection
+    await transporter.verify();
+    console.log('✅ Email transporter verified successfully');
+    
+    res.json({ 
+      success: true, 
+      message: "Email configuration is working",
+      note: "You still need to set up the actual Gmail app password"
+    });
+  } catch (error) {
+    console.error('❌ Email test failed:', error);
+    res.status(500).json({ 
+      error: "Email configuration failed", 
+      details: error.message,
+      code: error.code,
+      command: error.command
+    });
   }
 });
 

@@ -147,10 +147,10 @@
 /* Main Content */
 .raffle-winners-main {
   flex: 1;
-  padding: 20px;
-  font-family: 'Arial', sans-serif;
+  padding: 5px;
   overflow-y: auto;
-  max-height: calc(100vh - 200px);
+  min-height: 0;
+  max-height: calc(100vh - 80px); /* Reduced from 100px to 80px to bring footer up more */
 }
 
 .raffle-winners-content {
