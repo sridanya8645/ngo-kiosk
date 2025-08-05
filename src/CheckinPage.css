@@ -1,12 +1,10 @@
 /* Main Container */
 .checkin-container {
-  height: 100vh;
   display: flex;
   flex-direction: column;
-  background: linear-gradient(135deg, #f9b233 0%, #c86d3a 100%);
-  font-family: 'Arial', sans-serif;
+  height: 100vh;
   overflow: hidden;
-  /* Cache busting: Layout changes applied */
+  background: linear-gradient(135deg, #f9b233 0%, #c86d3a 100%);
 }
 
 /* Custom Scrollbar Styles */
@@ -51,13 +49,10 @@
 
 /* Header Section */
 .checkin-header {
+  background: linear-gradient(135deg, #f9b233 0%, #c86d3a 100%);
+  padding: 15px 20px;
+  border-bottom: 2px solid #8B1C1C;
   flex-shrink: 0;
-  padding: 5px 20px; /* Reduced padding */
-  background: rgba(139, 28, 28, 0.9);
-  color: white;
-  text-align: center;
-  position: relative;
-  z-index: 100;
 }
 
 .header-content {
@@ -79,6 +74,7 @@
   top: 50%;
   transform: translateY(-50%);
   margin-left: 20px;
+  z-index: 1001; /* Higher than full screen button */
 }
 
 .logo-image {
@@ -92,7 +88,7 @@
   display: block !important;
   visibility: visible !important;
   opacity: 1 !important;
-  z-index: 1000 !important;
+  z-index: 1001 !important; /* Higher than full screen button */
   min-width: 60px !important;
   min-height: 60px !important;
   position: relative !important;
@@ -186,14 +182,14 @@
   width: 100%;
   max-width: 500px;
   text-align: center;
-  margin-top: 10px; /* Small margin from top */
+  margin-top: 5px; /* Small margin from top */
 }
 
 .checkin-title {
-  font-size: 1.8rem; /* Reduced font size */
+  font-size: 1.6rem; /* Reduced font size */
   font-weight: bold;
   color: #8B1C1C;
-  margin-bottom: 10px; /* Reduced margin */
+  margin-bottom: 8px; /* Reduced margin */
   text-shadow: 0 2px 8px rgba(0,0,0,0.1);
 }
 
@@ -269,9 +265,9 @@
 }
 
 .event-banner {
-  width: 300px;
-  height: 300px;
-  margin: 5px auto; /* Reduced margin */
+  width: 280px;
+  height: 280px;
+  margin: 3px auto; /* Reduced margin */
   border-radius: 15px;
   overflow: hidden;
   box-shadow: 0 4px 12px rgba(0,0,0,0.15);
@@ -282,8 +278,8 @@
 }
 
 .event-banner-img {
-  width: 300px;
-  height: 300px;
+  width: 280px;
+  height: 280px;
   object-fit: cover;
   border-radius: 12px;
 }
@@ -323,9 +319,9 @@
 }
 
 .scanner-container {
-  width: 300px;
-  height: 300px;
-  margin: 5px auto; /* Reduced margin */
+  width: 280px;
+  height: 280px;
+  margin: 3px auto; /* Reduced margin */
   border-radius: 15px;
   overflow: hidden;
   box-shadow: 0 4px 12px rgba(0,0,0,0.15);
@@ -456,12 +452,12 @@
   background: #8B1C1C;
   color: white;
   border: none;
-  padding: 12px 30px; /* Reduced padding */
+  padding: 10px 25px; /* Reduced padding */
   border-radius: 25px;
-  font-size: 1.1rem; /* Reduced font size */
+  font-size: 1rem; /* Reduced font size */
   font-weight: bold;
   cursor: pointer;
-  margin: 10px 0; /* Reduced margin */
+  margin: 8px 0; /* Reduced margin */
   transition: all 0.3s ease;
   box-shadow: 0 4px 12px rgba(0,0,0,0.2);
 }
@@ -469,12 +465,12 @@
 /* Footer */
 .checkin-footer {
   flex-shrink: 0;
-  padding: 8px 24px; /* Reduced padding */
+  padding: 6px 24px; /* Reduced padding */
   background: rgba(255, 255, 255, 0.1);
   border-top: 1px solid rgba(255, 255, 255, 0.2);
   position: relative;
   z-index: 100;
-  min-height: 50px; /* Reduced minimum height */
+  min-height: 40px; /* Reduced minimum height */
   display: flex;
   align-items: center;
   justify-content: center;
@@ -532,9 +528,9 @@
 }
 
 .scanner-text {
-  font-size: 1.2rem; /* Reduced font size */
+  font-size: 1.1rem; /* Reduced font size */
   color: #8B1C1C;
-  margin: 5px 0; /* Reduced margin */
+  margin: 3px 0; /* Reduced margin */
   font-weight: 500;
 }
 

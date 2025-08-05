@@ -34,7 +34,7 @@
 /* Full screen button styles - repositioned */
 .fullscreen-btn {
   position: absolute;
-  right: 80px; /* Moved away from logo */
+  right: 150px; /* Moved further away from logo */
   top: 50%;
   transform: translateY(-50%);
   background: #8B1C1C;
@@ -81,17 +81,6 @@ input, textarea, select {
   user-select: text;
   pointer-events: auto !important;
   z-index: 1001 !important;
-}
-
-/* Remove full screen persistence that blocks interaction */
-.fullscreen-persistent {
-  position: fixed !important;
-  top: 0 !important;
-  left: 0 !important;
-  width: 100vw !important;
-  height: 100vh !important;
-  z-index: 9999 !important;
-  pointer-events: auto !important;
 }
 
 /* Remove any white space */

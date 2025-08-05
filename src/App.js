@@ -35,7 +35,7 @@ function App() {
         fullScreenBtn.innerHTML = '⛶';
         fullScreenBtn.style.cssText = `
           position: absolute;
-          right: 80px;
+          right: 150px;
           top: 50%;
           transform: translateY(-50%);
           background: #8B1C1C;
@@ -54,26 +54,11 @@ function App() {
 
     // Add full screen button after components load
     setTimeout(addFullScreenButton, 2000);
-
-    // Monitor full screen state and re-enter if needed (but don't block interaction)
-    const checkFullScreen = () => {
-      if (!document.fullscreenElement && !document.webkitFullscreenElement && !document.msFullscreenElement) {
-        setTimeout(requestFullScreen, 500);
-      }
-    };
-
-    // Check full screen state every 5 seconds (less aggressive)
-    const fullScreenInterval = setInterval(checkFullScreen, 5000);
-
-    // Cleanup
-    return () => {
-      clearInterval(fullScreenInterval);
-    };
   }, []);
 
   return (
     <Router>
-      <div className="App fullscreen-persistent">
+      <div className="App">
         <Routes>
           <Route path="/" element={<HomePage />} />
           <Route path="/checkin" element={<CheckinPage />} />
