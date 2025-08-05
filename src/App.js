@@ -37,31 +37,55 @@ function App() {
     // Try to enter full screen after a short delay (only once)
     setTimeout(requestFullScreen, 2000);
 
-    // Add full screen button to header
-    const addFullScreenButton = () => {
-      const header = document.querySelector('.header-content');
-      if (header && !document.querySelector('.fullscreen-btn')) {
-        const fullScreenBtn = document.createElement('button');
-        fullScreenBtn.className = 'fullscreen-btn';
-        fullScreenBtn.innerHTML = '⛶';
-        fullScreenBtn.style.cssText = `
-          position: absolute;
-          right: 150px;
-          top: 50%;
-          transform: translateY(-50%);
-          background: #8B1C1C;
-          color: white;
-          border: none;
-          border-radius: 5px;
-          padding: 8px 12px;
-          font-size: 16px;
-          cursor: pointer;
-          z-index: 1000;
-        `;
-        fullScreenBtn.onclick = requestFullScreen;
-        header.appendChild(fullScreenBtn);
-      }
-    };
+                      // Add full screen button to header
+                  const addFullScreenButton = () => {
+                    const header = document.querySelector('.header-content');
+                    if (header && !document.querySelector('.fullscreen-btn')) {
+                      const fullScreenBtn = document.createElement('button');
+                      fullScreenBtn.className = 'fullscreen-btn';
+                      fullScreenBtn.innerHTML = '⛶';
+                      fullScreenBtn.style.cssText = `
+                        position: absolute;
+                        right: 150px;
+                        top: 50%;
+                        transform: translateY(-50%);
+                        background: #8B1C1C;
+                        color: white;
+                        border: none;
+                        border-radius: 5px;
+                        padding: 8px 12px;
+                        font-size: 16px;
+                        cursor: pointer;
+                        z-index: 1000;
+                        display: block !important;
+                        visibility: visible !important;
+                      `;
+                      fullScreenBtn.onclick = requestFullScreen;
+                      header.appendChild(fullScreenBtn);
+                    }
+                  };
+                  
+                  // Monitor for route changes and add full screen button
+                  const addFullScreenButtonOnRouteChange = () => {
+                    setTimeout(() => {
+                      addFullScreenButton();
+                    }, 1000);
+                  };
+                  
+                  // Add full screen button on initial load
+                  addFullScreenButtonOnRouteChange();
+                  
+                  // Monitor for navigation changes
+                  const observer = new MutationObserver(() => {
+                    if (!document.querySelector('.fullscreen-btn')) {
+                      addFullScreenButtonOnRouteChange();
+                    }
+                  });
+                  
+                  observer.observe(document.body, {
+                    childList: true,
+                    subtree: true
+                  });
 
     // Add full screen button after components load
     setTimeout(addFullScreenButton, 3000);
