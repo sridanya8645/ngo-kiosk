@@ -286,8 +286,7 @@ app.post('/api/register', async (req, res) => {
     res.json({ 
       success: true, 
       message: "Registration successful", 
-      registrationId: registrationId,
-      qrCode: qrCodeDataUrl
+      registrationId: registrationId
     });
   } catch (error) {
     console.error('Registration error:', error);

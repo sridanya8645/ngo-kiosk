@@ -100,7 +100,7 @@
   flex: 1;
   text-align: center;
   font-size: 0.7rem; /* Reduced by 3 points from 1rem */
-  color: #000;
+  color: #000 !important;
   font-weight: 600;
   margin-left: 20px;
   line-height: 1.4;
@@ -119,7 +119,7 @@
 
 .admin-button {
   background: none;
-  color: white;
+  color: #000 !important;
   border: none;
   padding: 6px 12px;
   font-size: 0.9rem;
@@ -219,7 +219,7 @@
   padding: 15px 20px;
   min-height: 60px;
   flex-shrink: 0;
-  margin-top: -150px; /* Moved up by 50 more points (from -100px to -150px) */
+  margin-top: -125px; /* Moved down by 25 points (from -150px to -125px) */
 }
 
 .footer-content {
@@ -792,7 +792,7 @@
   margin-top: 0;
   gap: 20px;
   font-size: 1.9rem;
-  color: white;
+  color: #000 !important;
   font-weight: bold;
   width: 100%;
   max-width: 100%;
@@ -805,7 +805,7 @@
   display: flex;
   align-items: center;
   gap: 8px;
-  color: white;
+  color: #000 !important;
   font-weight: 600;
   font-size: 0.9rem;
   flex: 1;
@@ -819,7 +819,7 @@
 
 .footer-icon {
   font-size: 1.1rem;
-  color: white;
+  color: #000 !important;
   flex-shrink: 0;
 }
 
@@ -829,12 +829,12 @@
   display: flex;
   flex-direction: column;
   gap: 2px;
-  color: white;
+  color: #000 !important;
 }
 
 .powered-text {
   font-size: 0.8rem;
-  color: white;
+  color: #000 !important;
   font-weight: 600;
   margin-right: 8px;
 }
@@ -873,7 +873,7 @@
 
 .org-info {
   font-size: 1rem;
-  color: white;
+  color: #000 !important;
   text-align: center;
   flex: 1;
   margin: 0 20px;
