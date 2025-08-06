@@ -355,13 +355,7 @@
   z-index: 1 !important;
 }
 
-/* Hide any additional html5-qrcode elements */
-[class*="html5-qrcode"]:not(#reader) {
-  display: none !important;
-  visibility: hidden !important;
-}
-
-/* Ensure only one reader element is visible */
+/* Basic QR scanner styling */
 #reader {
   width: 280px !important;
   height: 280px !important;
@@ -370,19 +364,6 @@
   border-radius: 15px !important;
   overflow: hidden !important;
   box-shadow: 0 4px 12px rgba(0,0,0,0.2) !important;
-  display: block !important;
-  visibility: visible !important;
-  position: relative !important;
-  z-index: 1 !important;
-}
-
-/* Hide any duplicate elements */
-[class*="html5-qrcode"]:not(#reader),
-[id*="reader"]:not(#reader),
-[class*="qr"]:not(#reader) {
-  display: none !important;
-  visibility: hidden !important;
-  opacity: 0 !important;
 }
 
 #reader-container {
