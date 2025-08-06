@@ -134,6 +134,7 @@ const RegisterPage = () => {
         
         if (responseData.success) {
           console.log('✅ Registration successful! Setting submitSuccess to true');
+          alert('Registration successful! Success message should appear now.');
           setSubmitSuccess(true);
           console.log('✅ submitSuccess state should now be true');
           setTimeout(() => {
@@ -319,7 +320,13 @@ const RegisterPage = () => {
                 type="button" 
                 onClick={() => {
                   console.log('🧪 Test button clicked - setting submitSuccess to true');
+                  console.log('🧪 Current submitSuccess state:', submitSuccess);
                   setSubmitSuccess(true);
+                  console.log('🧪 submitSuccess should now be true');
+                  // Force a re-render
+                  setTimeout(() => {
+                    console.log('🧪 submitSuccess state after timeout:', submitSuccess);
+                  }, 100);
                 }}
                 style={{
                   background: '#28a745',
@@ -338,7 +345,10 @@ const RegisterPage = () => {
           
           {/* Show success message when submitted */}
           {submitSuccess && (
-            <SuccessMessage />
+            <>
+              {console.log('🎉 Success message should be rendering!')}
+              <SuccessMessage />
+            </>
           )}
         </div>
       </main>

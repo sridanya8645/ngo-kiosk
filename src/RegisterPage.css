@@ -96,8 +96,8 @@
 .org-info {
   flex: 1;
   text-align: center;
-  font-size: 1rem;
-  color: #222;
+  font-size: 0.7rem; /* Reduced by 3 points from 1rem */
+  color: #000;
   font-weight: 600;
   margin-left: 20px;
   line-height: 1.4;
@@ -302,22 +302,23 @@
 
 /* Registration Success Message */
 .registration-success {
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  background: rgba(255, 255, 255, 0.95);
-  border: 2px solid #28a745;
-  border-radius: 15px;
-  padding: 20px;
-  text-align: center;
-  z-index: 9999;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
-  max-width: 90%;
-  width: 400px;
+  position: fixed !important;
+  top: 50% !important;
+  left: 50% !important;
+  transform: translate(-50%, -50%) !important;
+  background: rgba(255, 255, 255, 0.95) !important;
+  border: 2px solid #28a745 !important;
+  border-radius: 15px !important;
+  padding: 20px !important;
+  text-align: center !important;
+  z-index: 99999 !important;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3) !important;
+  max-width: 90% !important;
+  width: 400px !important;
   display: block !important;
   visibility: visible !important;
   opacity: 1 !important;
+  pointer-events: auto !important;
 }
 
 .success-icon {
