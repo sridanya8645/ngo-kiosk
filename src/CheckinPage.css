@@ -473,7 +473,7 @@
   padding: 15px 20px;
   min-height: 60px;
   flex-shrink: 0;
-  margin-top: -50px; /* Move footer up by 50px */
+  margin-top: -100px; /* Move footer up by 100px */
 }
 
 .footer-content {
@@ -484,7 +484,7 @@
   margin-top: 0;
   gap: 20px;
   font-size: 1.9rem;
-  color: white;
+  color: #000;
   font-weight: bold;
   width: 100%;
   max-width: 100%;
@@ -525,8 +525,8 @@
 }
 
 .pits-logo {
-  height: 12rem;
-  width: 20rem;
+  height: 25px;
+  width: auto;
   object-fit: contain;
 }
 

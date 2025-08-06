@@ -13,7 +13,7 @@ const pageFiles = [
   'src/RaffleWinnersPage.css'
 ];
 
-// Standard header styling
+// Standard header styling - ALL TEXT BLACK
 const standardHeader = `
 /* Header - Standard across all pages */
 .header-content {
@@ -43,7 +43,7 @@ const standardHeader = `
 
 .org-info {
   font-size: 1rem;
-  color: #222;
+  color: #000;
   text-align: center;
   flex: 1;
   margin: 0 20px;
@@ -63,7 +63,7 @@ const standardHeader = `
 
 .admin-button {
   background: rgba(255, 255, 255, 0.2);
-  color: #222;
+  color: #000;
   border: 1px solid rgba(255, 255, 255, 0.3);
   padding: 8px 16px;
   border-radius: 6px;
@@ -83,7 +83,7 @@ const standardHeader = `
 }
 `;
 
-// Standard footer styling - matching admin page exactly
+// Standard footer styling - ALL TEXT BLACK and moved up more
 const standardFooter = `
 /* Footer - Standard across all pages */
 .footer-content {
@@ -94,7 +94,7 @@ const standardFooter = `
   margin-top: 0;
   gap: 20px;
   font-size: 1.9rem;
-  color: white;
+  color: #000;
   font-weight: bold;
   width: 100%;
   max-width: 100%;
@@ -182,15 +182,15 @@ pageFiles.forEach(filePath => {
       const footerRegex = new RegExp(`(${footerClass.replace('.', '\\.')}\\s*{[^}]*background:\\s*)[^;]+`, 'g');
       content = content.replace(footerRegex, `$1#8B1C1C`);
 
-      // Move footer up by 50px for all pages except register
-      if (filePath !== 'src/RegisterPage.css') {
+      // Move footer up by 100px for all pages except admin and register (more aggressive)
+      if (filePath !== 'src/AdminPage.css' && filePath !== 'src/RegisterPage.css') {
         const marginTopRegex = new RegExp(`(${footerClass.replace('.', '\\.')}\\s*{[^}]*margin-top:\\s*)[^;]+`, 'g');
         if (content.match(marginTopRegex)) {
-          content = content.replace(marginTopRegex, `$1-50px`);
+          content = content.replace(marginTopRegex, `$1-100px`);
         } else {
           // Add margin-top if it doesn't exist
           const footerBlockRegex = new RegExp(`(${footerClass.replace('.', '\\.')}\\s*{[^}]*)(})`, 'g');
-          content = content.replace(footerBlockRegex, `$1  margin-top: -50px;\n$2`);
+          content = content.replace(footerBlockRegex, `$1  margin-top: -100px;\n$2`);
         }
       }
 

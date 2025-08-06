@@ -139,7 +139,7 @@ const RegisterPage = () => {
           setTimeout(() => {
             console.log('🔄 Redirecting to home page...');
             navigate('/');
-          }, 3000);
+          }, 5000);
         } else {
           console.error('❌ Registration failed:', responseData.message);
           setErrors({ submit: responseData.message || 'Registration failed. Please try again.' });
@@ -160,13 +160,30 @@ const RegisterPage = () => {
 
   // Success message component
   const SuccessMessage = () => (
-    <div className="registration-success">
+    <div className="registration-success" style={{
+      position: 'fixed',
+      top: '50%',
+      left: '50%',
+      transform: 'translate(-50%, -50%)',
+      background: 'rgba(255, 255, 255, 0.95)',
+      border: '2px solid #28a745',
+      borderRadius: '15px',
+      padding: '20px',
+      textAlign: 'center',
+      zIndex: 9999,
+      boxShadow: '0 4px 20px rgba(0, 0, 0, 0.3)',
+      maxWidth: '90%',
+      width: '400px',
+      display: 'block !important',
+      visibility: 'visible !important',
+      opacity: '1 !important'
+    }}>
       <div className="success-icon">✅</div>
       <h2 className="success-title">Registration Successful!</h2>
       <p className="success-message">
         Thank you for registering with Shirdi Sai Dham. You will receive an email with your QR code for check-in shortly.
       </p>
-      <p style={{ fontSize: '0.9rem', color: '#666', marginTop: '10px' }}>Redirecting to home page in 3 seconds...</p>
+      <p style={{ fontSize: '0.9rem', color: '#666', marginTop: '10px' }}>Redirecting to home page in 5 seconds...</p>
     </div>
   );
 
