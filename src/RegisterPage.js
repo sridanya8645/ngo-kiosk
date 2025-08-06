@@ -17,9 +17,9 @@ const RegisterPage = () => {
   const [errors, setErrors] = useState({});
   const [allEvents, setAllEvents] = useState([]);
 
-  // Debug: Monitor submitSuccess state changes
+  // Monitor submitSuccess state changes
   useEffect(() => {
-    console.log('submitSuccess state changed to:', submitSuccess);
+    console.log('🔄 submitSuccess state changed to:', submitSuccess);
   }, [submitSuccess]);
 
   useEffect(() => {
@@ -80,14 +80,23 @@ const RegisterPage = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     
-    if (!validateForm()) {
+    console.log('🔄 Form submission started');
+    console.log('📝 Form data:', formData);
+    
+    // Validate form
+    const validationErrors = validateForm();
+    if (Object.keys(validationErrors).length > 0) {
+      console.log('❌ Validation errors:', validationErrors);
+      setErrors(validationErrors);
       return;
     }
 
     setIsSubmitting(true);
-    
+    setErrors({});
+
     try {
-      // Use the first event with a banner, or first available event
+      console.log('🌐 Sending registration request...');
+      
       let eventId = null;
       const eventWithBanner = allEvents.find(event => event.banner);
       if (eventWithBanner) {
@@ -102,7 +111,6 @@ const RegisterPage = () => {
         return;
       }
 
-      // Now register the user
       const response = await fetch('/api/register', {
         method: 'POST',
         headers: {
@@ -117,32 +125,35 @@ const RegisterPage = () => {
         })
       });
 
-      console.log('Registration response status:', response.status);
-      console.log('Registration response ok:', response.ok);
+      console.log('📡 Registration response status:', response.status);
+      console.log('📡 Registration response ok:', response.ok);
 
       if (response.ok) {
         const responseData = await response.json();
-        console.log('Registration response data:', responseData);
+        console.log('📡 Registration response data:', responseData);
         
         if (responseData.success) {
-          console.log('Setting submitSuccess to true');
+          console.log('✅ Registration successful! Setting submitSuccess to true');
           setSubmitSuccess(true);
-          console.log('submitSuccess state should now be true');
+          console.log('✅ submitSuccess state should now be true');
           setTimeout(() => {
+            console.log('🔄 Redirecting to home page...');
             navigate('/');
           }, 3000);
         } else {
-          console.error('Registration failed:', responseData.message);
+          console.error('❌ Registration failed:', responseData.message);
           setErrors({ submit: responseData.message || 'Registration failed. Please try again.' });
         }
       } else {
         const errorData = await response.json();
-        console.error('Registration error:', errorData);
+        console.error('❌ Registration error:', errorData);
         setErrors({ submit: errorData.message || 'Registration failed. Please try again.' });
       }
     } catch (error) {
+      console.error('❌ Network error:', error);
       setErrors({ submit: 'Network error. Please try again.' });
     } finally {
+      console.log('🏁 Form submission finished');
       setIsSubmitting(false);
     }
   };
@@ -209,81 +220,103 @@ const RegisterPage = () => {
           
           {/* Form third - only show if not submitted */}
           {!submitSuccess && (
-            <form onSubmit={handleSubmit} className="register-form">
-              <div className="form-group">
-                <label htmlFor="name" className="form-label">Full Name *</label>
-                <input
-                  type="text"
-                  id="name"
-                  name="name"
-                  value={formData.name}
-                  onChange={handleInputChange}
-                  className={`form-input ${errors.name ? 'error' : ''}`}
-                  placeholder="Enter your full name"
-                />
-                {errors.name && <span className="error-message">{errors.name}</span>}
-              </div>
+            <>
+              <form onSubmit={handleSubmit} className="register-form">
+                <div className="form-group">
+                  <label htmlFor="name" className="form-label">Full Name *</label>
+                  <input
+                    type="text"
+                    id="name"
+                    name="name"
+                    value={formData.name}
+                    onChange={handleInputChange}
+                    className={`form-input ${errors.name ? 'error' : ''}`}
+                    placeholder="Enter your full name"
+                  />
+                  {errors.name && <span className="error-message">{errors.name}</span>}
+                </div>
 
-              <div className="form-group">
-                <label htmlFor="phone" className="form-label">Phone Number *</label>
-                <input
-                  type="tel"
-                  id="phone"
-                  name="phone"
-                  value={formData.phone}
-                  onChange={handleInputChange}
-                  className={`form-input ${errors.phone ? 'error' : ''}`}
-                  placeholder="Enter your phone number"
-                />
-                {errors.phone && <span className="error-message">{errors.phone}</span>}
-              </div>
+                <div className="form-group">
+                  <label htmlFor="phone" className="form-label">Phone Number *</label>
+                  <input
+                    type="tel"
+                    id="phone"
+                    name="phone"
+                    value={formData.phone}
+                    onChange={handleInputChange}
+                    className={`form-input ${errors.phone ? 'error' : ''}`}
+                    placeholder="Enter your phone number"
+                  />
+                  {errors.phone && <span className="error-message">{errors.phone}</span>}
+                </div>
 
-              <div className="form-group">
-                <label htmlFor="email" className="form-label">Email Address *</label>
-                <input
-                  type="email"
-                  id="email"
-                  name="email"
-                  value={formData.email}
-                  onChange={handleInputChange}
-                  className={`form-input ${errors.email ? 'error' : ''}`}
-                  placeholder="Enter your email address"
-                />
-                {errors.email && <span className="error-message">{errors.email}</span>}
-              </div>
+                <div className="form-group">
+                  <label htmlFor="email" className="form-label">Email Address *</label>
+                  <input
+                    type="email"
+                    id="email"
+                    name="email"
+                    value={formData.email}
+                    onChange={handleInputChange}
+                    className={`form-input ${errors.email ? 'error' : ''}`}
+                    placeholder="Enter your email address"
+                  />
+                  {errors.email && <span className="error-message">{errors.email}</span>}
+                </div>
 
-              <div className="form-group">
-                <label htmlFor="volunteer" className="form-label">Interested in Volunteering?</label>
-                <select
-                  id="volunteer"
-                  name="volunteer"
-                  value={formData.volunteer}
-                  onChange={handleInputChange}
-                  className="form-select"
-                >
-                  <option value="No">No</option>
-                  <option value="Yes">Yes</option>
-                </select>
-              </div>
+                <div className="form-group">
+                  <label htmlFor="volunteer" className="form-label">Interested in Volunteering?</label>
+                  <select
+                    id="volunteer"
+                    name="volunteer"
+                    value={formData.volunteer}
+                    onChange={handleInputChange}
+                    className="form-select"
+                  >
+                    <option value="No">No</option>
+                    <option value="Yes">Yes</option>
+                  </select>
+                </div>
 
-              <div className="form-actions">
-                <button
-                  type="button"
-                  onClick={() => navigate('/')}
-                  className="cancel-button"
-                  disabled={isSubmitting}
-                >
-                  Cancel
-                </button>
-                <button
-                  type="submit"
-                  className="submit-button"
-                  disabled={isSubmitting}
-                >
-                  {isSubmitting ? 'Registering...' : 'Register'}
-                </button>
-              </div>
-            </form>
+                <div className="form-actions">
+                  <button
+                    type="button"
+                    onClick={() => navigate('/')}
+                    className="cancel-button"
+                    disabled={isSubmitting}
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    type="submit"
+                    className="submit-button"
+                    disabled={isSubmitting}
+                  >
+                    {isSubmitting ? 'Registering...' : 'Register'}
+                  </button>
+                </div>
+              </form>
+              
+              {/* Test button to manually trigger success message */}
+              <button 
+                type="button" 
+                onClick={() => {
+                  console.log('🧪 Test button clicked - setting submitSuccess to true');
+                  setSubmitSuccess(true);
+                }}
+                style={{
+                  background: '#28a745',
+                  color: 'white',
+                  border: 'none',
+                  padding: '10px 20px',
+                  borderRadius: '5px',
+                  marginTop: '10px',
+                  cursor: 'pointer'
+                }}
+              >
+                🧪 Test Success Message
+              </button>
+            </>
           )}
           
           {/* Show success message when submitted */}

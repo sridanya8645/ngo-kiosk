@@ -329,7 +329,7 @@
   .home-footer {
     flex-shrink: 0;
     padding: 18px 30px;
-    background: rgba(255, 255, 255, 0.1);
+    background: #8B1C1C;
     border-top: 1px solid rgba(255, 255, 255, 0.2);
     min-height: 75px;
   }
@@ -416,7 +416,7 @@
   .home-footer {
     flex-shrink: 0;
     padding: 20px 35px;
-    background: rgba(255, 255, 255, 0.1);
+    background: #8B1C1C;
     border-top: 1px solid rgba(255, 255, 255, 0.2);
     min-height: 85px;
   }
@@ -503,7 +503,7 @@
   .home-footer {
     flex-shrink: 0;
     padding: 15px 25px;
-    background: rgba(255, 255, 255, 0.1);
+    background: #8B1C1C;
     border-top: 1px solid rgba(255, 255, 255, 0.2);
     min-height: 70px;
   }
@@ -590,7 +590,7 @@
   .home-footer {
     flex-shrink: 0;
     padding: 15px 25px;
-    background: rgba(255, 255, 255, 0.1);
+    background: #8B1C1C;
     border-top: 1px solid rgba(255, 255, 255, 0.2);
     min-height: 70px;
   }
@@ -662,7 +662,7 @@
   .home-footer {
     min-height: 100px !important;
     padding: 20px 24px !important;
-    background: rgba(255, 255, 255, 0.2) !important;
+    background: #8B1C1C;
     border-top: 3px solid rgba(255, 255, 255, 0.4) !important;
     position: relative !important;
     z-index: 100 !important;
@@ -775,3 +775,131 @@
     height: 25px;
   }
 } 
+/* Footer - Standard across all pages */
+.footer-content {
+  display: flex !important;
+  flex-direction: row !important;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 0;
+  gap: 20px;
+  font-size: 1.9rem;
+  color: white;
+  font-weight: bold;
+  width: 100%;
+  max-width: 100%;
+  padding: 0 20px;
+  position: relative;
+  z-index: 10;
+}
+
+.footer-section {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: white;
+  font-weight: 600;
+  font-size: 0.9rem;
+  flex: 1;
+}
+
+.footer-section:has(.powered-text) {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.footer-icon {
+  font-size: 1.1rem;
+  color: white;
+  flex-shrink: 0;
+}
+
+.footer-text {
+  font-size: 0.9rem;
+  line-height: 1.2;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  color: white;
+}
+
+.powered-text {
+  font-size: 0.8rem;
+  color: white;
+  font-weight: 600;
+  margin-right: 8px;
+}
+
+.pits-logo {
+  height: 25px;
+  width: auto;
+  object-fit: contain;
+}
+
+/* Header - Standard across all pages */
+.header-content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+.logo-section {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  z-index: 1001;
+}
+
+.logo-image {
+  height: 50px;
+  width: 50px;
+  object-fit: contain;
+  border-radius: 50%;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.org-info {
+  font-size: 1rem;
+  color: white;
+  text-align: center;
+  flex: 1;
+  margin: 0 20px;
+  font-weight: 500;
+}
+
+.admin-bar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.admin-nav-buttons {
+  display: flex;
+  gap: 10px;
+}
+
+.admin-button {
+  background: rgba(255, 255, 255, 0.2);
+  color: white;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.admin-button:hover {
+  background: rgba(255, 255, 255, 0.3);
+  transform: translateY(-1px);
+}
