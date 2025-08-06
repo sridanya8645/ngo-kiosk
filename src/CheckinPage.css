@@ -361,6 +361,30 @@
   visibility: hidden !important;
 }
 
+/* Ensure only one reader element is visible */
+#reader {
+  width: 280px !important;
+  height: 280px !important;
+  margin: 0 auto !important;
+  border: 3px solid #8B1C1C !important;
+  border-radius: 15px !important;
+  overflow: hidden !important;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2) !important;
+  display: block !important;
+  visibility: visible !important;
+  position: relative !important;
+  z-index: 1 !important;
+}
+
+/* Hide any duplicate elements */
+[class*="html5-qrcode"]:not(#reader),
+[id*="reader"]:not(#reader),
+[class*="qr"]:not(#reader) {
+  display: none !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
+}
+
 #reader-container {
   display: flex !important;
   justify-content: center !important;
