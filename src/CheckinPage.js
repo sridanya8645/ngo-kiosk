@@ -124,7 +124,7 @@ export default function CheckinPage() {
       // Request camera permissions first
       navigator.mediaDevices.getUserMedia({ 
         video: { 
-          facingMode: "user",
+          facingMode: "user", // Use front camera
           width: { ideal: 640 },
           height: { ideal: 480 }
         } 
@@ -174,7 +174,57 @@ export default function CheckinPage() {
         })
         .catch((error) => {
           console.error('Camera permission denied:', error);
-          setErrorMsg('Camera access needed for QR scanning. Please allow camera permissions in your browser settings.');
+          // Try with different camera settings as fallback
+          navigator.mediaDevices.getUserMedia({ 
+            video: { 
+              facingMode: "user", // Try front camera as fallback
+              width: { ideal: 640 },
+              height: { ideal: 480 }
+            } 
+          })
+          .then(stream => {
+            console.log('Fallback camera permission granted');
+            stream.getTracks().forEach(track => track.stop());
+            
+            html5QrCodeRef.current
+              .start(
+                { facingMode: "user" },
+                { 
+                  fps: 10, 
+                  qrbox: { width: 280, height: 280 },
+                  aspectRatio: 1.0
+                },
+                qrCodeMessage => {
+                  console.log('QR Code detected:', qrCodeMessage);
+                  try {
+                    const data = JSON.parse(qrCodeMessage);
+                    const registrationId = data.registrationId;
+                    if (!registrationId) throw new Error("No registrationId in QR code");
+                    handleCheckin(registrationId, data.name);
+                  } catch (e) {
+                    console.error('QR code parsing error:', e);
+                    setErrorMsg('Invalid QR code format');
+                  }
+                },
+                errorMessage => {
+                  console.log('Scanner error:', errorMessage);
+                }
+              )
+              .then(() => {
+                isRunning.current = true;
+                console.log('Scanner started successfully with fallback camera');
+                setErrorMsg('');
+              })
+              .catch((error) => {
+                isRunning.current = false;
+                console.error('Scanner failed to start with fallback:', error);
+                setErrorMsg('Failed to start camera. Please check permissions and try again.');
+              });
+          })
+          .catch((fallbackError) => {
+            console.error('All camera access attempts failed:', fallbackError);
+            setErrorMsg('Camera access needed for QR scanning. Please allow camera permissions in your browser settings and refresh the page.');
+          });
         });
       } catch (error) {
         console.error('QR Scanner initialization error:', error);
