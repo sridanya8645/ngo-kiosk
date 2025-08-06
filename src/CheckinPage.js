@@ -59,6 +59,12 @@ export default function CheckinPage() {
   }, []);
 
   useEffect(() => {
+    // Clear the container completely
+    const container = document.getElementById("reader-container");
+    if (container) {
+      container.innerHTML = '';
+    }
+
     // Remove any existing #reader element
     const oldReader = document.getElementById("reader");
     if (oldReader && oldReader.parentNode) {
@@ -68,16 +74,6 @@ export default function CheckinPage() {
     // Create a new #reader element
     const readerDiv = document.createElement("div");
     readerDiv.id = "reader";
-    readerDiv.style.width = "280px";
-    readerDiv.style.height = "280px";
-    readerDiv.style.margin = "0 auto";
-    readerDiv.style.overflow = "hidden";
-    readerDiv.style.display = "block";
-    readerDiv.style.visibility = "visible";
-    readerDiv.style.border = "3px solid #8B1C1C";
-    readerDiv.style.borderRadius = "15px";
-    readerDiv.style.boxShadow = "0 4px 12px rgba(0,0,0,0.2)";
-    const container = document.getElementById("reader-container");
     if (container) {
       container.appendChild(readerDiv);
       console.log('QR Scanner container created and appended');
@@ -349,7 +345,7 @@ export default function CheckinPage() {
                 textAlign: 'center',
                 fontWeight: '500'
               }}>
-                Register if not previously registered then only QR scanning
+                Register For {allEvents.filter(event => event.banner).length > 0 ? allEvents.filter(event => event.banner)[0].name : 'Events'} if not previously registered
               </p>
             </div>
           </div>
