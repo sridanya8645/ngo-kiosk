@@ -123,16 +123,22 @@ const RegisterPage = () => {
       if (response.ok) {
         const responseData = await response.json();
         console.log('Registration response data:', responseData);
-        console.log('Setting submitSuccess to true');
-        setSubmitSuccess(true);
-        console.log('submitSuccess state should now be true');
-        setTimeout(() => {
-          navigate('/');
-        }, 3000);
+        
+        if (responseData.success) {
+          console.log('Setting submitSuccess to true');
+          setSubmitSuccess(true);
+          console.log('submitSuccess state should now be true');
+          setTimeout(() => {
+            navigate('/');
+          }, 3000);
+        } else {
+          console.error('Registration failed:', responseData.message);
+          setErrors({ submit: responseData.message || 'Registration failed. Please try again.' });
+        }
       } else {
         const errorData = await response.json();
         console.error('Registration error:', errorData);
-        setErrors({ submit: errorData.error || 'Registration failed. Please try again.' });
+        setErrors({ submit: errorData.message || 'Registration failed. Please try again.' });
       }
     } catch (error) {
       setErrors({ submit: 'Network error. Please try again.' });

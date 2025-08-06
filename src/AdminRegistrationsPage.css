@@ -414,16 +414,13 @@
 
 /* Footer */
 .admin-registrations-footer {
+  background: #8B1C1C;
+  color: white;
+  text-align: center;
+  padding: 15px 20px;
+  min-height: 60px;
   flex-shrink: 0;
-  padding: 6px 24px;
-  background: rgba(255, 255, 255, 0.1);
-  border-top: 1px solid rgba(255, 255, 255, 0.2);
-  position: relative;
-  z-index: 100;
-  min-height: 40px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  margin-top: -50px; /* Move footer up by 50px */
 }
 
 .footer-content {
@@ -431,10 +428,10 @@
   flex-direction: row !important;
   justify-content: space-between;
   align-items: center;
-  margin-top: 0; /* Match home page style */
+  margin-top: 0;
   gap: 20px;
   font-size: 1.9rem;
-  color: #000;
+  color: white;
   font-weight: bold;
   width: 100%;
   max-width: 100%;
@@ -447,7 +444,7 @@
   display: flex;
   align-items: center;
   gap: 8px;
-  color: #222;
+  color: white;
   font-weight: 600;
   font-size: 0.9rem;
   flex: 1;
@@ -461,7 +458,7 @@
 
 .footer-icon {
   font-size: 1.1rem;
-  color: #8B1C1C;
+  color: white;
   flex-shrink: 0;
 }
 
@@ -475,14 +472,14 @@
 
 .powered-text {
   font-size: 0.8rem;
-  color: #222;
+  color: white;
   font-weight: 600;
   margin-right: 8px;
 }
 
 .powered-text {
   font-size: 0.8rem;
-  color: #222;
+  color: white;
   font-weight: 600;
   margin-right: 8px;
 }

@@ -205,9 +205,13 @@
 
 /* Footer */
 .home-footer {
-  padding: 16px 24px;
-  margin-top: auto;
+  background: #8B1C1C;
+  color: white;
+  text-align: center;
+  padding: 15px 20px;
+  min-height: 60px;
   flex-shrink: 0;
+  margin-top: -50px; /* Move footer up by 50px */
 }
 
 .footer-content {
@@ -218,7 +222,7 @@
   margin-top: 0;
   gap: 20px;
   font-size: 1.9rem;
-  color: #000;
+  color: white;
   font-weight: bold;
   width: 100%;
   max-width: 100%;
