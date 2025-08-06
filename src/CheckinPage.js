@@ -59,7 +59,18 @@ export default function CheckinPage() {
   }, []);
 
   useEffect(() => {
-    // Clear the container completely and wait a bit
+    // Stop any existing scanner first
+    if (html5QrCodeRef.current && isRunning.current) {
+      html5QrCodeRef.current.stop().then(() => {
+        html5QrCodeRef.current = null;
+        isRunning.current = false;
+      }).catch(() => {
+        html5QrCodeRef.current = null;
+        isRunning.current = false;
+      });
+    }
+
+    // Clear the container completely
     const container = document.getElementById("reader-container");
     if (container) {
       container.innerHTML = '';
@@ -71,17 +82,25 @@ export default function CheckinPage() {
       oldReader.parentNode.removeChild(oldReader);
     }
 
-    // Also remove any elements with class containing 'html5-qrcode'
-    const html5Elements = document.querySelectorAll('[class*="html5-qrcode"]');
+    // Remove ALL html5-qrcode related elements
+    const html5Elements = document.querySelectorAll('[class*="html5-qrcode"], [id*="reader"], [class*="qr"]');
     html5Elements.forEach(el => {
       if (el.parentNode) {
         el.parentNode.removeChild(el);
       }
     });
 
-    // Create a new #reader element
+    // Create a new #reader element with specific styling
     const readerDiv = document.createElement("div");
     readerDiv.id = "reader";
+    readerDiv.style.width = "280px";
+    readerDiv.style.height = "280px";
+    readerDiv.style.margin = "0 auto";
+    readerDiv.style.border = "3px solid #8B1C1C";
+    readerDiv.style.borderRadius = "15px";
+    readerDiv.style.overflow = "hidden";
+    readerDiv.style.boxShadow = "0 4px 12px rgba(0,0,0,0.2)";
+    
     if (container) {
       container.appendChild(readerDiv);
       console.log('QR Scanner container created and appended');
@@ -89,7 +108,7 @@ export default function CheckinPage() {
       console.error('Reader container not found');
     }
 
-    // Add a small delay to ensure DOM is cleared
+    // Add a longer delay to ensure DOM is completely cleared
     setTimeout(() => {
       try {
         html5QrCodeRef.current = new Html5Qrcode("reader");
@@ -161,7 +180,7 @@ export default function CheckinPage() {
         console.error('QR Scanner initialization error:', error);
         setErrorMsg('Camera initialization failed');
       }
-    }, 100); // 100ms delay
+    }, 500); // 500ms delay to ensure complete cleanup
 
     return () => {
       if (html5QrCodeRef.current && isRunning.current) {

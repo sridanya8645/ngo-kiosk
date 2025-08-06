@@ -351,6 +351,14 @@
   box-shadow: 0 4px 12px rgba(0,0,0,0.2) !important;
   display: block !important;
   visibility: visible !important;
+  position: relative !important;
+  z-index: 1 !important;
+}
+
+/* Hide any additional html5-qrcode elements */
+[class*="html5-qrcode"]:not(#reader) {
+  display: none !important;
+  visibility: hidden !important;
 }
 
 #reader-container {
