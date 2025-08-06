@@ -17,6 +17,11 @@ const RegisterPage = () => {
   const [errors, setErrors] = useState({});
   const [allEvents, setAllEvents] = useState([]);
 
+  // Debug: Monitor submitSuccess state changes
+  useEffect(() => {
+    console.log('submitSuccess state changed to:', submitSuccess);
+  }, [submitSuccess]);
+
   useEffect(() => {
     // Fetch all events (same as CheckinPage)
     fetch("/api/events")

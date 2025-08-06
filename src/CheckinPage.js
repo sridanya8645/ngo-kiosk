@@ -324,14 +324,12 @@ export default function CheckinPage() {
             {/* Status Messages */}
             {successMsg && (
               <div className="success-message">
-                <span className="success-icon">✅</span>
                 {successMsg}
               </div>
             )}
             
             {errorMsg && (
               <div className="error-message">
-                <span className="error-icon">❌</span>
                 {errorMsg}
               </div>
             )}

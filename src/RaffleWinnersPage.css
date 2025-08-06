@@ -344,7 +344,18 @@
 }
 
 .footer-content {
+  display: flex !important;
+  flex-direction: row !important;
+  justify-content: space-between;
+  align-items: center;
   margin-top: 0;
+  gap: 20px;
+  font-size: 1.9rem;
+  color: white;
+  font-weight: bold;
+  width: 100%;
+  max-width: 100%;
+  padding: 0 20px;
   position: relative;
   z-index: 10;
 }
