@@ -311,10 +311,13 @@
   border-radius: 15px;
   padding: 20px;
   text-align: center;
-  z-index: 1000;
+  z-index: 9999;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
   max-width: 90%;
   width: 400px;
+  display: block !important;
+  visibility: visible !important;
+  opacity: 1 !important;
 }
 
 .success-icon {

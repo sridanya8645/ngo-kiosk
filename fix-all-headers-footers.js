@@ -4,7 +4,7 @@ const path = require('path');
 // List of all page CSS files
 const pageFiles = [
   'src/HomePage.css',
-  'src/RegisterPage.css', 
+  'src/RegisterPage.css',
   'src/CheckinPage.css',
   'src/AdminPage.css',
   'src/AdminRegistrationsPage.css',
@@ -43,7 +43,7 @@ const standardHeader = `
 
 .org-info {
   font-size: 1rem;
-  color: white;
+  color: #222;
   text-align: center;
   flex: 1;
   margin: 0 20px;
@@ -63,7 +63,7 @@ const standardHeader = `
 
 .admin-button {
   background: rgba(255, 255, 255, 0.2);
-  color: white;
+  color: #222;
   border: 1px solid rgba(255, 255, 255, 0.3);
   padding: 8px 16px;
   border-radius: 6px;
@@ -83,7 +83,7 @@ const standardHeader = `
 }
 `;
 
-// Standard footer styling
+// Standard footer styling - matching admin page exactly
 const standardFooter = `
 /* Footer - Standard across all pages */
 .footer-content {
@@ -107,38 +107,31 @@ const standardFooter = `
   display: flex;
   align-items: center;
   gap: 8px;
-  color: white;
-  font-weight: 600;
-  font-size: 0.9rem;
   flex: 1;
 }
 
 .footer-section:has(.powered-text) {
-  display: flex;
-  align-items: center;
-  gap: 8px;
+  justify-content: flex-end;
 }
 
 .footer-icon {
-  font-size: 1.1rem;
-  color: white;
-  flex-shrink: 0;
+  font-size: 1.5rem;
+  color: #000;
 }
 
 .footer-text {
-  font-size: 0.9rem;
+  font-size: 1.9rem;
+  color: #000;
+  font-weight: bold;
   line-height: 1.2;
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-  color: white;
 }
 
 .powered-text {
-  font-size: 0.8rem;
-  color: white;
-  font-weight: 600;
+  font-size: 1.8rem;
+  color: #000;
+  font-weight: bold;
   margin-right: 8px;
+  display: inline-block;
 }
 
 .pits-logo {
@@ -151,7 +144,7 @@ const standardFooter = `
 // Standard footer background for each page
 const footerBackgrounds = {
   'src/HomePage.css': '.home-footer',
-  'src/RegisterPage.css': '.register-footer', 
+  'src/RegisterPage.css': '.register-footer',
   'src/CheckinPage.css': '.checkin-footer',
   'src/AdminPage.css': '.admin-footer',
   'src/AdminRegistrationsPage.css': '.admin-registrations-footer',
@@ -163,7 +156,7 @@ const footerBackgrounds = {
 // Standard header background for each page
 const headerBackgrounds = {
   'src/HomePage.css': '.home-header',
-  'src/RegisterPage.css': '.register-header', 
+  'src/RegisterPage.css': '.register-header',
   'src/CheckinPage.css': '.checkin-header',
   'src/AdminPage.css': '.admin-header',
   'src/AdminRegistrationsPage.css': '.admin-registrations-header',
@@ -177,31 +170,43 @@ console.log('🔧 Fixing header and footer consistency across all pages...');
 pageFiles.forEach(filePath => {
   if (fs.existsSync(filePath)) {
     console.log(`📝 Processing: ${filePath}`);
-    
+
     let content = fs.readFileSync(filePath, 'utf8');
-    
+
     // Get the footer class name for this page
     const footerClass = footerBackgrounds[filePath];
     const headerClass = headerBackgrounds[filePath];
-    
+
     if (footerClass) {
       // Update footer background to #8B1C1C
       const footerRegex = new RegExp(`(${footerClass.replace('.', '\\.')}\\s*{[^}]*background:\\s*)[^;]+`, 'g');
       content = content.replace(footerRegex, `$1#8B1C1C`);
-      
+
+      // Move footer up by 50px for all pages except register
+      if (filePath !== 'src/RegisterPage.css') {
+        const marginTopRegex = new RegExp(`(${footerClass.replace('.', '\\.')}\\s*{[^}]*margin-top:\\s*)[^;]+`, 'g');
+        if (content.match(marginTopRegex)) {
+          content = content.replace(marginTopRegex, `$1-50px`);
+        } else {
+          // Add margin-top if it doesn't exist
+          const footerBlockRegex = new RegExp(`(${footerClass.replace('.', '\\.')}\\s*{[^}]*)(})`, 'g');
+          content = content.replace(footerBlockRegex, `$1  margin-top: -50px;\n$2`);
+        }
+      }
+
       // Add standard footer styling if not present
       if (!content.includes('/* Footer - Standard across all pages */')) {
         content += standardFooter;
       }
     }
-    
+
     if (headerClass) {
       // Add standard header styling if not present
       if (!content.includes('/* Header - Standard across all pages */')) {
         content += standardHeader;
       }
     }
-    
+
     // Write back the updated content
     fs.writeFileSync(filePath, content);
     console.log(`✅ Updated: ${filePath}`);
