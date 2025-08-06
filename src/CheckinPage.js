@@ -59,7 +59,7 @@ export default function CheckinPage() {
   }, []);
 
   useEffect(() => {
-    // Clear the container completely
+    // Clear the container completely and wait a bit
     const container = document.getElementById("reader-container");
     if (container) {
       container.innerHTML = '';
@@ -71,6 +71,14 @@ export default function CheckinPage() {
       oldReader.parentNode.removeChild(oldReader);
     }
 
+    // Also remove any elements with class containing 'html5-qrcode'
+    const html5Elements = document.querySelectorAll('[class*="html5-qrcode"]');
+    html5Elements.forEach(el => {
+      if (el.parentNode) {
+        el.parentNode.removeChild(el);
+      }
+    });
+
     // Create a new #reader element
     const readerDiv = document.createElement("div");
     readerDiv.id = "reader";
@@ -81,9 +89,11 @@ export default function CheckinPage() {
       console.error('Reader container not found');
     }
 
-    try {
-      html5QrCodeRef.current = new Html5Qrcode("reader");
-      console.log('QR Scanner initialized');
+    // Add a small delay to ensure DOM is cleared
+    setTimeout(() => {
+      try {
+        html5QrCodeRef.current = new Html5Qrcode("reader");
+        console.log('QR Scanner initialized');
       
       // Check if camera is available
       if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
@@ -147,10 +157,11 @@ export default function CheckinPage() {
           console.error('Camera permission denied:', error);
           setErrorMsg('Camera access needed for QR scanning. Please allow camera permissions in your browser settings.');
         });
-    } catch (error) {
-      console.error('QR Scanner initialization error:', error);
-      setErrorMsg('Camera initialization failed');
-    }
+      } catch (error) {
+        console.error('QR Scanner initialization error:', error);
+        setErrorMsg('Camera initialization failed');
+      }
+    }, 100); // 100ms delay
 
     return () => {
       if (html5QrCodeRef.current && isRunning.current) {
