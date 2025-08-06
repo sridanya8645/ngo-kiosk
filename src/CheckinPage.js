@@ -68,8 +68,8 @@ export default function CheckinPage() {
     // Create a new #reader element
     const readerDiv = document.createElement("div");
     readerDiv.id = "reader";
-    readerDiv.style.width = "400px";
-    readerDiv.style.height = "400px";
+    readerDiv.style.width = "280px";
+    readerDiv.style.height = "280px";
     readerDiv.style.margin = "0 auto";
     readerDiv.style.overflow = "hidden";
     readerDiv.style.display = "block";
@@ -114,7 +114,7 @@ export default function CheckinPage() {
               { facingMode: "user" }, // Use front camera on mobile
               { 
                 fps: 10, 
-                qrbox: { width: 250, height: 250 },
+                qrbox: { width: 280, height: 280 },
                 aspectRatio: 1.0
               },
           qrCodeMessage => {
@@ -208,7 +208,7 @@ export default function CheckinPage() {
           if (html5QrCodeRef.current && !isRunning.current) {
             html5QrCodeRef.current.start(
               { facingMode: "environment" },
-              { fps: 10, qrbox: { width: 600, height: 600 } },
+              { fps: 10, qrbox: { width: 280, height: 280 } },
               qrCodeMessage => {
                 console.log('QR Code detected:', qrCodeMessage);
                 try {
@@ -342,6 +342,15 @@ export default function CheckinPage() {
               >
                 Register
               </button>
+              <p style={{ 
+                color: 'red', 
+                fontSize: '0.9rem', 
+                marginTop: '8px', 
+                textAlign: 'center',
+                fontWeight: '500'
+              }}>
+                Register if not previously registered then only QR scanning
+              </p>
             </div>
           </div>
         </div>

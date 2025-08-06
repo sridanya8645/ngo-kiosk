@@ -328,8 +328,8 @@
 }
 
 .scanner-container {
-  width: 250px;
-  height: 250px;
+  width: 280px;
+  height: 280px;
   margin: 10px auto; /* Center horizontally */
   border: 3px solid #8B1C1C;
   border-radius: 15px;
@@ -342,8 +342,8 @@
 }
 
 #reader {
-  width: 400px !important;
-  height: 400px !important;
+  width: 280px !important;
+  height: 280px !important;
   margin: 0 auto !important;
   border: 3px solid #8B1C1C !important;
   border-radius: 15px !important;
@@ -473,7 +473,7 @@
   padding: 15px 20px;
   min-height: 60px;
   flex-shrink: 0;
-  margin-top: -125px; /* Moved down by 25 points (from -150px to -125px) */
+  margin-top: -110px; /* Moved down by 15 points (from -125px to -110px) */
 }
 
 .footer-content {

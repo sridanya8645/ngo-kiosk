@@ -46,7 +46,7 @@ function App() {
                       fullScreenBtn.innerHTML = '⛶';
                       fullScreenBtn.style.cssText = `
                         position: absolute;
-                        right: 150px;
+                        right: 80px;
                         top: 50%;
                         transform: translateY(-50%);
                         background: #8B1C1C;

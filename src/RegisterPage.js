@@ -134,7 +134,6 @@ const RegisterPage = () => {
         
         if (responseData.success) {
           console.log('✅ Registration successful! Setting submitSuccess to true');
-          alert('Registration successful! Success message should appear now.');
           setSubmitSuccess(true);
           console.log('✅ submitSuccess state should now be true');
           setTimeout(() => {
