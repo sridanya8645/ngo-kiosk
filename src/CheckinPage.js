@@ -59,57 +59,31 @@ export default function CheckinPage() {
   }, []);
 
   useEffect(() => {
-    // Stop any existing scanner first
-    if (html5QrCodeRef.current && isRunning.current) {
-      html5QrCodeRef.current.stop().then(() => {
-        html5QrCodeRef.current = null;
-        isRunning.current = false;
-      }).catch(() => {
-        html5QrCodeRef.current = null;
-        isRunning.current = false;
-      });
-    }
-
-    // Clear the container completely
-    const container = document.getElementById("reader-container");
-    if (container) {
-      container.innerHTML = '';
-    }
-
-    // Remove any existing #reader element
-    const oldReader = document.getElementById("reader");
-    if (oldReader && oldReader.parentNode) {
-      oldReader.parentNode.removeChild(oldReader);
-    }
-
-    // Remove ALL html5-qrcode related elements
-    const html5Elements = document.querySelectorAll('[class*="html5-qrcode"], [id*="reader"], [class*="qr"]');
-    html5Elements.forEach(el => {
-      if (el.parentNode) {
-        el.parentNode.removeChild(el);
+    // Simple QR scanner initialization
+    const initScanner = () => {
+      // Clear container
+      const container = document.getElementById("reader-container");
+      if (container) {
+        container.innerHTML = '';
       }
-    });
 
-    // Create a new #reader element with specific styling
-    const readerDiv = document.createElement("div");
-    readerDiv.id = "reader";
-    readerDiv.style.width = "280px";
-    readerDiv.style.height = "280px";
-    readerDiv.style.margin = "0 auto";
-    readerDiv.style.border = "3px solid #8B1C1C";
-    readerDiv.style.borderRadius = "15px";
-    readerDiv.style.overflow = "hidden";
-    readerDiv.style.boxShadow = "0 4px 12px rgba(0,0,0,0.2)";
-    
-    if (container) {
-      container.appendChild(readerDiv);
-      console.log('QR Scanner container created and appended');
-    } else {
-      console.error('Reader container not found');
-    }
+      // Create reader div
+      const readerDiv = document.createElement("div");
+      readerDiv.id = "reader";
+      readerDiv.style.width = "280px";
+      readerDiv.style.height = "280px";
+      readerDiv.style.margin = "0 auto";
+      readerDiv.style.border = "3px solid #8B1C1C";
+      readerDiv.style.borderRadius = "15px";
+      readerDiv.style.overflow = "hidden";
+      readerDiv.style.boxShadow = "0 4px 12px rgba(0,0,0,0.2)";
+      
+      if (container) {
+        container.appendChild(readerDiv);
+        console.log('QR Scanner container created');
+      }
 
-    // Add a longer delay to ensure DOM is completely cleared
-    setTimeout(() => {
+      // Initialize scanner
       try {
         html5QrCodeRef.current = new Html5Qrcode("reader");
         console.log('QR Scanner initialized');
@@ -230,7 +204,10 @@ export default function CheckinPage() {
         console.error('QR Scanner initialization error:', error);
         setErrorMsg('Camera initialization failed');
       }
-    }, 500); // 500ms delay to ensure complete cleanup
+    };
+
+    // Call initScanner after a delay
+    setTimeout(initScanner, 500);
 
     return () => {
       if (html5QrCodeRef.current && isRunning.current) {
