@@ -322,6 +322,11 @@ export default function CheckinPage() {
 
   return (
     <div className="checkin-container">
+      {/* Debug Info */}
+      <div style={{ position: 'fixed', top: '10px', left: '10px', background: 'red', color: 'white', padding: '10px', zIndex: 9999 }}>
+        Debug: CheckinPage loaded - Events: {allEvents.length}
+      </div>
+      
       {/* Header Section */}
       <header className="checkin-header">
         <div className="header-content">
