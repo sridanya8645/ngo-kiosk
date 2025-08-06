@@ -277,13 +277,7 @@ const RegisterPage = () => {
           
           {/* Show success message when submitted */}
           {submitSuccess && (
-            <div>
-              <div style={{color: 'red', fontSize: '12px'}}>DEBUG: submitSuccess is true</div>
-              <SuccessMessage />
-            </div>
-          )}
-          {!submitSuccess && (
-            <div style={{color: 'blue', fontSize: '12px'}}>DEBUG: submitSuccess is false</div>
+            <SuccessMessage />
           )}
         </div>
       </main>

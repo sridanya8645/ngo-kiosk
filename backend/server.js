@@ -419,8 +419,11 @@ app.put('/api/events/:id', upload.single('banner'), async (req, res) => {
     const { name, date, time, location } = req.body;
     const { id } = req.params;
     
+    console.log('Edit event request:', { id, name, date, time, location });
+    
     // Convert time to 24-hour format
     const convertedTime = convertTo24Hour(time);
+    console.log('Converted time:', convertedTime);
     
     let sql = 'UPDATE events SET name = ?, date = ?, time = ?, location = ?';
     let params = [name, date, convertedTime, location];
@@ -446,13 +449,16 @@ app.put('/api/events/:id', upload.single('banner'), async (req, res) => {
     sql += ' WHERE id = ?';
     params.push(id);
     
+    console.log('SQL:', sql);
+    console.log('Params:', params);
+    
     await pool.execute(sql, params);
     
     const [rows] = await pool.execute('SELECT * FROM events WHERE id = ?', [id]);
     res.json({ success: true, event: rows[0] });
   } catch (error) {
     console.error('Edit event error:', error);
-    res.status(500).json({ error: 'Database error' });
+    res.status(500).json({ error: 'Failed to update event', details: error.message });
   }
 });
 
