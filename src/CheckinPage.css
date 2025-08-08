@@ -331,11 +331,11 @@
   width: 280px;
   height: 280px;
   margin: 10px auto; /* Center horizontally */
-  border: 3px solid #8B1C1C;
-  border-radius: 15px;
-  overflow: hidden;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-  object-fit: cover;
+  border: none; /* remove outer border to avoid double rectangle */
+  border-radius: 0;
+  overflow: visible;
+  box-shadow: none; /* remove outer shadow */
+  background: transparent;
   display: flex;
   justify-content: center;
   align-items: center;
