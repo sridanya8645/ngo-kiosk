@@ -291,21 +291,21 @@ export default function CheckinPage() {
             </p>
           )}
           
-          {/* All Events with Banners Section */}
-          {allEvents.filter(event => event.banner).map((event, index) => (
-            <div key={event.id || index} className="event-section">
+          {/* Event Banner Section - Show only the first event with banner */}
+          {allEvents.filter(event => event.banner).length > 0 && (
+            <div className="event-section">
               <img 
-                src={`${event.banner}`}
-                alt={`${event.name} Banner`}
+                src={`${allEvents.filter(event => event.banner)[0].banner}`}
+                alt={`${allEvents.filter(event => event.banner)[0].name} Banner`}
                 className="event-banner"
-                onLoad={() => console.log(`Event banner loaded successfully: ${event.name} - ${event.banner}`)}
+                onLoad={() => console.log(`Event banner loaded successfully: ${allEvents.filter(event => event.banner)[0].name} - ${allEvents.filter(event => event.banner)[0].banner}`)}
                 onError={(e) => {
-                  console.error(`Event banner failed to load: ${event.name} - ${event.banner}`);
+                  console.error(`Event banner failed to load: ${allEvents.filter(event => event.banner)[0].name} - ${allEvents.filter(event => event.banner)[0].banner}`);
                   console.error('Error details:', e);
                 }}
               />
             </div>
-          ))}
+          )}
 
 
 
