@@ -15,6 +15,7 @@ const RaffleSpinPage = () => {
   const [currentEligibleIndex, setCurrentEligibleIndex] = useState(500);
   const [eligibleUsers, setEligibleUsers] = useState([]);
   const [todaysEvent, setTodaysEvent] = useState(null);
+  const [allEvents, setAllEvents] = useState([]);
   const navigate = useNavigate();
 
   // Function to generate 500 different colors
@@ -33,12 +34,17 @@ const RaffleSpinPage = () => {
     // Fetch eligible users (checked in TODAY) and winners
     Promise.all([
       fetch('/api/raffle/eligible-users'),
-      fetch('/api/raffle-winners')
+      fetch('/api/raffle-winners'),
+      fetch('/api/events')
     ])
     .then(responses => Promise.all(responses.map(res => res.json())))
-    .then(([eligibleUsers, winners]) => {
+    .then(([eligibleUsers, winners, events]) => {
       console.log('Eligible users (checked in today):', eligibleUsers);
       console.log('Winners:', winners);
+      console.log('All events:', events);
+      
+      // Set all events
+      setAllEvents(events);
       
       // Filter out already won users
       const availableUsers = eligibleUsers.filter(user => 
