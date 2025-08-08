@@ -232,13 +232,13 @@ const RegisterPage = () => {
           
           {/* Lottie animation second */}
           <div className="lottie-container">
-            <Lottie animationData={registerLottie} style={{ width: 200, height: 200 }} />
+            <Lottie animationData={registerLottie} style={{ width: 150, height: 150 }} />
           </div>
           
           {/* Raffle text between lottie and form */}
           <div style={{ 
             textAlign: 'center', 
-            margin: '20px 0',
+            margin: '10px 0',
             color: '#8B1C1C',
             fontSize: '1.2rem',
             fontWeight: 'bold'

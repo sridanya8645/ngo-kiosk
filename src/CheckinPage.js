@@ -77,10 +77,13 @@ export default function CheckinPage() {
         }
       }
 
-      // Clear container
+      // Clear container completely
       const container = document.getElementById("reader-container");
       if (container) {
         container.innerHTML = '';
+        // Remove any existing elements
+        const existingReaders = container.querySelectorAll('#reader');
+        existingReaders.forEach(el => el.remove());
       }
 
       // Create single reader div
@@ -210,6 +213,10 @@ export default function CheckinPage() {
                 const container = document.getElementById("reader-container");
                 if (container) {
                   container.innerHTML = '';
+                  // Remove any existing elements
+                  const existingReaders = container.querySelectorAll('#reader');
+                  existingReaders.forEach(el => el.remove());
+                  
                   const readerDiv = document.createElement("div");
                   readerDiv.id = "reader";
                   readerDiv.style.width = "280px";

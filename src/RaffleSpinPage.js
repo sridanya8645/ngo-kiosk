@@ -245,10 +245,11 @@ const RaffleSpinPage = () => {
         </div>
 
         <div className="raffle-main">
-          {/* Main Title */}
+          {/* Main heading centered at top */}
           <div style={{
             textAlign: 'center',
-            marginBottom: '20px'
+            marginBottom: '30px',
+            marginTop: '20px'
           }}>
             <h1 style={{
               fontSize: '3rem',
@@ -257,7 +258,7 @@ const RaffleSpinPage = () => {
               margin: '0',
               textShadow: '2px 2px 4px rgba(0,0,0,0.3)'
             }}>
-              🎰 RAFFLE SPIN 🎰
+              Spin the Wheel to Reveal the Winner!
             </h1>
           </div>
           
@@ -292,13 +293,11 @@ const RaffleSpinPage = () => {
             </div>
           </div>
           
-          <div className="raffle-welcome-msg">Spin the Wheel to Reveal the Winner!</div>
-          
-          <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'flex-start', gap: '40px', marginTop: '20px', position: 'relative' }}>
-            {/* Winner announcement on the left */}
+          <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', flexDirection: 'column', marginTop: '20px', position: 'relative' }}>
+            {/* Winner announcement centered */}
             {winner && (
               <div className="winner-announcement" style={{ 
-                marginTop: '200px', 
+                marginBottom: '30px',
                 minWidth: '500px',
                 maxWidth: '500px',
                 height: '500px',
@@ -371,8 +370,8 @@ const RaffleSpinPage = () => {
               </div>
             )}
 
-            {/* Wheel in the center with buttons positioned at right corner */}
-            <div style={{ position: 'relative' }}>
+            {/* Wheel centered */}
+            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
               <div className="wheel-container">
                 {registrations.length > 0 && (
                   <Wheel
@@ -405,20 +404,32 @@ const RaffleSpinPage = () => {
                 )}
               </div>
               
-              {/* Buttons positioned at right corner of wheel */}
-              <div className="raffle-buttons" style={{ 
-                position: 'absolute', 
-                bottom: '20px', 
-                right: '-120px', 
-                flexDirection: 'row', 
-                gap: '50px',
-                zIndex: 10
-              }}>
+              {/* Spin button centered below wheel */}
+              <div style={{ marginTop: '30px', textAlign: 'center' }}>
                 <button
                   onClick={spinWheel}
                   disabled={mustSpin || registrations.length === 0}
                   className="raffle-button primary"
-                  style={{ fontSize: '3rem', fontWeight: 'bold' }}
+                  style={{ 
+                    fontSize: '3rem', 
+                    fontWeight: 'bold',
+                    padding: '20px 40px',
+                    backgroundColor: '#8B1C1C',
+                    color: '#FFFFFF',
+                    border: 'none',
+                    borderRadius: '15px',
+                    cursor: 'pointer',
+                    transition: 'all 0.3s ease',
+                    boxShadow: '0 5px 15px rgba(0,0,0,0.3)'
+                  }}
+                  onMouseOver={(e) => {
+                    e.target.style.transform = 'scale(1.1)';
+                    e.target.style.boxShadow = '0 8px 25px rgba(0,0,0,0.4)';
+                  }}
+                  onMouseOut={(e) => {
+                    e.target.style.transform = 'scale(1)';
+                    e.target.style.boxShadow = '0 5px 15px rgba(0,0,0,0.3)';
+                  }}
                 >
                   Spin
                 </button>
