@@ -243,7 +243,7 @@ const RegisterPage = () => {
             fontSize: '1.2rem',
             fontWeight: 'bold'
           }}>
-            Register and get a chance to win $200 Raffle ticket
+            Register and get a chance to win $200 Raffle ticket!
           </div>
           
           {/* Form third - only show if not submitted */}
