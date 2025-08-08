@@ -200,29 +200,59 @@ export default function CheckinPage() {
         setTimeout(() => {
           setScanComplete(false);
           setSuccessMsg("");
-          if (html5QrCodeRef.current && !isRunning.current) {
-            html5QrCodeRef.current.start(
-              { facingMode: "user" },
-              { fps: 10, qrbox: { width: 280, height: 280 } },
-              qrCodeMessage => {
-                console.log('QR Code detected:', qrCodeMessage);
-                try {
-                  const data = JSON.parse(qrCodeMessage);
-                  const registrationId = data.registrationId;
-                  if (!registrationId) throw new Error("No registrationId in QR code");
-                  handleCheckin(registrationId, data.name);
-                } catch (e) {
-                  setErrorMsg('❌ Invalid QR code');
+          
+          // Properly stop existing scanner before restarting
+          if (html5QrCodeRef.current && isRunning.current) {
+            try {
+              html5QrCodeRef.current.stop().then(() => {
+                isRunning.current = false;
+                // Clear container and reinitialize
+                const container = document.getElementById("reader-container");
+                if (container) {
+                  container.innerHTML = '';
+                  const readerDiv = document.createElement("div");
+                  readerDiv.id = "reader";
+                  readerDiv.style.width = "280px";
+                  readerDiv.style.height = "280px";
+                  readerDiv.style.margin = "0 auto";
+                  readerDiv.style.border = "3px solid #8B1C1C";
+                  readerDiv.style.borderRadius = "15px";
+                  readerDiv.style.overflow = "hidden";
+                  readerDiv.style.boxShadow = "0 4px 12px rgba(0,0,0,0.2)";
+                  container.appendChild(readerDiv);
+                  
+                  // Reinitialize scanner
+                  html5QrCodeRef.current = new Html5Qrcode("reader");
+                  html5QrCodeRef.current.start(
+                    { facingMode: "user" },
+                    { fps: 10, qrbox: { width: 280, height: 280 } },
+                    qrCodeMessage => {
+                      console.log('QR Code detected:', qrCodeMessage);
+                      try {
+                        const data = JSON.parse(qrCodeMessage);
+                        const registrationId = data.registrationId;
+                        if (!registrationId) throw new Error("No registrationId in QR code");
+                        handleCheckin(registrationId, data.name);
+                      } catch (e) {
+                        setErrorMsg('❌ Invalid QR code');
+                      }
+                    },
+                    errorMessage => {
+                      console.log('Scanner error:', errorMessage);
+                    }
+                  ).then(() => {
+                    isRunning.current = true;
+                  }).catch((error) => {
+                    console.log('Scanner failed to restart:', error);
+                  });
                 }
-              },
-              errorMessage => {
-                console.log('Scanner error:', errorMessage);
-              }
-            ).then(() => {
-              isRunning.current = true;
-            }).catch((error) => {
-              console.log('Scanner failed to restart:', error);
-            });
+              }).catch(() => {
+                isRunning.current = false;
+              });
+            } catch (error) {
+              console.log('Error stopping scanner:', error);
+              isRunning.current = false;
+            }
           }
         }, 3000);
       } else {

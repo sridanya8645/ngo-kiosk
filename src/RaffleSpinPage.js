@@ -239,13 +239,54 @@ const RaffleSpinPage = () => {
         </div>
 
         <div className="raffle-main">
-          <div className="raffle-welcome-msg">Spin the Wheel to Reveal the Winner!</div>
+          {/* Main Title */}
+          <div style={{
+            textAlign: 'center',
+            marginBottom: '20px'
+          }}>
+            <h1 style={{
+              fontSize: '3rem',
+              fontWeight: 'bold',
+              color: '#8B1C1C',
+              margin: '0',
+              textShadow: '2px 2px 4px rgba(0,0,0,0.3)'
+            }}>
+              🎰 RAFFLE SPIN 🎰
+            </h1>
+          </div>
           
-          {eventInfo && (
-            <div className="raffle-event-info">
-              Date: {new Date().toLocaleDateString()} - Event Name: {eventInfo.name} - Eligible Participants: {registrations.length}
+          {/* Event Info and Date */}
+          <div style={{
+            textAlign: 'center',
+            marginBottom: '30px',
+            padding: '15px',
+            background: 'rgba(255,255,255,0.1)',
+            borderRadius: '10px',
+            border: '2px solid #8B1C1C'
+          }}>
+            <div style={{
+              fontSize: '1.5rem',
+              fontWeight: 'bold',
+              color: '#8B1C1C',
+              marginBottom: '10px'
+            }}>
+              {allEvents.filter(event => event.banner).length > 0 ? allEvents.filter(event => event.banner)[0].name : 'Temple Newsletter and General Events'}
             </div>
-          )}
+            <div style={{
+              fontSize: '1.2rem',
+              color: '#8B1C1C',
+              fontWeight: '600'
+            }}>
+              {new Date().toLocaleDateString('en-US', { 
+                weekday: 'long', 
+                year: 'numeric', 
+                month: 'long', 
+                day: 'numeric' 
+              })}
+            </div>
+          </div>
+          
+          <div className="raffle-welcome-msg">Spin the Wheel to Reveal the Winner!</div>
           
           <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'flex-start', gap: '40px', marginTop: '20px', position: 'relative' }}>
             {/* Winner announcement on the left */}
