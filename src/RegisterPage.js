@@ -230,20 +230,20 @@ const RegisterPage = () => {
             Register for {getEventName()}
           </h1>
           
-          {/* Lottie animation second */}
-          <div className="lottie-container">
-            <Lottie animationData={registerLottie} style={{ width: 100, height: 100 }} />
-          </div>
-          
-          {/* Raffle text between lottie and form */}
+          {/* Raffle text at the top */}
           <div style={{ 
             textAlign: 'center', 
-            margin: '5px 0',
+            margin: '10px 0 20px 0',
             color: '#8B1C1C',
-            fontSize: '1.1rem',
+            fontSize: '1.2rem',
             fontWeight: 'bold'
           }}>
             Register and get a chance to win $200 Raffle ticket!!
+          </div>
+          
+          {/* Lottie animation second */}
+          <div className="lottie-container">
+            <Lottie animationData={registerLottie} style={{ width: 150, height: 150 }} />
           </div>
           
           {/* Form third - only show if not submitted */}
