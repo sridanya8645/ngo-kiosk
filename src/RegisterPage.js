@@ -224,26 +224,26 @@ const RegisterPage = () => {
 
       {/* Main Content */}
       <main className="register-main">
-        <div className="register-content register-form-container">
+        <div className="register-form-container">
           {/* Heading first */}
           <h1 className="register-title">
             Register for {getEventName()}
           </h1>
           
-          {/* Raffle text at the top */}
+          {/* Lottie animation second */}
+          <div className="lottie-container">
+            <Lottie animationData={registerLottie} style={{ width: 150, height: 150 }} />
+          </div>
+          
+          {/* Raffle text between lottie and form */}
           <div style={{ 
             textAlign: 'center', 
-            margin: '10px 0 20px 0',
+            margin: '10px 0',
             color: '#8B1C1C',
             fontSize: '1.2rem',
             fontWeight: 'bold'
           }}>
             Register and get a chance to win $200 Raffle ticket!!
-          </div>
-          
-          {/* Lottie animation second */}
-          <div className="lottie-container">
-            <Lottie animationData={registerLottie} style={{ width: 150, height: 150 }} />
           </div>
           
           {/* Form third - only show if not submitted */}
