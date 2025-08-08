@@ -77,13 +77,19 @@ export default function CheckinPage() {
         }
       }
 
-      // Clear container completely
+      // Clear container completely and ensure only one scanner
       const container = document.getElementById("reader-container");
       if (container) {
+        // Remove all existing content
         container.innerHTML = '';
-        // Remove any existing elements
-        const existingReaders = container.querySelectorAll('#reader');
+        
+        // Remove any existing elements with reader ID
+        const existingReaders = document.querySelectorAll('#reader');
         existingReaders.forEach(el => el.remove());
+        
+        // Also remove any Html5Qrcode instances
+        const existingScanners = document.querySelectorAll('[data-testid="qr-reader"]');
+        existingScanners.forEach(el => el.remove());
       }
 
       // Create single reader div
@@ -212,10 +218,16 @@ export default function CheckinPage() {
                 // Clear container and reinitialize
                 const container = document.getElementById("reader-container");
                 if (container) {
+                  // Remove all existing content
                   container.innerHTML = '';
-                  // Remove any existing elements
-                  const existingReaders = container.querySelectorAll('#reader');
+                  
+                  // Remove any existing elements with reader ID
+                  const existingReaders = document.querySelectorAll('#reader');
                   existingReaders.forEach(el => el.remove());
+                  
+                  // Also remove any Html5Qrcode instances
+                  const existingScanners = document.querySelectorAll('[data-testid="qr-reader"]');
+                  existingScanners.forEach(el => el.remove());
                   
                   const readerDiv = document.createElement("div");
                   readerDiv.id = "reader";
