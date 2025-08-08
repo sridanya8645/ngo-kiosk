@@ -37,7 +37,7 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "postbuild": "xcopy build\\* backend\\public\\ /E /Y",
+    "postbuild": "node -e \"const fs=require('fs');const path=require('path');function copyDir(src,dest){if(!fs.existsSync(dest))fs.mkdirSync(dest,{recursive:true});const items=fs.readdirSync(src);items.forEach(item=>{const srcPath=path.join(src,item);const destPath=path.join(dest,item);if(fs.statSync(srcPath).isDirectory()){copyDir(srcPath,destPath)}else{fs.copyFileSync(srcPath,destPath)}})}copyDir('build','backend/public')\"",
     "deploy": "npm run build && npm run postbuild"
   },
   "eslintConfig": {
