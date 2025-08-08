@@ -235,12 +235,12 @@ const RegisterPage = () => {
             <Lottie animationData={registerLottie} style={{ width: 150, height: 150 }} />
           </div>
           
-          {/* Raffle text between lottie and form */}
+          {/* Raffle text directly below lottie */}
           <div style={{ 
             textAlign: 'center', 
-            margin: '10px 0',
+            margin: '5px 0 20px 0',
             color: '#8B1C1C',
-            fontSize: '1.2rem',
+            fontSize: '1.3rem',
             fontWeight: 'bold'
           }}>
             Register and get a chance to win $200 Raffle ticket!!

@@ -208,17 +208,17 @@
 }
 
 .form-label {
-  font-size: 1rem;
+  font-size: 1.2rem;
   font-weight: 600;
   color: #8B1C1C;
   text-align: left;
 }
 
 .form-input {
-  padding: 20px;
+  padding: 22px;
   border: 2px solid #ddd;
   border-radius: 6px;
-  font-size: 1rem;
+  font-size: 1.15rem;
   transition: border-color 0.3s ease;
   background: rgba(255, 255, 255, 0.9);
   backdrop-filter: blur(10px);
@@ -480,8 +480,8 @@
   
   .form-input,
   .form-select {
-    padding: 15px 18px;
-    font-size: 1.1rem;
+    padding: 20px 22px;
+    font-size: 1.2rem;
   }
   
   .form-actions {
