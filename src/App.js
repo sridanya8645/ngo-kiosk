@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'; // Manual deployment trigger
+import React, { useEffect } from 'react'; // Manual deployment trigger - updated
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import './App.css';
 import HomePage from './HomePage';
