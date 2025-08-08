@@ -193,7 +193,7 @@ export default function CheckinPage() {
 
       const data = await response.json();
 
-      if (response.ok && data.success) {
+      if (data.success) {
         setSuccessMsg(`✅ Successfully scanned! ${data.name} is now checked in.`);
         
         // Restart scanner after 3 seconds
@@ -337,11 +337,15 @@ export default function CheckinPage() {
               >
                 Register
               </button>
+            </div>
+            <div style={{ 
+              textAlign: 'center',
+              marginTop: '10px'
+            }}>
               <p style={{ 
                 color: 'red', 
                 fontSize: '0.9rem', 
-                marginTop: '8px', 
-                textAlign: 'center',
+                margin: '0',
                 fontWeight: '500'
               }}>
                 Register For {allEvents.filter(event => event.banner).length > 0 ? allEvents.filter(event => event.banner)[0].name : 'Events'} if not previously registered
