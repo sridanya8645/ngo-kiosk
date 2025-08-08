@@ -224,7 +224,7 @@ const RegisterPage = () => {
 
       {/* Main Content */}
       <main className="register-main">
-        <div className="register-form-container">
+        <div className="register-content register-form-container">
           {/* Heading first */}
           <h1 className="register-title">
             Register for {getEventName()}

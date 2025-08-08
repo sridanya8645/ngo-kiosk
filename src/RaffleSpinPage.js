@@ -116,22 +116,23 @@ const RaffleSpinPage = () => {
 
   const handleStopSpinning = () => {
     setMustSpin(false);
-    const selectedWinner = registrations[prizeNumber];
-    setWinner(selectedWinner);
-    
-    // Save winner to database
-    saveWinner(selectedWinner);
-    
-    // Trigger confetti
-    triggerConfetti();
-    
-    // Remove winner from the list for next spin
-    const updatedRegistrations = registrations.filter((_, index) => index !== prizeNumber);
-    setRegistrations(updatedRegistrations);
-    
-    // Update all eligible registrations
-    const updatedAllEligible = allEligibleRegistrations.filter(reg => reg.id !== selectedWinner.id);
-    setAllEligibleRegistrations(updatedAllEligible);
+    const selected = registrations[prizeNumber];
+    if (selected) {
+      setWinner(selected);
+      triggerConfetti();
+
+      // Persist winner to backend, then remove from wheel
+      fetch('/api/raffle-winners', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ registrationId: selected.id })
+      })
+      .then(() => {
+        // Remove winner from the wheel list so they can't win again
+        setRegistrations(prev => prev.filter(u => u.id !== selected.id));
+      })
+      .catch(err => console.error('Failed to save winner:', err));
+    }
   };
 
   const resetWheel = () => {

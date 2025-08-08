@@ -710,6 +710,38 @@ app.get('/api/raffle-winners', async (req, res) => {
   }
 });
 
+// New: Save a raffle winner (called from spin wheel)
+app.post('/api/raffle-winners', async (req, res) => {
+  try {
+    const { registrationId } = req.body;
+    if (!registrationId) {
+      return res.status(400).json({ success: false, message: 'registrationId is required' });
+    }
+
+    // Fetch registration details to persist winner info
+    const [regs] = await pool.execute(
+      'SELECT id, name, email, phone FROM registrations WHERE id = ?',
+      [registrationId]
+    );
+
+    if (regs.length === 0) {
+      return res.status(404).json({ success: false, message: 'Registration not found' });
+    }
+
+    const reg = regs[0];
+
+    await pool.execute(
+      'INSERT INTO raffle_winners (registration_id, name, email, phone, won_at) VALUES (?, ?, ?, ?, NOW())',
+      [reg.id, reg.name || null, reg.email || null, reg.phone || null]
+    );
+
+    return res.json({ success: true });
+  } catch (error) {
+    console.error('Save raffle winner error:', error);
+    res.status(500).json({ success: false, message: 'Failed to save raffle winner' });
+  }
+});
+
 // Upload banner endpoint
 app.post('/api/upload-banner', upload.single('banner'), async (req, res) => {
   try {
@@ -743,7 +775,7 @@ app.post('/api/test-email-send', async (req, res) => {
     
     console.log('🔍 Testing email sending to:', testEmail);
     
-    const transporter = nodemailer.createTransporter({
+    const transporter = nodemailer.createTransport({
       service: 'gmail',
       auth: {
         user: 'sridanyaravi07@gmail.com',
@@ -806,7 +838,7 @@ app.get('/api/test-email', async (req, res) => {
   try {
     console.log('🔍 Testing email configuration...');
     
-    const transporter = nodemailer.createTransporter({
+    const transporter = nodemailer.createTransport({
       service: 'gmail',
       auth: {
         user: 'sridanyaravi07@gmail.com',

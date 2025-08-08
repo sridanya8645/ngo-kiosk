@@ -155,21 +155,21 @@
   display: flex;
   align-items: flex-start;
   justify-content: center;
-  padding: 20px;
+  padding: 10px 20px; /* reduce top padding to move content up */
   overflow-y: auto;
   min-height: 0;
-  max-height: calc(100vh - 200px); /* Give more space for footer */
+  max-height: calc(100vh - 220px);
 }
 
 .register-content {
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: flex-start; /* Changed from center to flex-start */
+  justify-content: flex-start;
   width: 100%;
   max-width: 500px;
   text-align: center;
-  margin-top: 5px; /* Small margin from top */
+  margin-top: 0; /* move content further up */
 }
 
 .register-form-container {
