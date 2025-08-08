@@ -5,7 +5,6 @@ import "./CheckinPage.css";
 
 export default function CheckinPage() {
   const html5QrCodeRef = useRef(null);
-  // Removed unused checkedIn state
   const [successMsg, setSuccessMsg] = useState("");
   const [errorMsg, setErrorMsg] = useState("");
   const [scanComplete, setScanComplete] = useState(false);
@@ -59,15 +58,32 @@ export default function CheckinPage() {
   }, []);
 
   useEffect(() => {
-    // Simple QR scanner initialization
+    // Single QR scanner initialization
     const initScanner = () => {
+      // Clear any existing scanner
+      if (html5QrCodeRef.current && isRunning.current) {
+        try {
+          html5QrCodeRef.current.stop().then(() => {
+            html5QrCodeRef.current = null;
+            isRunning.current = false;
+          }).catch(() => {
+            html5QrCodeRef.current = null;
+            isRunning.current = false;
+          });
+        } catch (error) {
+          console.log('Error stopping existing scanner:', error);
+          html5QrCodeRef.current = null;
+          isRunning.current = false;
+        }
+      }
+
       // Clear container
       const container = document.getElementById("reader-container");
       if (container) {
         container.innerHTML = '';
       }
 
-      // Create reader div
+      // Create single reader div
       const readerDiv = document.createElement("div");
       readerDiv.id = "reader";
       readerDiv.style.width = "280px";
@@ -80,126 +96,52 @@ export default function CheckinPage() {
       
       if (container) {
         container.appendChild(readerDiv);
-        console.log('QR Scanner container created');
+        console.log('Single QR Scanner container created');
       }
 
-      // Initialize scanner
+      // Initialize single scanner
       try {
         html5QrCodeRef.current = new Html5Qrcode("reader");
-        console.log('QR Scanner initialized');
-      
-      // Check if camera is available
-      if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
-        console.error('Camera not available');
-        setErrorMsg('Camera not available on this device');
-        return;
-      }
+        console.log('Single QR Scanner initialized');
+        
+        // Start scanner with front camera
+        html5QrCodeRef.current
+          .start(
+            { facingMode: "user" }, // Use front camera
+            { 
+              fps: 10, 
+              qrbox: { width: 280, height: 280 },
+              aspectRatio: 1.0
+            },
+            qrCodeMessage => {
+              console.log('QR Code detected:', qrCodeMessage);
+              try {
+                const data = JSON.parse(qrCodeMessage);
+                const registrationId = data.registrationId;
+                if (!registrationId) throw new Error("No registrationId in QR code");
 
-      // Request camera permissions first
-      navigator.mediaDevices.getUserMedia({ 
-        video: { 
-          facingMode: "user", // Use front camera
-          width: { ideal: 640 },
-          height: { ideal: 480 }
-        } 
-      })
-        .then(stream => {
-          console.log('Camera permission granted');
-          stream.getTracks().forEach(track => track.stop()); // Stop the test stream
-          
-          // Now start the QR scanner
-          html5QrCodeRef.current
-            .start(
-              { facingMode: "user" }, // Use front camera on mobile
-              { 
-                fps: 10, 
-                qrbox: { width: 280, height: 280 },
-                aspectRatio: 1.0
-              },
-          qrCodeMessage => {
-            console.log('QR Code detected:', qrCodeMessage);
-            try {
-              const data = JSON.parse(qrCodeMessage);
-              const registrationId = data.registrationId;
-              if (!registrationId) throw new Error("No registrationId in QR code");
-
-              // Call the check-in endpoint
-              handleCheckin(registrationId, data.name);
-            } catch (e) {
-              console.error('QR code parsing error:', e);
-              setErrorMsg('Invalid QR code format');
+                // Call the check-in endpoint
+                handleCheckin(registrationId, data.name);
+              } catch (e) {
+                console.error('QR code parsing error:', e);
+                setErrorMsg('Invalid QR code format');
+              }
+            },
+            errorMessage => {
+              console.log('Scanner error:', errorMessage);
+              // Don't show error for normal scanning process
             }
-          },
-          errorMessage => {
-            console.log('Scanner error:', errorMessage);
-            // Don't show error for normal scanning process
-          }
-        )
-        .then(() => {
-          isRunning.current = true;
-          console.log('Scanner started successfully');
-          setErrorMsg(''); // Clear any previous errors
-        })
-        .catch((error) => {
-          isRunning.current = false;
-          console.error('Scanner failed to start:', error);
-          setErrorMsg('Failed to start camera. Please check permissions.');
-        });
-        })
-        .catch((error) => {
-          console.error('Camera permission denied:', error);
-          // Try with different camera settings as fallback
-          navigator.mediaDevices.getUserMedia({ 
-            video: { 
-              facingMode: "user", // Try front camera as fallback
-              width: { ideal: 640 },
-              height: { ideal: 480 }
-            } 
+          )
+          .then(() => {
+            isRunning.current = true;
+            console.log('Single scanner started successfully');
+            setErrorMsg(''); // Clear any previous errors
           })
-          .then(stream => {
-            console.log('Fallback camera permission granted');
-            stream.getTracks().forEach(track => track.stop());
-            
-            html5QrCodeRef.current
-              .start(
-                { facingMode: "user" },
-                { 
-                  fps: 10, 
-                  qrbox: { width: 280, height: 280 },
-                  aspectRatio: 1.0
-                },
-                qrCodeMessage => {
-                  console.log('QR Code detected:', qrCodeMessage);
-                  try {
-                    const data = JSON.parse(qrCodeMessage);
-                    const registrationId = data.registrationId;
-                    if (!registrationId) throw new Error("No registrationId in QR code");
-                    handleCheckin(registrationId, data.name);
-                  } catch (e) {
-                    console.error('QR code parsing error:', e);
-                    setErrorMsg('Invalid QR code format');
-                  }
-                },
-                errorMessage => {
-                  console.log('Scanner error:', errorMessage);
-                }
-              )
-              .then(() => {
-                isRunning.current = true;
-                console.log('Scanner started successfully with fallback camera');
-                setErrorMsg('');
-              })
-              .catch((error) => {
-                isRunning.current = false;
-                console.error('Scanner failed to start with fallback:', error);
-                setErrorMsg('Failed to start camera. Please check permissions and try again.');
-              });
-          })
-          .catch((fallbackError) => {
-            console.error('All camera access attempts failed:', fallbackError);
-            setErrorMsg('Camera access needed for QR scanning. Please allow camera permissions in your browser settings and refresh the page.');
+          .catch((error) => {
+            isRunning.current = false;
+            console.error('Scanner failed to start:', error);
+            setErrorMsg('Failed to start camera. Please check permissions.');
           });
-        });
       } catch (error) {
         console.error('QR Scanner initialization error:', error);
         setErrorMsg('Camera initialization failed');
@@ -260,7 +202,7 @@ export default function CheckinPage() {
           setSuccessMsg("");
           if (html5QrCodeRef.current && !isRunning.current) {
             html5QrCodeRef.current.start(
-              { facingMode: "environment" },
+              { facingMode: "user" },
               { fps: 10, qrbox: { width: 280, height: 280 } },
               qrCodeMessage => {
                 console.log('QR Code detected:', qrCodeMessage);

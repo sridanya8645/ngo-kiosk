@@ -355,17 +355,6 @@
   z-index: 1 !important;
 }
 
-/* Basic QR scanner styling */
-#reader {
-  width: 280px !important;
-  height: 280px !important;
-  margin: 0 auto !important;
-  border: 3px solid #8B1C1C !important;
-  border-radius: 15px !important;
-  overflow: hidden !important;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.2) !important;
-}
-
 #reader-container {
   display: flex !important;
   justify-content: center !important;
