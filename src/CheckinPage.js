@@ -110,7 +110,9 @@ export default function CheckinPage() {
 
       // Initialize single scanner
       try {
-        html5QrCodeRef.current = new Html5Qrcode("reader");
+        if (!html5QrCodeRef.current) {
+          html5QrCodeRef.current = new Html5Qrcode("reader");
+        }
         console.log('Single QR Scanner initialized');
         
         // Start scanner with front camera
@@ -240,8 +242,10 @@ export default function CheckinPage() {
                   readerDiv.style.boxShadow = "0 4px 12px rgba(0,0,0,0.2)";
                   container.appendChild(readerDiv);
                   
-                  // Reinitialize scanner
-                  html5QrCodeRef.current = new Html5Qrcode("reader");
+                                     // Reinitialize scanner (guard)
+                  if (!html5QrCodeRef.current) {
+                    html5QrCodeRef.current = new Html5Qrcode("reader");
+                  }
                   html5QrCodeRef.current.start(
                     { facingMode: "user" },
                     { fps: 10, qrbox: { width: 280, height: 280 } },
@@ -361,7 +365,7 @@ export default function CheckinPage() {
           {/* QR Scanner Section */}
           <div className="scanner-section">
             <h3 className="scanner-title">Scan QR Code to Check-In</h3>
-            <div id="reader-container" className="scanner-container"></div>
+                         <div id="reader-container" className="scanner-container" />
             
 
             
