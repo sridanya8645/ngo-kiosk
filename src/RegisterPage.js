@@ -235,6 +235,17 @@ const RegisterPage = () => {
             <Lottie animationData={registerLottie} style={{ width: 200, height: 200 }} />
           </div>
           
+          {/* Raffle text between lottie and form */}
+          <div style={{ 
+            textAlign: 'center', 
+            margin: '20px 0',
+            color: '#8B1C1C',
+            fontSize: '1.2rem',
+            fontWeight: 'bold'
+          }}>
+            Register and get a chance to win $200 Raffle ticket
+          </div>
+          
           {/* Form third - only show if not submitted */}
           {!submitSuccess && (
             <>
@@ -313,32 +324,6 @@ const RegisterPage = () => {
                   </button>
                 </div>
               </form>
-              
-              {/* Test button to manually trigger success message */}
-              <button 
-                type="button" 
-                onClick={() => {
-                  console.log('🧪 Test button clicked - setting submitSuccess to true');
-                  console.log('🧪 Current submitSuccess state:', submitSuccess);
-                  setSubmitSuccess(true);
-                  console.log('🧪 submitSuccess should now be true');
-                  // Force a re-render
-                  setTimeout(() => {
-                    console.log('🧪 submitSuccess state after timeout:', submitSuccess);
-                  }, 100);
-                }}
-                style={{
-                  background: '#28a745',
-                  color: 'white',
-                  border: 'none',
-                  padding: '10px 20px',
-                  borderRadius: '5px',
-                  marginTop: '10px',
-                  cursor: 'pointer'
-                }}
-              >
-                🧪 Test Success Message
-              </button>
             </>
           )}
           
