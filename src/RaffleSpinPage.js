@@ -47,6 +47,7 @@ const RaffleSpinPage = () => {
       
       console.log('Available users for wheel:', availableUsers);
       setEligibleUsers(availableUsers);
+      setRegistrations(availableUsers); // Set registrations for the wheel
     })
     .catch(error => {
       console.error('Error fetching data:', error);
@@ -69,7 +70,7 @@ const RaffleSpinPage = () => {
 
   const triggerConfetti = () => {
     setShowConfetti(true);
-    setTimeout(() => setShowConfetti(false), 5000);
+    setTimeout(() => setShowConfetti(false), 8000); // Extended confetti duration
   };
 
   const saveWinner = async (winner) => {
@@ -152,6 +153,7 @@ const RaffleSpinPage = () => {
       );
       
       setEligibleUsers(availableUsers);
+      setRegistrations(availableUsers); // Update registrations for the wheel
       console.log('Wheel refreshed with', availableUsers.length, 'available users');
     } catch (error) {
       console.error('Error refreshing registrations:', error);
@@ -181,10 +183,11 @@ const RaffleSpinPage = () => {
           width={window.innerWidth}
           height={window.innerHeight}
           recycle={true}
-          numberOfPieces={300}
-          colors={['#FF0000', '#00FF00', '#0000FF', '#FFFF00', '#FF00FF', '#00FFFF', '#FFA500', '#800080', '#FF69B4', '#00CED1', '#FFD700', '#FF4500']}
-          gravity={0.3}
-          wind={0.05}
+          numberOfPieces={500}
+          colors={['#8B0000', '#2F4F4F', '#191970', '#4B0082', '#800000', '#556B2F', '#2E8B57', '#8B4513', '#A0522D', '#6B8E23', '#B8860B', '#CD853F']}
+          gravity={0.2}
+          wind={0.1}
+          tweenDuration={8000}
         />
       )}
       <div className="raffle-aspect">
@@ -249,56 +252,71 @@ const RaffleSpinPage = () => {
             {winner && (
               <div className="winner-announcement" style={{ 
                 marginTop: '200px', 
-                minWidth: '400px',
-                maxWidth: '400px',
-                height: '400px',
+                minWidth: '500px',
+                maxWidth: '500px',
+                height: '500px',
                 display: 'flex',
                 flexDirection: 'column',
                 justifyContent: 'center',
                 alignItems: 'center',
-                borderRadius: '15px',
-                padding: '20px',
+                borderRadius: '20px',
+                padding: '30px',
                 textAlign: 'center',
-                background: '#8B1C1C',
-                border: '3px solid #fff',
-                boxShadow: '0 8px 32px rgba(0,0,0,0.3)'
+                background: 'linear-gradient(135deg, #8B0000, #2F4F4F)',
+                border: '5px solid #FFD700',
+                boxShadow: '0 15px 50px rgba(0,0,0,0.5)',
+                animation: 'winnerGlow 2s ease-in-out infinite alternate'
               }}>
                 <h3 style={{ 
-                  fontSize: '4rem', 
-                  margin: '0 0 20px 0', 
-                  color: '#8B1C1C', 
-                  fontWeight: 'bold' 
+                  fontSize: '3.5rem', 
+                  margin: '0 0 30px 0', 
+                  color: '#FFD700', 
+                  fontWeight: 'bold',
+                  textShadow: '2px 2px 4px rgba(0,0,0,0.8)'
                 }}>
-                  🎉 Congratulations! 🎉
+                  🎉 WINNER! 🎉
                 </h3>
                 <p className="winner-name" style={{ 
-                  fontSize: '4rem', 
+                  fontSize: '3rem', 
                   fontWeight: 'bold', 
-                  margin: '10px 0', 
-                  color: '#FFEAA7' 
+                  margin: '15px 0', 
+                  color: '#FFFFFF',
+                  textShadow: '2px 2px 4px rgba(0,0,0,0.8)'
                 }}>
-                  Winner: {winner.name}
+                  {winner.name}
                 </p>
                 <p className="winner-id" style={{ 
-                  fontSize: '4rem', 
+                  fontSize: '2.5rem', 
                   color: '#FFD700', 
-                  margin: '5px 0' 
+                  margin: '10px 0',
+                  fontWeight: 'bold',
+                  textShadow: '1px 1px 2px rgba(0,0,0,0.8)'
                 }}>
                   ID: {winner.id}
                 </p>
+
                 <button
                   onClick={resetWheel}
                   style={{
-                    marginTop: '20px',
-                    padding: '15px 30px',
+                    marginTop: '30px',
+                    padding: '20px 40px',
                     fontSize: '2rem',
                     fontWeight: 'bold',
                     backgroundColor: '#FFD700',
-                    color: '#8B1C1C',
+                    color: '#8B0000',
                     border: 'none',
-                    borderRadius: '10px',
+                    borderRadius: '15px',
                     cursor: 'pointer',
-                    transition: 'all 0.3s ease'
+                    transition: 'all 0.3s ease',
+                    boxShadow: '0 5px 15px rgba(0,0,0,0.3)'
+                  }}
+                  onMouseOver={(e) => {
+                    e.target.style.transform = 'scale(1.1)';
+                    e.target.style.boxShadow = '0 8px 25px rgba(0,0,0,0.4)';
+                  }}
+                  onMouseOut={(e) => {
+                    e.target.style.transform = 'scale(1)';
+                    e.target.style.boxShadow = '0 5px 15px rgba(0,0,0,0.3)';
                   }}
                 >
                   Spin Again

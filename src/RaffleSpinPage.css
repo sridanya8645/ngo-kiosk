@@ -275,6 +275,15 @@
   50% { transform: scale(1.05); }
 }
 
+@keyframes winnerGlow {
+  0%, 100% { 
+    box-shadow: 0 15px 50px rgba(0,0,0,0.5), 0 0 20px rgba(255, 215, 0, 0.3);
+  }
+  50% { 
+    box-shadow: 0 15px 50px rgba(0,0,0,0.5), 0 0 40px rgba(255, 215, 0, 0.6);
+  }
+}
+
 .winner-announcement h3 {
   font-size: clamp(2rem, 5vw, 4rem);
   margin: 0 0 20px 0;
