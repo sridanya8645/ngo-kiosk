@@ -212,7 +212,7 @@
 .winners-table-container {
   background: rgba(255, 255, 255, 0.95);
   border-radius: 15px;
-  padding: 20px;
+  padding: 0; /* no container padding; rows handle spacing */
   margin: 20px 0;
   box-shadow: 0 8px 32px rgba(0,0,0,0.1);
   border: 1px solid rgba(255, 255, 255, 0.2);
@@ -228,7 +228,7 @@
   gap: 0; /* like registrations */
   background: #8B1C1C;
   color: #fff;
-  padding: 0; /* header cells carry padding */
+  padding: 0 20px; /* align with data-row left/right padding */
   border-radius: 8px 8px 0 0;
   font-weight: 600;
   font-size: 0.9rem;
@@ -249,7 +249,7 @@
   grid-template-columns: var(--winners-cols);
   gap: 0; /* exact alignment */
   background: #f8f9fa;
-  padding: 0; /* spacing handled by cells */
+  padding: 0 20px; /* match row horizontal padding */
   border-bottom: 1px solid #ddd;
   width: 100%;
 }
