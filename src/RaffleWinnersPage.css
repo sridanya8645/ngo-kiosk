@@ -247,18 +247,19 @@
 .filter-row {
   display: grid;
   grid-template-columns: var(--winners-cols);
-  gap: 10px;
+  gap: 0; /* match header/data for perfect alignment */
   background: #f8f9fa;
-  padding: 20px;
+  padding: 0; /* move spacing to cells */
   border-bottom: 1px solid #dee2e6;
   width: 100%;
 }
 
-.filter-cell { display:flex; align-items:center; min-width:0; }
+.filter-cell { display:flex; align-items:center; min-width:0; padding: 8px 12px; border-right: 1px solid #dee2e6; }
+.filter-cell:last-child{ border-right: none; }
 
 .filter-input {
   width: 100%;
-  padding: 8px 12px;
+  padding: 6px 8px;
   border: 1px solid #ced4da;
   border-radius: 4px;
   font-size: 0.85rem;
