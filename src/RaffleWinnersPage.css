@@ -208,101 +208,70 @@
   background: #218838;
 }
 
-/* Table Styles */
+/* Winners Table */
 .winners-table-container {
-  background: white;
-  border-radius: 8px;
-  overflow: hidden;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-  border: 2px solid #8B1C1C;
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 15px;
+  padding: 20px;
+  margin: 20px 0;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
 /* Table Header Row */
 .table-header-row {
   display: grid;
-  grid-template-columns: repeat(7, 1fr);
-  background: #8B1C1C;
-  color: white;
-  font-weight: bold;
+  grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
+  gap: 10px;
+  background: linear-gradient(135deg, #8B1C1C 0%, #A52A2A 100%);
+  color: #fff;
+  padding: 15px 10px;
+  border-radius: 8px 8px 0 0;
+  font-weight: 600;
   font-size: 0.9rem;
 }
 
-.header-cell {
-  padding: 15px 12px;
-  text-align: left;
-  border-right: 1px solid #6B0F0F;
-}
-
-.header-cell:last-child {
-  border-right: none;
-}
+.header-cell{ text-align:left; }
 
 /* Filter Row */
 .filter-row {
   display: grid;
-  grid-template-columns: repeat(7, 1fr);
-  background: #f8f9fa;
-  border-bottom: 1px solid #dee2e6;
+  grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
+  gap: 10px;
+  background: rgba(139, 28, 28, 0.1);
+  padding: 20px;
+  border-bottom: 1px solid rgba(139, 28, 28, 0.2);
 }
 
-.filter-cell {
-  padding: 8px 12px;
-  border-right: 1px solid #dee2e6;
-}
-
-.filter-cell:last-child {
-  border-right: none;
-}
+.filter-cell { display:flex; align-items:center; }
 
 .filter-input {
   width: 100%;
-  padding: 6px 8px;
-  border: 1px solid #ced4da;
-  border-radius: 4px;
-  font-size: 0.8rem;
-  background: white;
-}
-
-.filter-input:focus {
-  outline: none;
-  border-color: #8B1C1C;
-  box-shadow: 0 0 0 2px rgba(139, 28, 28, 0.25);
+  padding: 8px 12px;
+  border: 1px solid rgba(139, 28, 28, 0.3);
+  border-radius: 6px;
+  font-size: 0.85rem;
+  background: rgba(255, 255, 255, 0.9);
 }
 
 /* Data Table */
-.data-table {
-  max-height: 400px;
-  overflow-y: auto;
-}
+.data-table { background: rgba(255, 255, 255, 0.95); }
 
 .winner-row {
   display: grid;
-  grid-template-columns: repeat(7, 1fr);
-  padding: 20px;
+  grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
+  gap: 10px;
+  padding: 12px 10px;
+  border-bottom: 1px solid rgba(139, 28, 28, 0.1);
   align-items: center;
-  border-bottom: 1px solid #dee2e6;
-}
-
-.winner-row:hover {
-  background-color: #f8f9fa;
-}
-
-.winner-row:nth-child(even) {
-  background-color: #f8f9fa;
 }
 
 .data-cell {
-  padding: 8px 12px;
-  text-align: left;
+  display: flex;
+  align-items: center;
+  min-height: 40px;
   font-size: 0.9rem;
-  border-right: 1px solid #ddd;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.data-cell:last-child {
-  border-right: none;
+  color: #333;
 }
 
 /* Messages */

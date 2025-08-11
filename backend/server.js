@@ -720,7 +720,7 @@ app.post('/api/raffle-winners', async (req, res) => {
 
     // Fetch registration details to persist winner info
     const [regs] = await pool.execute(
-      'SELECT id, name, email, phone FROM registrations WHERE id = ?',
+      'SELECT id, name, email, phone, event_name FROM registrations WHERE id = ?',
       [registrationId]
     );
 
@@ -730,9 +730,10 @@ app.post('/api/raffle-winners', async (req, res) => {
 
     const reg = regs[0];
 
+    // Persist with event_name and split win_date/win_time for table display
     await pool.execute(
-      'INSERT INTO raffle_winners (registration_id, name, email, phone, won_at) VALUES (?, ?, ?, ?, NOW())',
-      [reg.id, reg.name || null, reg.email || null, reg.phone || null]
+      'INSERT INTO raffle_winners (registration_id, name, email, phone, event_name, win_date, win_time, won_at) VALUES (?, ?, ?, ?, ?, CURDATE(), CURTIME(), NOW())',
+      [reg.id, reg.name || null, reg.email || null, reg.phone || null, reg.event_name || null]
     );
 
     return res.json({ success: true });
