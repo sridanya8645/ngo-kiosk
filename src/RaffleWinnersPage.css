@@ -272,11 +272,12 @@
 .winner-row {
   display: grid;
   grid-template-columns: var(--winners-cols);
-  gap: 0; /* like registrations */
-  padding: 20px; /* like registrations */
+  gap: 0; /* exact alignment */
+  padding: 0; /* move spacing to cells */
   border-bottom: 1px solid #dee2e6;
   align-items: center;
   width: 100%;
+  box-sizing: border-box;
 }
 
 .data-cell {
@@ -289,8 +290,9 @@
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  padding: 8px 12px; /* like registrations */
+  padding: 12px 20px; /* moves spacing into cells to align header/filter edges */
   border-right: 1px solid #ddd;
+  box-sizing: border-box;
 }
 .data-cell:last-child{ border-right: none; }
 
