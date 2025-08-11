@@ -217,7 +217,7 @@
   box-shadow: 0 8px 32px rgba(0,0,0,0.1);
   border: 1px solid rgba(255, 255, 255, 0.2);
   overflow: hidden;
-  --winners-cols: minmax(0,1fr) minmax(0,1fr) minmax(0,1fr) minmax(0,1fr) minmax(0,1fr) minmax(0,1fr) minmax(0,1fr);
+  --winners-cols: 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
 }
 .winners-table-container * { box-sizing: border-box; }
 
@@ -247,10 +247,10 @@
 .filter-row {
   display: grid;
   grid-template-columns: var(--winners-cols);
-  gap: 0; /* match header/data for perfect alignment */
+  gap: 10px; /* match registrations table */
   background: #f8f9fa;
-  padding: 0; /* move spacing to cells */
-  border-bottom: 1px solid #dee2e6;
+  padding: 20px; /* like registrations */
+  border-bottom: 1px solid #ddd;
   width: 100%;
 }
 
