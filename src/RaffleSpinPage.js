@@ -246,45 +246,15 @@ const RaffleSpinPage = () => {
         </div>
 
         <div className="raffle-main">
-          {/* Main heading centered at top */}
-          <div style={{
-            textAlign: 'center',
-            marginBottom: '30px',
-            marginTop: '20px'
-          }}>
-            <h1 style={{
-              fontSize: '3rem',
-              fontWeight: 'bold',
-              color: '#8B1C1C',
-              margin: '0',
-              textShadow: '2px 2px 4px rgba(0,0,0,0.3)'
-            }}>
-              Spin the Wheel to Reveal the Winner!
-            </h1>
-          </div>
-          
+          {/* Title */}
+          <h1 className="raffle-title">Spin the Wheel to Reveal the Winner!</h1>
+
           {/* Event Info and Date */}
-          <div style={{
-            textAlign: 'center',
-            marginBottom: '30px',
-            padding: '15px',
-            background: 'rgba(255,255,255,0.1)',
-            borderRadius: '10px',
-            border: '2px solid #8B1C1C'
-          }}>
-            <div style={{
-              fontSize: '1.5rem',
-              fontWeight: 'bold',
-              color: '#8B1C1C',
-              marginBottom: '10px'
-            }}>
+          <div className="event-info-card">
+            <div className="event-name">
               {allEvents.filter(event => event.banner).length > 0 ? allEvents.filter(event => event.banner)[0].name : 'Temple Newsletter and General Events'}
             </div>
-            <div style={{
-              fontSize: '1.2rem',
-              color: '#8B1C1C',
-              fontWeight: '600'
-            }}>
+            <div className="event-date">
               {new Date().toLocaleDateString('en-US', { 
                 weekday: 'long', 
                 year: 'numeric', 
@@ -293,149 +263,125 @@ const RaffleSpinPage = () => {
               })}
             </div>
           </div>
-          
-          <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', flexDirection: 'column', marginTop: '20px', position: 'relative' }}>
-            {/* Winner announcement centered */}
-            {winner && (
-              <div className="winner-announcement" style={{ 
-                marginBottom: '30px',
-                minWidth: '500px',
-                maxWidth: '500px',
-                height: '500px',
-                display: 'flex',
-                flexDirection: 'column',
-                justifyContent: 'center',
-                alignItems: 'center',
-                borderRadius: '20px',
-                padding: '30px',
-                textAlign: 'center',
-                background: 'linear-gradient(135deg, #8B0000, #2F4F4F)',
-                border: '5px solid #FFD700',
-                boxShadow: '0 15px 50px rgba(0,0,0,0.5)',
-                animation: 'winnerGlow 2s ease-in-out infinite alternate'
+
+          {/* Winner announcement */}
+          {winner && (
+            <div className="winner-announcement" style={{ 
+              marginBottom: '30px',
+              minWidth: '500px',
+              maxWidth: '500px',
+              height: '500px',
+              display: 'flex',
+              flexDirection: 'column',
+              justifyContent: 'center',
+              alignItems: 'center',
+              borderRadius: '20px',
+              padding: '30px',
+              textAlign: 'center',
+              background: 'linear-gradient(135deg, #8B0000, #2F4F4F)',
+              border: '5px solid #FFD700',
+              boxShadow: '0 15px 50px rgba(0,0,0,0.5)',
+              animation: 'winnerGlow 2s ease-in-out infinite alternate'
+            }}>
+              <h3 style={{ 
+                fontSize: '3.5rem', 
+                margin: '0 0 30px 0', 
+                color: '#FFD700', 
+                fontWeight: 'bold',
+                textShadow: '2px 2px 4px rgba(0,0,0,0.8)'
               }}>
-                <h3 style={{ 
-                  fontSize: '3.5rem', 
-                  margin: '0 0 30px 0', 
-                  color: '#FFD700', 
-                  fontWeight: 'bold',
-                  textShadow: '2px 2px 4px rgba(0,0,0,0.8)'
-                }}>
-                  🎉 WINNER! 🎉
-                </h3>
-                <p className="winner-name" style={{ 
-                  fontSize: '3rem', 
-                  fontWeight: 'bold', 
-                  margin: '15px 0', 
-                  color: '#FFFFFF',
-                  textShadow: '2px 2px 4px rgba(0,0,0,0.8)'
-                }}>
-                  {winner.name}
-                </p>
-                <p className="winner-id" style={{ 
-                  fontSize: '2.5rem', 
-                  color: '#FFD700', 
-                  margin: '10px 0',
-                  fontWeight: 'bold',
-                  textShadow: '1px 1px 2px rgba(0,0,0,0.8)'
-                }}>
-                  ID: {winner.id}
-                </p>
+                🎉 WINNER! 🎉
+              </h3>
+              <p className="winner-name" style={{ 
+                fontSize: '3rem', 
+                fontWeight: 'bold', 
+                margin: '15px 0', 
+                color: '#FFFFFF',
+                textShadow: '2px 2px 4px rgba(0,0,0,0.8)'
+              }}>
+                {winner.name}
+              </p>
+              <p className="winner-id" style={{ 
+                fontSize: '2.5rem', 
+                color: '#FFD700', 
+                margin: '10px 0',
+                fontWeight: 'bold',
+                textShadow: '1px 1px 2px rgba(0,0,0,0.8)'
+              }}>
+                ID: {winner.id}
+              </p>
 
-                <button
-                  onClick={resetWheel}
-                  style={{
-                    marginTop: '30px',
-                    padding: '20px 40px',
-                    fontSize: '2rem',
-                    fontWeight: 'bold',
-                    backgroundColor: '#FFD700',
-                    color: '#8B0000',
-                    border: 'none',
-                    borderRadius: '15px',
-                    cursor: 'pointer',
-                    transition: 'all 0.3s ease',
-                    boxShadow: '0 5px 15px rgba(0,0,0,0.3)'
-                  }}
-                  onMouseOver={(e) => {
-                    e.target.style.transform = 'scale(1.1)';
-                    e.target.style.boxShadow = '0 8px 25px rgba(0,0,0,0.4)';
-                  }}
-                  onMouseOut={(e) => {
-                    e.target.style.transform = 'scale(1)';
-                    e.target.style.boxShadow = '0 5px 15px rgba(0,0,0,0.3)';
-                  }}
-                >
-                  Spin Again
-                </button>
-              </div>
-            )}
-
-            {/* Wheel centered */}
-            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-              <div className="wheel-container">
-                {registrations.length > 0 && (
-                  <Wheel
-                    mustStartSpinning={mustSpin}
-                    prizeNumber={prizeNumber}
-                    data={registrations.map((reg, index) => ({
-                      option: reg.name ? (() => {
-                        const nameParts = reg.name.split(' ');
-                        const firstName = nameParts[0] || '';
-                        const lastNameInitial = nameParts.length > 1 ? nameParts[1][0] : '';
-                        return `${firstName} ${lastNameInitial}.`;
-                      })() : `ID: ${reg.id}`,
-                      style: { 
-                        backgroundColor: generateColors(500)[index],
-                        textColor: '#000'
-                      }
-                    }))}
-                    onStopSpinning={handleStopSpinning}
-                    textDistance={70}
-                    perpendicularText={false}
-                    fontSize={6}
-                    radiusLineWidth={1}
-                    radiusLineColor="#fff"
-                    outerBorderWidth={4}
-                    innerBorderWidth={4}
-                    innerBorderColor="#fff"
-                    outerBorderColor="#fff"
-                    textColors={['#000']}
-                  />
-                )}
-              </div>
-              
-              {/* Spin button centered below wheel */}
-              <div style={{ marginTop: '30px', textAlign: 'center' }}>
-                <button
-                  onClick={spinWheel}
-                  disabled={mustSpin || registrations.length === 0}
-                  className="raffle-button primary"
-                  style={{ 
-                    fontSize: '3rem', 
-                    fontWeight: 'bold',
-                    padding: '20px 40px',
-                    backgroundColor: '#8B1C1C',
-                    color: '#FFFFFF',
-                    border: 'none',
-                    borderRadius: '15px',
-                    cursor: 'pointer',
-                    transition: 'all 0.3s ease',
-                    boxShadow: '0 5px 15px rgba(0,0,0,0.3)'
-                  }}
-                  onMouseOver={(e) => {
-                    e.target.style.transform = 'scale(1.1)';
-                    e.target.style.boxShadow = '0 8px 25px rgba(0,0,0,0.4)';
-                  }}
-                  onMouseOut={(e) => {
-                    e.target.style.transform = 'scale(1)';
-                    e.target.style.boxShadow = '0 5px 15px rgba(0,0,0,0.3)';
-                  }}
-                >
-                  Spin
-                </button>
-              </div>
+              <button
+                onClick={resetWheel}
+                style={{
+                  marginTop: '30px',
+                  padding: '20px 40px',
+                  fontSize: '2rem',
+                  fontWeight: 'bold',
+                  backgroundColor: '#FFD700',
+                  color: '#8B0000',
+                  border: 'none',
+                  borderRadius: '15px',
+                  cursor: 'pointer',
+                  transition: 'all 0.3s ease',
+                  boxShadow: '0 5px 15px rgba(0,0,0,0.3)'
+                }}
+                onMouseOver={(e) => {
+                  e.target.style.transform = 'scale(1.1)';
+                  e.target.style.boxShadow = '0 8px 25px rgba(0,0,0,0.4)';
+                }}
+                onMouseOut={(e) => {
+                  e.target.style.transform = 'scale(1)';
+                  e.target.style.boxShadow = '0 5px 15px rgba(0,0,0,0.3)';
+                }}
+              >
+                Spin Again
+              </button>
             </div>
+          )}
+
+          {/* Wheel */}
+          <div className="wheel-container">
+            {registrations.length > 0 && (
+              <Wheel
+                mustStartSpinning={mustSpin}
+                prizeNumber={prizeNumber}
+                data={registrations.map((reg, index) => ({
+                  option: reg.name ? (() => {
+                    const nameParts = reg.name.split(' ');
+                    const firstName = nameParts[0] || '';
+                    const lastNameInitial = nameParts.length > 1 ? nameParts[1][0] : '';
+                    return `${firstName} ${lastNameInitial}.`;
+                  })() : `ID: ${reg.id}`,
+                  style: { 
+                    backgroundColor: generateColors(500)[index],
+                    textColor: '#000'
+                  }
+                }))}
+                onStopSpinning={handleStopSpinning}
+                textDistance={70}
+                perpendicularText={false}
+                fontSize={6}
+                radiusLineWidth={1}
+                radiusLineColor="#fff"
+                outerBorderWidth={4}
+                innerBorderWidth={4}
+                innerBorderColor="#fff"
+                outerBorderColor="#fff"
+                textColors={['#000']}
+              />
+            )}
+          </div>
+
+          {/* Spin button */}
+          <div className="spin-button-wrapper">
+            <button
+              onClick={spinWheel}
+              disabled={mustSpin || registrations.length === 0}
+              className="raffle-button primary"
+            >
+              Spin
+            </button>
           </div>
 
           {registrations.length === 0 && (
@@ -444,8 +390,6 @@ const RaffleSpinPage = () => {
             </div>
           )}
         </div>
-
-
 
         {/* Footer */}
         <footer className="raffle-footer">
