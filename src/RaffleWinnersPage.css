@@ -225,7 +225,7 @@
 .table-header-row {
   display: grid;
   grid-template-columns: var(--winners-cols);
-  gap: 0; /* match registrations table */
+  gap: 0; /* like registrations */
   background: #8B1C1C;
   color: #fff;
   padding: 0; /* header cells carry padding */
@@ -247,19 +247,19 @@
 .filter-row {
   display: grid;
   grid-template-columns: var(--winners-cols);
-  gap: 0; /* exact alignment with header/data */
+  gap: 0; /* exact alignment */
   background: #f8f9fa;
-  padding: 0; /* move spacing to cells to match data */
+  padding: 0; /* spacing handled by cells */
   border-bottom: 1px solid #ddd;
   width: 100%;
 }
 
-.filter-cell { display:flex; align-items:center; min-width:0; padding: 8px 12px; border-right: 1px solid #dee2e6; }
-.filter-cell:last-child{ border-right: none; }
+.filter-cell { display:flex; align-items:center; min-width:0; padding: 8px 12px; border-right: 1px solid #ddd; }
+.filter-cell:last-child { border-right: none; }
 
 .filter-input {
   width: 100%;
-  padding: 6px 8px;
+  padding: 8px 10px;
   border: 1px solid #ced4da;
   border-radius: 4px;
   font-size: 0.85rem;
@@ -272,8 +272,8 @@
 .winner-row {
   display: grid;
   grid-template-columns: var(--winners-cols);
-  gap: 0; /* match registrations table */
-  padding: 0; /* data cells carry padding */
+  gap: 0; /* like registrations */
+  padding: 20px; /* like registrations */
   border-bottom: 1px solid #dee2e6;
   align-items: center;
   width: 100%;

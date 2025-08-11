@@ -311,7 +311,7 @@
   border: 1px solid rgba(255, 255, 255, 0.2);
   width: 100%;
   overflow: hidden;
-  --events-cols: 1fr 1fr 1fr 1fr 1fr 1fr 150px;
+  --events-cols: 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
 }
 .events-table-container * { box-sizing: border-box; }
 
@@ -341,9 +341,9 @@
  .filter-row {
   display: grid;
   grid-template-columns: var(--events-cols);
-  gap: 0; /* exact alignment with header/data */
+  gap: 0; /* exact alignment */
   background: #f8f9fa;
-  padding: 0; /* spacing in cells, not row */
+  padding: 0; /* spacing handled by cells */
   border-bottom: 1px solid #dee2e6;
   width: 100%;
 }
@@ -383,8 +383,8 @@
 .event-row {
   display: grid;
   grid-template-columns: var(--events-cols);
-  gap: 0; /* match registrations */
-  padding: 0; /* data cells carry padding */
+  gap: 0; /* like registrations */
+  padding: 20px; /* like registrations */
   border-bottom: 1px solid #dee2e6;
   align-items: center;
   transition: background 0.3s ease;
