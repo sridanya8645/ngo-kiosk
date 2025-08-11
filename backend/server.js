@@ -743,6 +743,32 @@ app.post('/api/raffle-winners', async (req, res) => {
   }
 });
 
+// Backfill missing event_name and win_date/win_time in raffle_winners from registrations
+app.post('/api/raffle-winners/backfill', async (req, res) => {
+  try {
+    // Fill event_name from registrations when missing
+    await pool.execute(`
+      UPDATE raffle_winners rw
+      JOIN registrations r ON rw.registration_id = r.id
+      SET rw.event_name = r.event_name
+      WHERE (rw.event_name IS NULL OR rw.event_name = '')
+    `);
+
+    // If win_date or win_time missing, derive from won_at
+    await pool.execute(`
+      UPDATE raffle_winners
+      SET win_date = IFNULL(win_date, DATE(won_at)),
+          win_time = IFNULL(win_time, TIME(won_at))
+      WHERE win_date IS NULL OR win_time IS NULL
+    `);
+
+    res.json({ success: true });
+  } catch (error) {
+    console.error('Backfill raffle_winners error:', error);
+    res.status(500).json({ success: false, message: 'Failed to backfill winners' });
+  }
+});
+
 // Upload banner endpoint
 app.post('/api/upload-banner', upload.single('banner'), async (req, res) => {
   try {

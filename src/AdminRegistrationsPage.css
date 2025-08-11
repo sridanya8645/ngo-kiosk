@@ -841,3 +841,19 @@
   background: rgba(255, 255, 255, 0.3);
   transform: translateY(-1px);
 }
+
+/* Fix overflow for registrations grid */
+.registrations-table-container,
+.data-table {
+  width: 100%;
+  overflow-x: auto;
+}
+
+.registration-row { width: 100%; }
+
+.registration-row .data-cell {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
