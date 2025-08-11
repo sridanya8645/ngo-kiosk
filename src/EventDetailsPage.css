@@ -341,9 +341,9 @@
  .filter-row {
   display: grid;
   grid-template-columns: var(--events-cols);
-  gap: 0; /* match header/data */
+  gap: 0; /* exact alignment with header/data */
   background: #f8f9fa;
-  padding: 0; /* move spacing to cells */
+  padding: 0; /* spacing in cells, not row */
   border-bottom: 1px solid #dee2e6;
   width: 100%;
 }

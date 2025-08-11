@@ -247,9 +247,9 @@
 .filter-row {
   display: grid;
   grid-template-columns: var(--winners-cols);
-  gap: 10px; /* match registrations table */
+  gap: 0; /* exact alignment with header/data */
   background: #f8f9fa;
-  padding: 20px; /* like registrations */
+  padding: 0; /* move spacing to cells to match data */
   border-bottom: 1px solid #ddd;
   width: 100%;
 }
