@@ -22,9 +22,9 @@
 
 .raffle-header {
   background: linear-gradient(135deg, #f9b233 0%, #c86d3a 100%);
-  padding: 20px;
+  padding: 15px 20px;
   border-bottom: 2px solid #8B1C1C;
-  flex-shrink: 0;
+  flex-shrink: 0; /* keep header height fixed like other pages */
 }
 
 .header-content {
@@ -129,12 +129,12 @@
 .raffle-main {
   flex: 1;
   display: flex;
-  align-items: center;
+  align-items: flex-start; /* match other pages so content starts near top */
   justify-content: center;
   padding: 20px;
   overflow-y: auto;
   min-height: 0;
-  max-height: calc(100vh - 200px); /* Reduced from 20px to 5px to bring footer up more */
+  max-height: calc(100vh - 200px); /* consistent with other pages */
 }
 
 .raffle-welcome-msg {
