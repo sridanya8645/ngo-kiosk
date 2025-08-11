@@ -31,24 +31,12 @@ export default function RaffleWinnersPage() {
     setLoading(true);
     setError('');
     fetch("/api/raffle-winners")
-      .then(res => {
-        if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
-        return res.json();
-      })
-      .then(data => {
-        setWinners(Array.isArray(data) ? data : []);
-        setLoading(false);
-      })
-      .catch((error) => {
-        console.error('RaffleWinnersPage: Error fetching raffle winners:', error);
-        setError("Failed to load winners.");
-        setLoading(false);
-      });
+      .then(res => { if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`); return res.json(); })
+      .then(data => { setWinners(Array.isArray(data) ? data : []); setLoading(false); })
+      .catch((error) => { console.error('RaffleWinnersPage: Error fetching raffle winners:', error); setError("Failed to load winners."); setLoading(false); });
   }, []);
 
-  const handleFilterChange = (e) => {
-    setFilters({ ...filters, [e.target.name]: e.target.value });
-  };
+  const handleFilterChange = (e) => setFilters({ ...filters, [e.target.name]: e.target.value });
 
   const filtered = winners.filter((row) =>
     columns.every((col) => {
@@ -60,25 +48,12 @@ export default function RaffleWinnersPage() {
 
   const downloadExcel = () => {
     const headers = columns.map(col => col.label).join(',');
-    const csvContent = filtered.map(row => [
-      row.registration_id || '',
-      row.name || '',
-      row.email || '',
-      row.phone || '',
-      row.event_name || '',
-      row.win_date || '',
-      row.win_time || ''
-    ].join(',')).join('\n');
-    const fullCsv = headers + '\n' + csvContent;
-    const blob = new Blob([fullCsv], { type: 'text/csv;charset=utf-8;' });
+    const csvContent = filtered.map(row => [row.registration_id||'',row.name||'',row.email||'',row.phone||'',row.event_name||'',row.win_date||'',row.win_time||''].join(',')).join('\n');
+    const blob = new Blob([headers+'\n'+csvContent], { type: 'text/csv;charset=utf-8;' });
     const link = document.createElement('a');
-    const url = URL.createObjectURL(blob);
-    link.setAttribute('href', url);
-    link.setAttribute('download', `raffle_winners_${new Date().toISOString().split('T')[0]}.csv`);
-    link.style.visibility = 'hidden';
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
+    link.href = URL.createObjectURL(blob);
+    link.download = `raffle_winners_${new Date().toISOString().split('T')[0]}.csv`;
+    document.body.appendChild(link); link.click(); document.body.removeChild(link);
   };
 
   return (
@@ -87,12 +62,8 @@ export default function RaffleWinnersPage() {
         {/* Header Section */}
         <header className="raffle-winners-header">
           <div className="header-content">
-            <div className="logo-section">
-              <img src="/sai-baba.png" alt="Sai Baba" className="logo-image" />
-            </div>
-            <div className="org-info">
-              A 501 (C) 3 non profit Organization | Tax Exempt Tax Id - 91-2190340 | All donations are tax exempt
-            </div>
+            <div className="logo-section"><img src="/sai-baba.png" alt="Sai Baba" className="logo-image" /></div>
+            <div className="org-info">A 501 (C) 3 non profit Organization | Tax Exempt Tax Id - 91-2190340 | All donations are tax exempt</div>
           </div>
         </header>
 
@@ -118,22 +89,17 @@ export default function RaffleWinnersPage() {
               <div className="error-message">{error}</div>
             ) : (
               <>
-                {/* Stats and Download Section */}
                 <div className="winners-stats-section">
                   <div className="winners-count">🏆 Total Winners: {filtered.length}</div>
                   <button onClick={downloadExcel} className="download-excel-button">📊 DOWNLOAD EXCEL FILE</button>
                 </div>
 
-                {/* Winners Table */}
-                <div className="winners-table-container">
-                  {/* Table Header */}
+                {/* Use the same table container/row classes as Event Details */}
+                <div className="events-table-container winners-table-container">
                   <div className="table-header-row">
-                    {columns.map((c) => (
-                      <div className="header-cell" key={c.key}>{c.label}</div>
-                    ))}
+                    {columns.map(c => (<div className="header-cell" key={c.key}>{c.label}</div>))}
                   </div>
 
-                  {/* Filter Row */}
                   <div className="filter-row">
                     <div className="filter-cell"><input name="registration_id" value={filters.registration_id} onChange={handleFilterChange} placeholder="Filter Registration ID" className="filter-input" /></div>
                     <div className="filter-cell"><input name="name" value={filters.name} onChange={handleFilterChange} placeholder="Filter Winner Name" className="filter-input" /></div>
@@ -144,16 +110,12 @@ export default function RaffleWinnersPage() {
                     <div className="filter-cell"><input name="win_time" value={filters.win_time} onChange={handleFilterChange} placeholder="Filter Win Time" className="filter-input" /></div>
                   </div>
 
-                  {/* Data Table */}
                   <div className="data-table">
                     {filtered.length === 0 ? (
-                      <div className="no-data-message">
-                        <span className="no-data-icon">🏆</span>
-                        <p>{winners.length === 0 ? "No winners yet. Winners will appear here when raffles are conducted." : "No winners found matching the filters."}</p>
-                      </div>
+                      <div className="no-data-message"><span className="no-data-icon">🏆</span><p>{winners.length === 0 ? "No winners yet. Winners will appear here when raffles are conducted." : "No winners found matching the filters."}</p></div>
                     ) : (
-                      filtered.map((w, index) => (
-                        <div key={index} className="winner-row">
+                      filtered.map((w, idx) => (
+                        <div key={idx} className="event-row winner-row">
                           <div className="data-cell">{w.registration_id || '-'}</div>
                           <div className="data-cell">{w.name || '-'}</div>
                           <div className="data-cell">{w.email || '-'}</div>
@@ -174,28 +136,10 @@ export default function RaffleWinnersPage() {
         {/* Footer */}
         <footer className="raffle-winners-footer">
           <div className="footer-content">
-            <div className="footer-section">
-              <span className="footer-icon">📍</span>
-              <div className="footer-text">
-                <div>Shirdi Sai Dham Inc, 12 Perrine Road,</div>
-                <div>Monmouth Junction NJ 08852</div>
-              </div>
-            </div>
-            <div className="footer-section">
-              <span className="footer-icon">📞</span>
-              <div className="footer-text">
-                <div>609 937 2800 /</div>
-                <div>609 937 2806</div>
-              </div>
-            </div>
-            <div className="footer-section">
-              <span className="footer-icon">✉️</span>
-              <span className="footer-text">shirdisaidham1@gmail.com</span>
-            </div>
-            <div className="footer-section">
-              <span className="powered-text">Powered by</span>
-              <img src="/PITS-removebg-preview.png" alt="Princeton IT Services" className="pits-logo" />
-            </div>
+            <div className="footer-section"><span className="footer-icon">📍</span><div className="footer-text"><div>Shirdi Sai Dham Inc, 12 Perrine Road,</div><div>Monmouth Junction NJ 08852</div></div></div>
+            <div className="footer-section"><span className="footer-icon">📞</span><div className="footer-text"><div>609 937 2800 /</div><div>609 937 2806</div></div></div>
+            <div className="footer-section"><span className="footer-icon">✉️</span><span className="footer-text">shirdisaidham1@gmail.com</span></div>
+            <div className="footer-section"><span className="powered-text">Powered by</span><img src="/PITS-removebg-preview.png" alt="Princeton IT Services" className="pits-logo" /></div>
           </div>
         </footer>
       </div>
