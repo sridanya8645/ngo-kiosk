@@ -319,10 +319,10 @@
 .table-header-row {
   display: grid;
   grid-template-columns: var(--events-cols);
-  gap: 10px;
-  background: linear-gradient(135deg, #8B1C1C 0%, #A52A2A 100%);
+  gap: 0; /* match registrations */
+  background: #8B1C1C;
   color: white;
-  padding: 15px 10px;
+  padding: 0; /* header cells carry padding */
   border-radius: 8px 8px 0 0;
   font-weight: 600;
   font-size: 0.9rem;
@@ -332,16 +332,19 @@
 .header-cell {
   text-align: left;
   min-width: 0;
+  padding: 15px 12px; /* like registrations */
+  border-right: 1px solid #6B0F0F;
 }
+.header-cell:last-child { border-right: none; }
 
 /* Filter Row */
 .filter-row {
   display: grid;
   grid-template-columns: var(--events-cols);
   gap: 10px;
-  background: rgba(139, 28, 28, 0.1);
+  background: #f8f9fa;
   padding: 20px;
-  border-bottom: 1px solid rgba(139, 28, 28, 0.2);
+  border-bottom: 1px solid #dee2e6;
   width: 100%;
 }
 
@@ -377,9 +380,9 @@
 .event-row {
   display: grid;
   grid-template-columns: var(--events-cols);
-  gap: 10px;
-  padding: 12px 10px;
-  border-bottom: 1px solid rgba(139, 28, 28, 0.1);
+  gap: 0; /* match registrations */
+  padding: 0; /* data cells carry padding */
+  border-bottom: 1px solid #dee2e6;
   align-items: center;
   transition: background 0.3s ease;
   width: 100%;
@@ -399,7 +402,10 @@
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+  padding: 8px 12px; /* like registrations */
+  border-right: 1px solid #ddd;
 }
+.data-cell:last-child { border-right: none; }
 
 .banner-thumbnail {
   width: 50px;
