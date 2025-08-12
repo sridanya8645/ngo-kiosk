@@ -475,7 +475,7 @@
   padding: 15px 20px;
   min-height: 60px;
   flex-shrink: 0;
-  margin-top: -30px; /* Lift footer by ~30px for kiosk bezel */
+  margin-top: -50px; /* Match Register footer position */
 }
 
 .footer-content {
