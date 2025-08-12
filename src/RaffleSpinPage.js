@@ -257,82 +257,6 @@ const RaffleSpinPage = () => {
             </div>
           </div>
 
-          {/* Winner announcement */}
-          {winner && (
-            <div className="winner-announcement" style={{ 
-              marginBottom: '30px',
-              minWidth: '500px',
-              maxWidth: '500px',
-              height: '500px',
-              display: 'flex',
-              flexDirection: 'column',
-              justifyContent: 'center',
-              alignItems: 'center',
-              borderRadius: '20px',
-              padding: '30px',
-              textAlign: 'center',
-              background: 'linear-gradient(135deg, #8B0000, #2F4F4F)',
-              border: '5px solid #FFD700',
-              boxShadow: '0 15px 50px rgba(0,0,0,0.5)',
-              animation: 'winnerGlow 2s ease-in-out infinite alternate'
-            }}>
-              <h3 style={{ 
-                fontSize: '3.5rem', 
-                margin: '0 0 30px 0', 
-                color: '#FFD700', 
-                fontWeight: 'bold',
-                textShadow: '2px 2px 4px rgba(0,0,0,0.8)'
-              }}>
-                🎉 WINNER! 🎉
-              </h3>
-              <p className="winner-name" style={{ 
-                fontSize: '3rem', 
-                fontWeight: 'bold', 
-                margin: '15px 0', 
-                color: '#FFFFFF',
-                textShadow: '2px 2px 4px rgba(0,0,0,0.8)'
-              }}>
-                {winner.name}
-              </p>
-              <p className="winner-id" style={{ 
-                fontSize: '2.5rem', 
-                color: '#FFD700', 
-                margin: '10px 0',
-                fontWeight: 'bold',
-                textShadow: '1px 1px 2px rgba(0,0,0,0.8)'
-              }}>
-                ID: {winner.id}
-              </p>
-
-              <button
-                onClick={resetWheel}
-                style={{
-                  marginTop: '30px',
-                  padding: '20px 40px',
-                  fontSize: '2rem',
-                  fontWeight: 'bold',
-                  backgroundColor: '#FFD700',
-                  color: '#8B0000',
-                  border: 'none',
-                  borderRadius: '15px',
-                  cursor: 'pointer',
-                  transition: 'all 0.3s ease',
-                  boxShadow: '0 5px 15px rgba(0,0,0,0.3)'
-                }}
-                onMouseOver={(e) => {
-                  e.target.style.transform = 'scale(1.1)';
-                  e.target.style.boxShadow = '0 8px 25px rgba(0,0,0,0.4)';
-                }}
-                onMouseOut={(e) => {
-                  e.target.style.transform = 'scale(1)';
-                  e.target.style.boxShadow = '0 5px 15px rgba(0,0,0,0.3)';
-                }}
-              >
-                Spin Again
-              </button>
-            </div>
-          )}
-
           {/* Wheel */}
           <div className="wheel-container">
             {registrations.length > 0 && (
@@ -365,6 +289,43 @@ const RaffleSpinPage = () => {
               />
             )}
           </div>
+
+          {/* Compact winner card below the wheel */}
+          {winner && (
+            <div className="winner-announcement" style={{
+              margin: '16px auto 8px',
+              width: '320px',
+              maxWidth: '90%',
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              borderRadius: '12px',
+              padding: '14px 16px',
+              textAlign: 'center',
+              background: 'linear-gradient(135deg, #8B0000, #2F4F4F)',
+              border: '3px solid #FFD700',
+              boxShadow: '0 6px 18px rgba(0,0,0,0.35)'
+            }}>
+              <h3 style={{
+                fontSize: '1.6rem',
+                margin: '0 0 8px 0',
+                color: '#FFD700',
+                fontWeight: 'bold'
+              }}>🎉 WINNER! 🎉</h3>
+              <p style={{
+                fontSize: '1.4rem',
+                fontWeight: '700',
+                margin: '4px 0',
+                color: '#FFFFFF'
+              }}>{winner.name}</p>
+              <p style={{
+                fontSize: '1.1rem',
+                color: '#FFD700',
+                margin: '2px 0',
+                fontWeight: '700'
+              }}>ID: {winner.id}</p>
+            </div>
+          )}
 
           {/* Spin button */}
           <div className="spin-button-wrapper">
