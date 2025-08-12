@@ -397,7 +397,7 @@ export default function CheckinPage() {
                 margin: '0',
                 fontWeight: '500'
               }}>
-                Register For {allEvents.filter(event => event.banner).length > 0 ? allEvents.filter(event => event.banner)[0].name : 'Events'} if not previously registered
+                Register For {selectedEvent?.name || 'Events'} if not previously registered
               </p>
             </div>
           </div>

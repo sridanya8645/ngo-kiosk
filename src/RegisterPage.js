@@ -100,15 +100,9 @@ const RegisterPage = () => {
     try {
       console.log('🌐 Sending registration request...');
       
-      let eventId = null;
-      const eventWithBanner = allEvents.find(event => event.banner);
-      if (eventWithBanner) {
-        eventId = eventWithBanner.id;
-        console.log('Using event with banner:', eventWithBanner.name, 'ID:', eventId);
-      } else if (allEvents.length > 0) {
-        eventId = allEvents[0].id;
-        console.log('Using first available event:', allEvents[0].name, 'ID:', eventId);
-      } else {
+      // Choose the selectedEvent determined on mount
+      let eventId = selectedEvent?.id || null;
+      if (!eventId) {
         console.error('No events found');
         setErrors({ submit: 'No events available for registration.' });
         return;

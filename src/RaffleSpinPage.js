@@ -65,19 +65,7 @@ const RaffleSpinPage = () => {
     });
   }, []);
 
-  const fetchEventInfo = async () => {
-    try {
-      const response = await fetch('/api/events');
-      if (response.ok) {
-        const events = await response.json();
-        const today = new Date().toISOString().split('T')[0];
-        const todaysEvent = events.find(event => event.date === today);
-        setTodaysEvent(todaysEvent);
-      }
-    } catch (error) {
-      console.error('Error fetching event info:', error);
-    }
-  };
+  // Removed unused fetchEventInfo with undefined setter to satisfy linter
 
   const triggerConfetti = () => {
     setShowConfetti(true);
