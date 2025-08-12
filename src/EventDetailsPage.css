@@ -322,7 +322,7 @@
   gap: 0; /* match registrations */
   background: #8B1C1C;
   color: white;
-  padding: 0 20px; /* align with data-row left/right padding */
+  padding: 0; /* move spacing into cells for perfect alignment */
   border-radius: 8px 8px 0 0;
   font-weight: 600;
   font-size: 0.9rem;
@@ -332,18 +332,18 @@
 .header-cell {
   text-align: left;
   min-width: 0;
-  padding: 15px 12px; /* like registrations */
+  padding: 12px 20px; /* match data-cell horizontal padding */
   border-right: 1px solid #6B0F0F;
 }
 .header-cell:last-child { border-right: none; }
 
 /* Filter Row */
- .filter-row {
+ .events-table-container .filter-row {
   display: grid;
   grid-template-columns: var(--events-cols);
   gap: 0; /* exact alignment */
   background: #f8f9fa;
-  padding: 0 20px; /* match row horizontal padding */
+  padding: 0; /* move spacing into cells for perfect alignment */
   border-bottom: 1px solid #dee2e6;
   width: 100%;
 }
@@ -352,7 +352,7 @@
   display: flex;
   align-items: center;
   min-width: 0;
-  padding: 8px 12px; /* match data cell */
+  padding: 8px 20px; /* match data-cell horizontal padding */
   border-right: 1px solid #dee2e6;
 }
 .filter-cell:last-child { border-right: none; }
@@ -824,7 +824,7 @@ select.table-input:focus {
     grid-template-columns: 1fr;
   }
   
-  .filter-row {
+  .filters-section .filter-row {
     grid-template-columns: repeat(2, 1fr);
   }
   
@@ -881,7 +881,7 @@ select.table-input:focus {
     padding: 20px;
   }
   
-  .filter-row {
+  .filters-section .filter-row {
     grid-template-columns: 1fr;
   }
   
