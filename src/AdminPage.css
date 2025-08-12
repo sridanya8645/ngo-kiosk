@@ -308,8 +308,8 @@
 }
 
 .pits-logo {
-  height: 12rem;
-  width: 20rem;
+  height: 45px;
+  width: auto;
   object-fit: contain;
 }
 
