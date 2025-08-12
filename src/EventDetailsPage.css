@@ -563,7 +563,7 @@
   padding: 15px 20px;
   min-height: 60px;
   flex-shrink: 0;
-  margin-top: -35px; /* move footer 35px up */
+  margin-top: -70px; /* move footer 70px up (additional 35px) */
 }
 
 .footer-content {
