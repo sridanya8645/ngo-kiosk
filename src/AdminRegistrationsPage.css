@@ -270,9 +270,10 @@
   box-shadow: 0 2px 8px rgba(0,0,0,0.1);
   border: 2px solid #8B1C1C;
   margin-top: 20px;
+  margin-bottom: 10px; /* buffer above footer */
   display: flex;
   flex-direction: column;
-  max-height: calc(100vh - 320px); /* leave room so footer never overlaps */
+  max-height: calc(100vh - 360px); /* smaller table area to avoid touching footer */
 }
 
 /* Table Header Row */

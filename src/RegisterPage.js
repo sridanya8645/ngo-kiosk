@@ -267,6 +267,8 @@ const RegisterPage = () => {
                     onChange={handleInputChange}
                     className={`form-input ${errors.phone ? 'error' : ''}`}
                     placeholder="Enter your phone number"
+                    pattern="^(\+1[\s-]?)?\(?\d{3}\)?[\s-]?\d{3}[\s-]?\d{4}$"
+                    title="Enter a valid US phone number (e.g., 555-123-4567)"
                     required
                   />
                   {errors.phone && <span className="error-message">{errors.phone}</span>}

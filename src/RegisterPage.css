@@ -204,17 +204,17 @@
 }
 
 .form-label {
-  font-size: 1.5rem; /* increased label size */
+  font-size: 1.7rem; /* larger label */
   font-weight: 600;
   color: #8B1C1C;
   text-align: left;
 }
 
 .form-input {
-  padding: 26px; /* bigger input height */
+  padding: 30px; /* bigger input height */
   border: 2px solid #ddd;
   border-radius: 6px;
-  font-size: 1.3rem; /* larger text */
+  font-size: 1.5rem; /* larger text */
   transition: border-color 0.3s ease;
   background: rgba(255, 255, 255, 0.9);
   backdrop-filter: blur(10px);
@@ -227,10 +227,10 @@
 }
 
 .form-select {
-  padding: 24px; /* bigger control */
+  padding: 28px; /* bigger control */
   border: 2px solid #ddd;
   border-radius: 6px;
-  font-size: 1.2rem; /* larger text */
+  font-size: 1.4rem; /* larger text */
   background: rgba(255, 255, 255, 0.9);
   backdrop-filter: blur(10px);
   cursor: pointer;
