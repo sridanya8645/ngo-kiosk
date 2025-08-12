@@ -1,0 +1,21 @@
+:root {
+  /* Brand colors */
+  --brand: #8B1C1C;
+  --brand-dark: #6B0F0F;
+  --surface: #f8f9fa;
+  --text-primary: #000;
+  --text-secondary: #333;
+  --border-color: #ddd;
+
+  /* Spacing */
+  --space-8: 8px;
+  --space-12: 12px;
+  --space-15: 15px;
+  --space-20: 20px;
+
+  /* Typography */
+  --font-size-sm: 0.8rem;
+  --font-size-base: 0.9rem;
+  --font-size-lg: 1.2rem;
+}
+

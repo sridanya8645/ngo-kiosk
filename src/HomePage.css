@@ -219,7 +219,7 @@
   padding: 15px 20px;
   min-height: 60px;
   flex-shrink: 0;
-  margin-top: -110px; /* Moved down by 15 points (from -125px to -110px) */
+  /* No negative margin; footer sits naturally at the bottom */
 }
 
 .footer-content {
@@ -783,23 +783,7 @@
     height: 25px;
   }
 } 
-/* Footer - Standard across all pages */
-.footer-content {
-  display: flex !important;
-  flex-direction: row !important;
-  justify-content: space-between;
-  align-items: center;
-  margin-top: 0;
-  gap: 20px;
-  font-size: 1.9rem;
-  color: #000 !important;
-  font-weight: bold;
-  width: 100%;
-  max-width: 100%;
-  padding: 0 20px;
-  position: relative;
-  z-index: 10;
-}
+@import './styles/footer.css';
 
 .footer-section {
   display: flex;
@@ -845,40 +829,7 @@
   object-fit: contain;
 }
 
-/* Header - Standard across all pages */
-.header-content {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  width: 100%;
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 0 20px;
-}
-
-.logo-section {
-  display: flex;
-  align-items: center;
-  gap: 15px;
-  z-index: 1001;
-}
-
-.logo-image {
-  height: 50px;
-  width: 50px;
-  object-fit: contain;
-  border-radius: 50%;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-}
-
-.org-info {
-  font-size: 1rem;
-  color: #000 !important;
-  text-align: center;
-  flex: 1;
-  margin: 0 20px;
-  font-weight: 500;
-}
+@import './styles/header.css';
 
 .admin-bar {
   display: flex;
