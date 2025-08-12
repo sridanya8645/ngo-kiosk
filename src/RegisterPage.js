@@ -237,7 +237,7 @@ const RegisterPage = () => {
           {/* Raffle text directly below lottie */}
           <div style={{ 
             textAlign: 'center', 
-            margin: '-12px 0 8px 0',
+            margin: '-30px 0 8px 0',
             color: '#8B1C1C',
             fontSize: '1.3rem',
             fontWeight: 'bold'
