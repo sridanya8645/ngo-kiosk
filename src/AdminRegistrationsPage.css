@@ -270,6 +270,9 @@
   box-shadow: 0 2px 8px rgba(0,0,0,0.1);
   border: 2px solid #8B1C1C;
   margin-top: 20px;
+  display: flex;
+  flex-direction: column;
+  max-height: calc(100vh - 320px); /* leave room so footer never overlaps */
 }
 
 /* Table Header Row */
@@ -326,6 +329,8 @@
 /* Data Table */
 .data-table {
   background: white;
+  flex: 1 1 auto;
+  overflow-y: auto;
 }
 
 .registration-row {
@@ -420,7 +425,7 @@
   padding: 15px 20px;
   min-height: 60px;
   flex-shrink: 0;
-  /* No negative margin; footer sits naturally at the bottom */
+  margin-top: -15px; /* raise footer per request */
 }
 
 .footer-content {

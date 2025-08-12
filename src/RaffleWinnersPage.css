@@ -332,6 +332,7 @@
   padding: 15px 20px;
   min-height: 60px;
   flex-shrink: 0;
+  margin-top: -40px; /* raise footer per request */
 }
 
 @import './styles/footer.css';
