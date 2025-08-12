@@ -219,7 +219,7 @@
   padding: 15px 20px;
   min-height: 60px;
   flex-shrink: 0;
-  margin-top: -50px; /* Match Register footer position */
+  margin-top: -80px; /* Raised by additional ~30px as requested */
 }
 
 .footer-content {
