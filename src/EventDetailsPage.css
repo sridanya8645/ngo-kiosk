@@ -312,41 +312,30 @@
   width: 100%;
   overflow: hidden;
   --events-cols: 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
+  display: grid; /* one grid to rule them all */
+  grid-template-columns: var(--events-cols);
 }
 .events-table-container * { box-sizing: border-box; }
 
 /* Table Header */
-.table-header-row {
-  display: grid;
-  grid-template-columns: var(--events-cols);
-  gap: 0; /* match registrations */
-  background: #8B1C1C;
-  color: white;
-  padding: 0; /* move spacing into cells for perfect alignment */
-  border-radius: 8px 8px 0 0;
-  font-weight: 600;
-  font-size: 0.9rem;
-  width: 100%;
-}
+.table-header-row { display: contents; }
 
 .header-cell {
   text-align: left;
   min-width: 0;
   padding: 12px 20px; /* match data-cell horizontal padding */
   border-right: 1px solid #6B0F0F;
+  background: #8B1C1C; /* move header background to cells */
+  color: #fff;
+  font-weight: 600;
+  font-size: 0.9rem;
 }
 .header-cell:last-child { border-right: none; }
+.header-cell:first-child { border-top-left-radius: 8px; }
+.header-cell:last-child { border-top-right-radius: 8px; }
 
 /* Filter Row */
- .events-table-container .filter-row {
-  display: grid;
-  grid-template-columns: var(--events-cols);
-  gap: 0; /* exact alignment */
-  background: #f8f9fa;
-  padding: 0; /* move spacing into cells for perfect alignment */
-  border-bottom: 1px solid #dee2e6;
-  width: 100%;
-}
+ .events-table-container .filter-row { display: contents; }
 
 .filter-cell {
   display: flex;
@@ -354,6 +343,7 @@
   min-width: 0;
   padding: 8px 20px; /* match data-cell horizontal padding */
   border-right: 1px solid #dee2e6;
+  background: #f8f9fa;
 }
 .filter-cell:last-child { border-right: none; }
 
@@ -374,27 +364,9 @@
 }
 
 /* Data Table */
-.data-table {
-  background: rgba(255, 255, 255, 0.95);
-  border-radius: 0 0 8px 8px;
-  width: 100%;
-}
+.data-table { display: contents; }
 
-.event-row {
-  display: grid;
-  grid-template-columns: var(--events-cols);
-  gap: 0; /* exact alignment */
-  padding: 0; /* move spacing to cells */
-  border-bottom: 1px solid #dee2e6;
-  align-items: center;
-  transition: background 0.3s ease;
-  width: 100%;
-  box-sizing: border-box;
-}
-
-.event-row:hover {
-  background: rgba(139, 28, 28, 0.05);
-}
+.event-row { display: contents; }
 
 .data-cell {
   display: flex;
@@ -408,7 +380,9 @@
   white-space: nowrap;
   padding: 12px 20px; /* moves spacing into cells to align header/filter edges */
   border-right: 1px solid #ddd;
+  border-bottom: 1px solid #dee2e6; /* row separators when rows are contents */
   box-sizing: border-box;
+  background: #fff;
 }
 .data-cell:last-child { border-right: none; }
 
