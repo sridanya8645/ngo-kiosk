@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import Lottie from 'lottie-react';
 import './RegisterPage.css';
-import registerLottie from './register-lottie.json';
 
 const RegisterPage = () => {
   const navigate = useNavigate();
@@ -229,15 +227,10 @@ const RegisterPage = () => {
             Register for {getEventName()}
           </h1>
           
-          {/* Lottie animation second */}
-          <div className="lottie-container">
-            <Lottie animationData={registerLottie} style={{ width: 150, height: 150 }} />
-          </div>
-          
-          {/* Raffle text directly below lottie */}
+          {/* Raffle text directly below title */}
           <div style={{ 
             textAlign: 'center', 
-            margin: '-30px 0 8px 0',
+            margin: '8px 0 12px 0',
             color: '#8B1C1C',
             fontSize: '1.3rem',
             fontWeight: 'bold'

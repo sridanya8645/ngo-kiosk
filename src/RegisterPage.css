@@ -178,11 +178,7 @@
   text-align: center;
 }
 
-.lottie-container {
-  display: flex;
-  justify-content: center;
-  margin-bottom: 0; /* no gap below lottie */
-}
+/* lottie removed */
 
 .register-title {
   font-size: 1.6rem; /* Reduced font size */
@@ -198,7 +194,7 @@
   gap: 6px;
   width: 100%;
   max-width: 400px;
-  margin-top: -90px; /* move form even closer below raffle text */
+  margin-top: 10px; /* form sits below raffle text */
 }
 
 .form-group {
