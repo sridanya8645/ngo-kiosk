@@ -332,7 +332,6 @@
   padding: 15px 20px;
   min-height: 60px;
   flex-shrink: 0;
-  margin-top: -100px; /* Move footer up by 100px */
 }
 
 @import './styles/footer.css';
