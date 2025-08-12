@@ -311,7 +311,8 @@
   border: 1px solid rgba(255, 255, 255, 0.2);
   width: 100%;
   overflow: hidden;
-  --events-cols: 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
+  /* Column proportions tuned for content fit */
+  --events-cols: 2fr 1.2fr 1fr 1.4fr 1fr 1.6fr 1.1fr;
 }
 .events-table-container * { box-sizing: border-box; }
 
@@ -325,6 +326,14 @@
   padding: 0;
   border-radius: 8px 8px 0 0;
 }
+/* Lock header cells to exact columns to avoid any reflow issues */
+.table-header-row .header-cell:nth-child(1) { grid-column: 1; }
+.table-header-row .header-cell:nth-child(2) { grid-column: 2; }
+.table-header-row .header-cell:nth-child(3) { grid-column: 3; }
+.table-header-row .header-cell:nth-child(4) { grid-column: 4; }
+.table-header-row .header-cell:nth-child(5) { grid-column: 5; }
+.table-header-row .header-cell:nth-child(6) { grid-column: 6; }
+.table-header-row .header-cell:nth-child(7) { grid-column: 7; }
 
 .header-cell {
   text-align: left;
@@ -349,6 +358,14 @@
   padding: 0;
   border-bottom: 1px solid #dee2e6;
  }
+/* Lock filter cells to exact columns */
+.events-table-container .filter-row .filter-cell:nth-child(1) { grid-column: 1; }
+.events-table-container .filter-row .filter-cell:nth-child(2) { grid-column: 2; }
+.events-table-container .filter-row .filter-cell:nth-child(3) { grid-column: 3; }
+.events-table-container .filter-row .filter-cell:nth-child(4) { grid-column: 4; }
+.events-table-container .filter-row .filter-cell:nth-child(5) { grid-column: 5; }
+.events-table-container .filter-row .filter-cell:nth-child(6) { grid-column: 6; }
+.events-table-container .filter-row .filter-cell:nth-child(7) { grid-column: 7; }
 
 .filter-cell {
   display: flex;
@@ -391,6 +408,14 @@
   border-bottom: 1px solid #dee2e6;
   align-items: center;
 }
+/* Ensure data cells stay in their intended columns too */
+.event-row .data-cell:nth-child(1) { grid-column: 1; }
+.event-row .data-cell:nth-child(2) { grid-column: 2; }
+.event-row .data-cell:nth-child(3) { grid-column: 3; }
+.event-row .data-cell:nth-child(4) { grid-column: 4; }
+.event-row .data-cell:nth-child(5) { grid-column: 5; }
+.event-row .data-cell:nth-child(6) { grid-column: 6; }
+.event-row .data-cell:nth-child(7) { grid-column: 7; }
 
 .data-cell {
   display: flex;
