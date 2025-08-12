@@ -74,7 +74,7 @@ const RegisterPage = () => {
     }
 
     setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
+    return Object.keys(newErrors).length === 0; // true when valid
   };
 
   const handleSubmit = async (e) => {
@@ -83,11 +83,10 @@ const RegisterPage = () => {
     console.log('🔄 Form submission started');
     console.log('📝 Form data:', formData);
     
-    // Validate form
-    const validationErrors = validateForm();
-    if (Object.keys(validationErrors).length > 0) {
-      console.log('❌ Validation errors:', validationErrors);
-      setErrors(validationErrors);
+    // Validate form and block submit when invalid
+    const isValid = validateForm();
+    if (!isValid) {
+      console.log('❌ Validation errors – submission blocked');
       return;
     }
 
@@ -238,7 +237,7 @@ const RegisterPage = () => {
           {/* Raffle text directly below lottie */}
           <div style={{ 
             textAlign: 'center', 
-            margin: '5px 0 20px 0',
+            margin: '5px 0 10px 0',
             color: '#8B1C1C',
             fontSize: '1.3rem',
             fontWeight: 'bold'
@@ -260,6 +259,7 @@ const RegisterPage = () => {
                     onChange={handleInputChange}
                     className={`form-input ${errors.name ? 'error' : ''}`}
                     placeholder="Enter your full name"
+                    required
                   />
                   {errors.name && <span className="error-message">{errors.name}</span>}
                 </div>
@@ -274,6 +274,7 @@ const RegisterPage = () => {
                     onChange={handleInputChange}
                     className={`form-input ${errors.phone ? 'error' : ''}`}
                     placeholder="Enter your phone number"
+                    required
                   />
                   {errors.phone && <span className="error-message">{errors.phone}</span>}
                 </div>
@@ -288,6 +289,7 @@ const RegisterPage = () => {
                     onChange={handleInputChange}
                     className={`form-input ${errors.email ? 'error' : ''}`}
                     placeholder="Enter your email address"
+                    required
                   />
                   {errors.email && <span className="error-message">{errors.email}</span>}
                 </div>
