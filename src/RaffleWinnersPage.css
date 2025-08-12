@@ -335,22 +335,7 @@
   margin-top: -100px; /* Move footer up by 100px */
 }
 
-.footer-content {
-  display: flex !important;
-  flex-direction: row !important;
-  justify-content: space-between;
-  align-items: center;
-  margin-top: 0;
-  gap: 20px;
-  font-size: 1.9rem;
-  color: #000;
-  font-weight: bold;
-  width: 100%;
-  max-width: 100%;
-  padding: 0 20px;
-  position: relative;
-  z-index: 10;
-}
+@import './styles/footer.css';
 
 .footer-section {
   display: flex;
@@ -520,22 +505,7 @@
   }
 } 
 /* Footer - Standard across all pages */
-.footer-content {
-  display: flex !important;
-  flex-direction: row !important;
-  justify-content: space-between;
-  align-items: center;
-  margin-top: 0;
-  gap: 20px;
-  font-size: 1.9rem;
-  color: #000 !important;
-  font-weight: bold;
-  width: 100%;
-  max-width: 100%;
-  padding: 0 20px;
-  position: relative;
-  z-index: 10;
-}
+@import './styles/footer.css';
 
 .footer-section {
   display: flex;
