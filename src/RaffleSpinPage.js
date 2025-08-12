@@ -14,8 +14,7 @@ const RaffleSpinPage = () => {
   const [allEligibleRegistrations, setAllEligibleRegistrations] = useState([]);
   const [currentEligibleIndex, setCurrentEligibleIndex] = useState(500);
   const [eligibleUsers, setEligibleUsers] = useState([]);
-  const [todaysEvent, setTodaysEvent] = useState(null);
-  const [allEvents, setAllEvents] = useState([]);
+  const [selectedEvent, setSelectedEvent] = useState(null);
   const navigate = useNavigate();
 
   // Function to generate 500 different colors
@@ -43,8 +42,14 @@ const RaffleSpinPage = () => {
       console.log('Winners:', winners);
       console.log('All events:', events);
       
-      // Set all events
-      setAllEvents(events);
+      // Choose today's or next event
+      const normalize = (d) => { const dt = new Date(d); return new Date(dt.getFullYear(), dt.getMonth(), dt.getDate()).getTime(); };
+      const todayTs = normalize(new Date());
+      const sorted = [...events].sort((a,b) => normalize(a.date) - normalize(b.date));
+      const todays = sorted.find(e => normalize(e.date) === todayTs);
+      const next = sorted.find(e => normalize(e.date) > todayTs);
+      const chosen = todays || next || sorted[0] || null;
+      setSelectedEvent(chosen);
       
       // Filter out already won users
       const availableUsers = eligibleUsers.filter(user => 
@@ -252,7 +257,7 @@ const RaffleSpinPage = () => {
           {/* Event Info and Date */}
           <div className="event-info-card">
             <div className="event-name">
-              {allEvents.filter(event => event.banner).length > 0 ? allEvents.filter(event => event.banner)[0].name : 'Temple Newsletter and General Events'}
+              {selectedEvent?.name || 'Temple Newsletter and General Events'}
             </div>
             <div className="event-date">
               {new Date().toLocaleDateString('en-US', { 

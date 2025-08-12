@@ -13,7 +13,7 @@ const RegisterPage = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitSuccess, setSubmitSuccess] = useState(false);
   const [errors, setErrors] = useState({});
-  const [allEvents, setAllEvents] = useState([]);
+  const [selectedEvent, setSelectedEvent] = useState(null);
 
   // Monitor submitSuccess state changes
   useEffect(() => {
@@ -31,7 +31,13 @@ const RegisterPage = () => {
       })
       .then(events => {
         console.log('Events data received in RegisterPage:', events);
-        setAllEvents(events);
+        const normalize = (d) => { const dt = new Date(d); return new Date(dt.getFullYear(), dt.getMonth(), dt.getDate()).getTime(); };
+        const todayTs = normalize(new Date());
+        const sorted = [...events].sort((a,b) => normalize(a.date) - normalize(b.date));
+        const todays = sorted.find(e => normalize(e.date) === todayTs);
+        const next = sorted.find(e => normalize(e.date) > todayTs);
+        const chosen = todays || next || sorted[0] || null;
+        setSelectedEvent(chosen);
       })
       .catch((error) => {
         console.error('Error fetching events in RegisterPage:', error);
@@ -185,15 +191,7 @@ const RegisterPage = () => {
   );
 
   // Get the event name to display
-  const getEventName = () => {
-    const eventWithBanner = allEvents.find(event => event.banner);
-    if (eventWithBanner) {
-      return eventWithBanner.name;
-    } else if (allEvents.length > 0) {
-      return allEvents[0].name;
-    }
-    return 'Newsletter and General Events';
-  };
+  const getEventName = () => selectedEvent?.name || 'Newsletter and General Events';
 
   return (
     <div className="register-container">

@@ -10,7 +10,7 @@ export default function CheckinPage() {
   const [scanComplete, setScanComplete] = useState(false);
   const [todaysEvent, setTodaysEvent] = useState(null);
   const [newsletterEvent, setNewsletterEvent] = useState(null);
-  const [allEvents, setAllEvents] = useState([]);
+  const [selectedEvent, setSelectedEvent] = useState(null);
 
   const navigate = useNavigate();
   const isRunning = useRef(false);
@@ -46,11 +46,14 @@ export default function CheckinPage() {
       .then(res => res.json())
       .then(events => {
         console.log('All events data:', events);
-        
-        // Set all events for banner display
-        setAllEvents(events);
-        
-
+        // Determine today's or next event using normalized dates
+        const normalize = (d) => { const dt = new Date(d); return new Date(dt.getFullYear(), dt.getMonth(), dt.getDate()).getTime(); };
+        const todayTs = normalize(new Date());
+        const sorted = [...events].sort((a,b) => normalize(a.date) - normalize(b.date));
+        const todays = sorted.find(e => normalize(e.date) === todayTs);
+        const next = sorted.find(e => normalize(e.date) > todayTs);
+        const chosen = todays || next || sorted[0] || null;
+        setSelectedEvent(chosen);
       })
       .catch(error => {
         console.error('Error fetching events:', error);
@@ -338,24 +341,17 @@ export default function CheckinPage() {
       <main className="checkin-main">
         <div className="checkin-content">
           <h1 className="checkin-title">Check-In</h1>
-          {allEvents.filter(event => event.banner).length > 0 && (
-            <p className="checkin-for-text">
-              Checkin for {allEvents.filter(event => event.banner)[0].name}
-            </p>
+          {selectedEvent && (
+            <p className="checkin-for-text">Checkin for {selectedEvent.name}</p>
           )}
           
           {/* Event Banner Section - Show only the first event with banner */}
-          {allEvents.filter(event => event.banner).length > 0 && (
+          {selectedEvent && selectedEvent.banner && (
             <div className="event-section">
               <img 
-                src={`${allEvents.filter(event => event.banner)[0].banner}`}
-                alt={`${allEvents.filter(event => event.banner)[0].name} Banner`}
+                src={`${selectedEvent.banner}`}
+                alt={`${selectedEvent.name} Banner`}
                 className="event-banner"
-                onLoad={() => console.log(`Event banner loaded successfully: ${allEvents.filter(event => event.banner)[0].name} - ${allEvents.filter(event => event.banner)[0].banner}`)}
-                onError={(e) => {
-                  console.error(`Event banner failed to load: ${allEvents.filter(event => event.banner)[0].name} - ${allEvents.filter(event => event.banner)[0].banner}`);
-                  console.error('Error details:', e);
-                }}
               />
             </div>
           )}

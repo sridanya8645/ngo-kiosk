@@ -32,7 +32,12 @@ function AdminRegistrationsPage() {
       .then(res => res.json())
       .then(data => {
         console.log('Registrations data:', data);
-        setRegistrations(data);
+        // Normalize volunteer value to 'Yes'/'No'
+        const normalized = data.map(r => ({
+          ...r,
+          interested_to_volunteer: (r.interested_to_volunteer === 1 || r.interested_to_volunteer === true || r.interested_to_volunteer === '1') ? 'Yes' : (r.interested_to_volunteer === 'Yes' ? 'Yes' : 'No')
+        }));
+        setRegistrations(normalized);
       })
       .catch(error => {
         console.error('Error fetching registrations:', error);
