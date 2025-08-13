@@ -14,6 +14,7 @@ export default function CheckinPage() {
 
   const navigate = useNavigate();
   const isRunning = useRef(false);
+  const isProcessingScan = useRef(false);
 
   useEffect(() => {
     // Debug: Test image loading
@@ -128,6 +129,8 @@ export default function CheckinPage() {
               aspectRatio: 1.0
             },
             qrCodeMessage => {
+              if (isProcessingScan.current) { return; }
+              isProcessingScan.current = true;
               console.log('QR Code detected:', qrCodeMessage);
               try {
                 const data = JSON.parse(qrCodeMessage);
@@ -139,6 +142,7 @@ export default function CheckinPage() {
               } catch (e) {
                 console.error('QR code parsing error:', e);
                 setErrorMsg('Invalid QR code format');
+                isProcessingScan.current = false;
               }
             },
             errorMessage => {
@@ -253,6 +257,8 @@ export default function CheckinPage() {
                     { facingMode: "user" },
                     { fps: 10, qrbox: { width: 280, height: 280 } },
                     qrCodeMessage => {
+                      if (isProcessingScan.current) { return; }
+                      isProcessingScan.current = true;
                       console.log('QR Code detected:', qrCodeMessage);
                       try {
                         const data = JSON.parse(qrCodeMessage);
@@ -261,6 +267,7 @@ export default function CheckinPage() {
                         handleCheckin(registrationId, data.name);
                       } catch (e) {
                         setErrorMsg('❌ Invalid QR code');
+                        isProcessingScan.current = false;
                       }
                     },
                     errorMessage => {
@@ -268,6 +275,7 @@ export default function CheckinPage() {
                     }
                   ).then(() => {
                     isRunning.current = true;
+                    isProcessingScan.current = false;
                   }).catch((error) => {
                     console.log('Scanner failed to restart:', error);
                   });
@@ -281,7 +289,7 @@ export default function CheckinPage() {
             }
           }
         }, 3000);
-      } else {
+        } else {
         console.log('Check-in failed:', data);
         if (data.message && (data.message.includes("already checked in") || data.message.includes("already been scanned"))) {
           setErrorMsg(`❌ QR already scanned! This registration has already been checked in.`);
@@ -291,11 +299,13 @@ export default function CheckinPage() {
           setErrorMsg("❌ Check-in failed");
         }
         setScanComplete(false);
+          isProcessingScan.current = false;
       }
     } catch (error) {
       console.error("Check-in error:", error);
       setErrorMsg("❌ Network error. Please try again.");
       setScanComplete(false);
+        isProcessingScan.current = false;
     }
   }, [scanComplete]);
 
