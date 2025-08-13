@@ -371,7 +371,9 @@ export default function CheckinPage() {
             >
               <option value="" disabled>Select an event</option>
               {events.map(ev => {
-                const dt = new Date(`${ev.date}T${ev.time || '00:00:00'}`);
+                const datePart = typeof ev.date === 'string' ? ev.date.split('T')[0] : new Date(ev.date).toISOString().split('T')[0];
+                const timePart = ev.time && ev.time.length >= 5 ? ev.time : '00:00:00';
+                const dt = new Date(`${datePart}T${timePart}`);
                 const dateStr = dt.toLocaleDateString('en-US', {
                   weekday: 'long',
                   month: 'short',
@@ -402,14 +404,15 @@ export default function CheckinPage() {
                 src={`${selectedEvent.banner}`}
                 alt={`${selectedEvent.name} Banner`}
                 className="event-banner"
+                style={{ maxWidth: '100%', width: '540px', height: 'auto', borderRadius: '12px' }}
               />
             </div>
           )}
 
 
 
-          {/* QR Scanner Section */}
-          <div className="scanner-section">
+          {/* QR Scanner Section - only show when an event is selected */}
+          <div className="scanner-section" style={{ display: selectedEvent ? 'block' : 'none' }}>
             <h3 className="scanner-title">Scan QR Code to Check-In</h3>
                          <div id="reader-container" className="scanner-container" />
             
@@ -441,14 +444,16 @@ export default function CheckinPage() {
               textAlign: 'center',
               marginTop: '10px'
             }}>
-              <p style={{ 
-                color: 'red', 
-                fontSize: '0.9rem', 
-                margin: '0',
-                fontWeight: '500'
-              }}>
-                Register For {selectedEvent?.name || 'Events'} if not previously registered
-              </p>
+              {selectedEvent && (
+                <p style={{ 
+                  color: 'red', 
+                  fontSize: '0.9rem', 
+                  margin: '0',
+                  fontWeight: '500'
+                }}>
+                  Register For {selectedEvent.name} if not previously registered
+                </p>
+              )}
             </div>
           </div>
         </div>

@@ -201,7 +201,9 @@ const RegisterPage = () => {
 
   const formatEventDisplay = (ev) => {
     try {
-      const dateTime = new Date(`${ev.date}T${ev.time || '00:00:00'}`);
+      const datePart = typeof ev.date === 'string' ? ev.date.split('T')[0] : new Date(ev.date).toISOString().split('T')[0];
+      const timePart = ev.time && ev.time.length >= 5 ? ev.time : '00:00:00';
+      const dateTime = new Date(`${datePart}T${timePart}`);
       const dateStr = dateTime.toLocaleDateString('en-US', {
         weekday: 'long',
         month: 'short',
