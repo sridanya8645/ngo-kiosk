@@ -3,7 +3,7 @@
   display: flex;
   flex-direction: column;
   height: 100vh;
-  overflow: hidden;
+  overflow: auto; /* allow page to scroll so footer is always reachable */
   background: linear-gradient(135deg, #f9b233 0%, #c86d3a 100%);
 }
 
@@ -168,7 +168,6 @@
   flex: 1;
   padding: 20px;
   overflow-y: auto;
-  max-height: calc(100vh - 150px); /* Reduced from 200px to ensure footer visibility */
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
@@ -475,7 +474,10 @@
   padding: 15px 20px;
   min-height: 60px;
   flex-shrink: 0;
-  margin-top: -115px; /* additional 5px up */
+  margin-top: 0;
+  position: sticky;
+  bottom: 0;
+  z-index: 5;
 }
 
 .footer-content {
