@@ -10,6 +10,7 @@ export default function CheckinPage() {
   const [scanComplete, setScanComplete] = useState(false);
   const [todaysEvent, setTodaysEvent] = useState(null);
   const [newsletterEvent, setNewsletterEvent] = useState(null);
+  const [events, setEvents] = useState([]);
   const [selectedEvent, setSelectedEvent] = useState(null);
 
   const navigate = useNavigate();
@@ -54,6 +55,7 @@ export default function CheckinPage() {
         const todays = sorted.find(e => normalize(e.date) === todayTs);
         const next = sorted.find(e => normalize(e.date) > todayTs);
         const chosen = todays || next || sorted[0] || null;
+        setEvents(sorted);
         setSelectedEvent(chosen);
       })
       .catch(error => {
@@ -205,7 +207,8 @@ export default function CheckinPage() {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          registrationId: registrationId
+          registrationId: registrationId,
+          eventId: selectedEvent?.id || null
         })
       });
 
@@ -293,6 +296,8 @@ export default function CheckinPage() {
         console.log('Check-in failed:', data);
         if (data.message && (data.message.includes("already checked in") || data.message.includes("already been scanned"))) {
           setErrorMsg(`❌ QR already scanned! This registration has already been checked in.`);
+        } else if (data.error && data.error.includes('QR not valid for selected event')) {
+          setErrorMsg('❌ QR not valid for the selected event');
         } else if (data.error) {
           setErrorMsg(`❌ ${data.error}`);
         } else {
@@ -351,6 +356,41 @@ export default function CheckinPage() {
       <main className="checkin-main">
         <div className="checkin-content">
           <h1 className="checkin-title">Check-In</h1>
+          <div className="form-group" style={{ maxWidth: '420px', margin: '0 auto 8px' }}>
+            <label htmlFor="event" className="form-label">Select Event *</label>
+            <select
+              id="event"
+              name="event"
+              value={selectedEvent?.id || ''}
+              onChange={(e) => {
+                const id = Number(e.target.value);
+                const ev = events.find(evt => Number(evt.id) === id) || null;
+                setSelectedEvent(ev);
+              }}
+              className="form-select"
+            >
+              <option value="" disabled>Select an event</option>
+              {events.map(ev => {
+                const dt = new Date(`${ev.date}T${ev.time || '00:00:00'}`);
+                const dateStr = dt.toLocaleDateString('en-US', {
+                  weekday: 'long',
+                  month: 'short',
+                  day: 'numeric',
+                  year: 'numeric'
+                });
+                const timeStr = ev.time ? dt.toLocaleTimeString('en-US', {
+                  hour: 'numeric',
+                  minute: '2-digit',
+                  hour12: true
+                }) : '';
+                return (
+                  <option key={ev.id} value={ev.id}>
+                    {ev.name} ({dateStr}{timeStr ? ` at ${timeStr}` : ''})
+                  </option>
+                );
+              })}
+            </select>
+          </div>
           {selectedEvent && (
             <p className="checkin-for-text">Checkin for {selectedEvent.name}</p>
           )}

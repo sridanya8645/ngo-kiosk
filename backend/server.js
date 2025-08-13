@@ -557,7 +557,7 @@ app.get('/api/registrations', async (req, res) => {
 // Check-in endpoint
 app.post('/api/checkin', async (req, res) => {
   try {
-    const { phone, registrationId } = req.body;
+    const { phone, registrationId, eventId } = req.body;
     
     let query, params;
     
@@ -595,6 +595,15 @@ app.post('/api/checkin', async (req, res) => {
           error: "Invalid QR code"
         });
       }
+    }
+
+    // If client provided selected event, enforce event match
+    if (eventId && rows[0].event_id && Number(rows[0].event_id) !== Number(eventId)) {
+      return res.status(400).json({
+        success: false,
+        message: 'QR not valid for selected event',
+        error: 'QR not valid for selected event'
+      });
     }
     
     await pool.execute(

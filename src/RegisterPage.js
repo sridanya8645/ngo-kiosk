@@ -13,6 +13,7 @@ const RegisterPage = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitSuccess, setSubmitSuccess] = useState(false);
   const [errors, setErrors] = useState({});
+  const [events, setEvents] = useState([]);
   const [selectedEvent, setSelectedEvent] = useState(null);
 
   // Monitor submitSuccess state changes
@@ -21,7 +22,7 @@ const RegisterPage = () => {
   }, [submitSuccess]);
 
   useEffect(() => {
-    // Fetch all events (same as CheckinPage)
+    // Fetch all events for dropdown
     fetch("/api/events")
       .then(res => {
         if (!res.ok) {
@@ -37,6 +38,7 @@ const RegisterPage = () => {
         const todays = sorted.find(e => normalize(e.date) === todayTs);
         const next = sorted.find(e => normalize(e.date) > todayTs);
         const chosen = todays || next || sorted[0] || null;
+        setEvents(sorted);
         setSelectedEvent(chosen);
       })
       .catch((error) => {
@@ -62,6 +64,9 @@ const RegisterPage = () => {
 
   const validateForm = () => {
     const newErrors = {};
+    if (!selectedEvent || !selectedEvent.id) {
+      newErrors.event = 'Please select an event';
+    }
     
     if (!formData.name.trim()) {
       newErrors.name = 'Name is required';
@@ -100,7 +105,7 @@ const RegisterPage = () => {
     try {
       console.log('🌐 Sending registration request...');
       
-      // Choose the selectedEvent determined on mount
+      // Use the selected event from dropdown
       let eventId = selectedEvent?.id || null;
       if (!eventId) {
         console.error('No events found');
@@ -184,8 +189,35 @@ const RegisterPage = () => {
     </div>
   );
 
-  // Get the event name to display
-  const getEventName = () => selectedEvent?.name || 'Newsletter and General Events';
+  // Event change handler
+  const handleEventChange = (e) => {
+    const id = Number(e.target.value);
+    const ev = events.find(evt => Number(evt.id) === id) || null;
+    setSelectedEvent(ev);
+    if (errors.event) {
+      setErrors(prev => ({ ...prev, event: '' }));
+    }
+  };
+
+  const formatEventDisplay = (ev) => {
+    try {
+      const dateTime = new Date(`${ev.date}T${ev.time || '00:00:00'}`);
+      const dateStr = dateTime.toLocaleDateString('en-US', {
+        weekday: 'long',
+        month: 'short',
+        day: 'numeric',
+        year: 'numeric'
+      });
+      const timeStr = ev.time ? dateTime.toLocaleTimeString('en-US', {
+        hour: 'numeric',
+        minute: '2-digit',
+        hour12: true
+      }) : '';
+      return `${ev.name} (${dateStr}${timeStr ? ` at ${timeStr}` : ''})`;
+    } catch (e) {
+      return `${ev.name} (${new Date(ev.date).toLocaleDateString('en-US')})`;
+    }
+  };
 
   return (
     <div className="register-container">
@@ -216,7 +248,7 @@ const RegisterPage = () => {
         <div className="register-form-container">
           {/* Heading first */}
           <h1 className="register-title">
-            Register for {getEventName()}
+            Register for Event
           </h1>
           
           {/* Raffle text directly below title */}
@@ -234,6 +266,25 @@ const RegisterPage = () => {
           {!submitSuccess && (
             <>
               <form onSubmit={handleSubmit} className="register-form">
+                <div className="form-group">
+                  <label htmlFor="event" className="form-label">Select Event *</label>
+                  <select
+                    id="event"
+                    name="event"
+                    value={selectedEvent?.id || ''}
+                    onChange={handleEventChange}
+                    className={`form-select ${errors.event ? 'error' : ''}`}
+                    required
+                  >
+                    <option value="" disabled>Select an event</option>
+                    {events.map(ev => (
+                      <option key={ev.id} value={ev.id}>
+                        {formatEventDisplay(ev)}
+                      </option>
+                    ))}
+                  </select>
+                  {errors.event && <span className="error-message">{errors.event}</span>}
+                </div>
                 <div className="form-group">
                   <label htmlFor="name" className="form-label">Full Name *</label>
                   <input
