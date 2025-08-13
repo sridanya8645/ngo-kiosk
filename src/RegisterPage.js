@@ -37,9 +37,9 @@ const RegisterPage = () => {
         const sorted = [...events].sort((a,b) => normalize(a.date) - normalize(b.date));
         const todays = sorted.find(e => normalize(e.date) === todayTs);
         const next = sorted.find(e => normalize(e.date) > todayTs);
-        const chosen = todays || next || sorted[0] || null;
+        const chosen = todays || next || null; // keep dropdown empty by default
         setEvents(sorted);
-        setSelectedEvent(chosen);
+        setSelectedEvent(null);
       })
       .catch((error) => {
         console.error('Error fetching events in RegisterPage:', error);
