@@ -279,20 +279,24 @@ const RaffleSpinPage = () => {
             </select>
           </div>
 
-          {/* Event Info and Date */}
-          <div className="event-info-card">
-            <div className="event-name">
-              {selectedEvent?.name || 'Temple Newsletter and General Events'}
+          {/* Event Info and Date - show only after selection */}
+          {selectedEvent && (
+            <div className="event-info-card">
+              <div className="event-name">
+                {selectedEvent.name}
+              </div>
+              <div className="event-date">
+                {(() => {
+                  const datePart = typeof selectedEvent.date === 'string' ? selectedEvent.date.split('T')[0] : new Date(selectedEvent.date).toISOString().split('T')[0];
+                  const timePart = selectedEvent.time && selectedEvent.time.length >= 5 ? selectedEvent.time : '00:00:00';
+                  const dt = new Date(`${datePart}T${timePart}`);
+                  const dateStr = dt.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' });
+                  const timeStr = selectedEvent.time ? dt.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true }) : '';
+                  return `${dateStr}${timeStr ? ` at ${timeStr}` : ''}`;
+                })()}
+              </div>
             </div>
-            <div className="event-date">
-              {new Date().toLocaleDateString('en-US', { 
-                weekday: 'long', 
-                year: 'numeric', 
-                month: 'long', 
-                day: 'numeric' 
-              })}
-            </div>
-          </div>
+          )}
 
           {/* Wheel */}
           <div className="wheel-container">
@@ -379,7 +383,7 @@ const RaffleSpinPage = () => {
             </button>
           </div>
 
-          {registrations.length === 0 && (
+          {selectedEvent && registrations.length === 0 && (
             <div className="no-registrations">
               <p>No checked-in registrations found for today. Please check in some participants first.</p>
             </div>
