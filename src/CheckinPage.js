@@ -404,7 +404,7 @@ export default function CheckinPage() {
                 src={`${selectedEvent.banner}`}
                 alt={`${selectedEvent.name} Banner`}
                 className="event-banner"
-                style={{ maxWidth: '100%', width: '540px', height: 'auto', borderRadius: '12px' }}
+                style={{ maxWidth: '100%', width: '450px', height: 'auto', borderRadius: '12px' }}
               />
             </div>
           )}
