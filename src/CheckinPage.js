@@ -64,134 +64,96 @@ export default function CheckinPage() {
   }, []);
 
   useEffect(() => {
-    // Single QR scanner initialization
+    // Initialize or teardown scanner based on event selection
+    const stopScanner = async () => {
+      if (html5QrCodeRef.current && isRunning.current) {
+        try {
+          await html5QrCodeRef.current.stop();
+        } catch (_) {}
+        try {
+          if (html5QrCodeRef.current && typeof html5QrCodeRef.current.clear === 'function') {
+            await html5QrCodeRef.current.clear();
+          }
+        } catch (_) {}
+        isRunning.current = false;
+        html5QrCodeRef.current = null;
+      }
+      const container = document.getElementById('reader-container');
+      if (container) container.innerHTML = '';
+      const existingReaders = document.querySelectorAll('#reader');
+      existingReaders.forEach(el => el.remove());
+      const existingScanners = document.querySelectorAll('[data-testid="qr-reader"]');
+      existingScanners.forEach(el => el.remove());
+    };
+
+    if (!selectedEvent) {
+      // No event selected: ensure scanner is stopped and hidden
+      stopScanner();
+      return;
+    }
+
+    // Event selected: start scanner
     const initScanner = () => {
       // Clear any existing scanner
-      if (html5QrCodeRef.current && isRunning.current) {
-        try {
-          html5QrCodeRef.current.stop().then(() => {
-            html5QrCodeRef.current = null;
-            isRunning.current = false;
-          }).catch(() => {
-            html5QrCodeRef.current = null;
-            isRunning.current = false;
-          });
-        } catch (error) {
-          console.log('Error stopping existing scanner:', error);
-          html5QrCodeRef.current = null;
-          isRunning.current = false;
-        }
-      }
-
-      // Clear container completely and ensure only one scanner
-      const container = document.getElementById("reader-container");
-      if (container) {
-        // Remove all existing content
-        container.innerHTML = '';
-        
-        // Remove any existing elements with reader ID
-        const existingReaders = document.querySelectorAll('#reader');
-        existingReaders.forEach(el => el.remove());
-        
-        // Also remove any Html5Qrcode instances
-        const existingScanners = document.querySelectorAll('[data-testid="qr-reader"]');
-        existingScanners.forEach(el => el.remove());
-      }
-
-      // Create single reader div
-      const readerDiv = document.createElement("div");
-      readerDiv.id = "reader";
-      readerDiv.style.width = "280px";
-      readerDiv.style.height = "280px";
-      readerDiv.style.margin = "0 auto";
-      readerDiv.style.border = "3px solid #8B1C1C";
-      readerDiv.style.borderRadius = "15px";
-      readerDiv.style.overflow = "hidden";
-      readerDiv.style.boxShadow = "0 4px 12px rgba(0,0,0,0.2)";
-      
-      if (container) {
+      stopScanner().then(() => {
+        const container = document.getElementById('reader-container');
+        if (!container) return;
+        // Create reader div
+        const readerDiv = document.createElement('div');
+        readerDiv.id = 'reader';
+        readerDiv.style.width = '280px';
+        readerDiv.style.height = '280px';
+        readerDiv.style.margin = '0 auto';
+        readerDiv.style.border = '3px solid #8B1C1C';
+        readerDiv.style.borderRadius = '15px';
+        readerDiv.style.overflow = 'hidden';
+        readerDiv.style.boxShadow = '0 4px 12px rgba(0,0,0,0.2)';
         container.appendChild(readerDiv);
-        console.log('Single QR Scanner container created');
-      }
 
-      // Initialize single scanner
-      try {
-        if (!html5QrCodeRef.current) {
-          html5QrCodeRef.current = new Html5Qrcode("reader");
-        }
-        console.log('Single QR Scanner initialized');
-        
-        // Start scanner with front camera
-        html5QrCodeRef.current
-          .start(
-            { facingMode: "user" }, // Use front camera
-            { 
-              fps: 10, 
-              qrbox: { width: 280, height: 280 },
-              aspectRatio: 1.0
-            },
-            qrCodeMessage => {
-              if (isProcessingScan.current) { return; }
-              isProcessingScan.current = true;
-              console.log('QR Code detected:', qrCodeMessage);
-              try {
-                const data = JSON.parse(qrCodeMessage);
-                const registrationId = data.registrationId;
-                if (!registrationId) throw new Error("No registrationId in QR code");
-
-                // Call the check-in endpoint
-                handleCheckin(registrationId, data.name);
-              } catch (e) {
-                console.error('QR code parsing error:', e);
-                setErrorMsg('Invalid QR code format');
-                isProcessingScan.current = false;
-              }
-            },
-            errorMessage => {
-              console.log('Scanner error:', errorMessage);
-              // Don't show error for normal scanning process
-            }
-          )
-          .then(() => {
-            isRunning.current = true;
-            console.log('Single scanner started successfully');
-            setErrorMsg(''); // Clear any previous errors
-          })
-          .catch((error) => {
-            isRunning.current = false;
-            console.error('Scanner failed to start:', error);
-            setErrorMsg('Failed to start camera. Please check permissions.');
-          });
-      } catch (error) {
-        console.error('QR Scanner initialization error:', error);
-        setErrorMsg('Camera initialization failed');
-      }
-    };
-
-    // Call initScanner after a delay
-    setTimeout(initScanner, 500);
-
-    return () => {
-      if (html5QrCodeRef.current && isRunning.current) {
         try {
-          html5QrCodeRef.current.stop().then(() => {
-            if (html5QrCodeRef.current && typeof html5QrCodeRef.current.clear === "function") {
-              html5QrCodeRef.current.clear().catch(() => {});
-            }
-            isRunning.current = false;
-            html5QrCodeRef.current = null;
-          }).catch(() => {
-            isRunning.current = false;
-            html5QrCodeRef.current = null;
-          });
+          if (!html5QrCodeRef.current) {
+            html5QrCodeRef.current = new Html5Qrcode('reader');
+          }
+          html5QrCodeRef.current
+            .start(
+              { facingMode: 'user' },
+              { fps: 10, qrbox: { width: 280, height: 280 }, aspectRatio: 1.0 },
+              qrCodeMessage => {
+                if (isProcessingScan.current) return;
+                isProcessingScan.current = true;
+                try {
+                  const data = JSON.parse(qrCodeMessage);
+                  const registrationId = data.registrationId;
+                  if (!registrationId) throw new Error('No registrationId in QR code');
+                  handleCheckin(registrationId, data.name);
+                } catch (e) {
+                  setErrorMsg('Invalid QR code format');
+                  isProcessingScan.current = false;
+                }
+              },
+              errorMessage => {
+                console.log('Scanner error:', errorMessage);
+              }
+            )
+            .then(() => {
+              isRunning.current = true;
+              setErrorMsg('');
+            })
+            .catch((error) => {
+              isRunning.current = false;
+              console.error('Scanner failed to start:', error);
+              setErrorMsg('Failed to start camera. Please check permissions.');
+            });
         } catch (error) {
-          console.log('Error stopping scanner:', error);
-          isRunning.current = false;
-          html5QrCodeRef.current = null;
+          console.error('QR Scanner initialization error:', error);
+          setErrorMsg('Camera initialization failed');
         }
-      }
+      });
     };
-  }, []);
+
+    const timer = setTimeout(initScanner, 300);
+    return () => clearTimeout(timer);
+  }, [selectedEvent]);
 
   const handleCheckin = useCallback(async (registrationId, name) => {
     console.log('Handling check-in for:', registrationId, name);
