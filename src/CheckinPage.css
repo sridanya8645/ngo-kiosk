@@ -166,7 +166,7 @@
 /* Main Content */
 .checkin-main {
   flex: 1;
-  padding: 12px 16px 65px; /* reduce bottom padding since footer moved up 25px */
+  padding: 8px 16px 45px; /* move content up and account for higher footer */
   overflow-y: auto;
   display: flex;
   flex-direction: column;
@@ -183,7 +183,7 @@
   max-width: 600px; /* allow wider banner */
   text-align: center;
   margin-top: 0;
-  gap: 16px; /* unified vertical spacing between blocks */
+  gap: 12px; /* tighter, equal spacing */
 }
 
 .checkin-title {
@@ -477,7 +477,7 @@
   flex-shrink: 0;
   margin-top: 0;
   position: sticky;
-  bottom: 25px; /* moved up by 25px */
+  bottom: 45px; /* move up 20px more from previous 25px */
   z-index: 5;
 }
 

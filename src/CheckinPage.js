@@ -404,7 +404,7 @@ export default function CheckinPage() {
                 src={`${selectedEvent.banner}`}
                 alt={`${selectedEvent.name} Banner`}
                 className="event-banner"
-                style={{ maxWidth: '100%', width: '450px', height: 'auto', borderRadius: '12px' }}
+                style={{ maxWidth: '100%', width: '450px', height: 'auto', maxHeight: '300px', borderRadius: '12px', objectFit: 'contain' }}
               />
             </div>
           )}
@@ -431,7 +431,8 @@ export default function CheckinPage() {
               </div>
             )}
 
-            {/* Register Button */}
+            {/* Register Button */
+            }
             <div className="checkin-actions">
               <button 
                 onClick={() => navigate('/register')}
@@ -447,11 +448,11 @@ export default function CheckinPage() {
               {selectedEvent && (
                 <p style={{ 
                   color: 'red', 
-                  fontSize: '0.9rem', 
+                  fontSize: '0.95rem', 
                   margin: '0',
-                  fontWeight: '500'
+                  fontWeight: '600'
                 }}>
-                  Register For {selectedEvent.name} if not previously registered
+                  Register for {selectedEvent.name} if not previously registered, then scan the QR code received via email.
                 </p>
               )}
             </div>
