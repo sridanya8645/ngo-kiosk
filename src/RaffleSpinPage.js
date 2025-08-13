@@ -14,6 +14,7 @@ const RaffleSpinPage = () => {
   const [allEligibleRegistrations, setAllEligibleRegistrations] = useState([]);
   const [currentEligibleIndex, setCurrentEligibleIndex] = useState(500);
   const [eligibleUsers, setEligibleUsers] = useState([]);
+  const [events, setEvents] = useState([]);
   const [selectedEvent, setSelectedEvent] = useState(null);
   const navigate = useNavigate();
 
@@ -30,7 +31,7 @@ const RaffleSpinPage = () => {
   };
 
   useEffect(() => {
-    // Fetch eligible users (checked in TODAY) and winners
+    // Fetch eligible users (checked in TODAY), winners, and events
     Promise.all([
       fetch('/api/raffle/eligible-users'),
       fetch('/api/raffle-winners'),
@@ -42,14 +43,11 @@ const RaffleSpinPage = () => {
       console.log('Winners:', winners);
       console.log('All events:', events);
       
-      // Choose today's or next event
+      // Prepare events list (no auto-selection; admin must choose)
       const normalize = (d) => { const dt = new Date(d); return new Date(dt.getFullYear(), dt.getMonth(), dt.getDate()).getTime(); };
-      const todayTs = normalize(new Date());
       const sorted = [...events].sort((a,b) => normalize(a.date) - normalize(b.date));
-      const todays = sorted.find(e => normalize(e.date) === todayTs);
-      const next = sorted.find(e => normalize(e.date) > todayTs);
-      const chosen = todays || next || sorted[0] || null;
-      setSelectedEvent(chosen);
+      setEvents(sorted);
+      setSelectedEvent(null);
       
       // Filter out already won users
       const availableUsers = eligibleUsers.filter(user => 
@@ -58,12 +56,22 @@ const RaffleSpinPage = () => {
       
       console.log('Available users for wheel:', availableUsers);
       setEligibleUsers(availableUsers);
-      setRegistrations(availableUsers); // Set registrations for the wheel
+      setRegistrations([]); // Wait until event is selected
     })
     .catch(error => {
       console.error('Error fetching data:', error);
     });
   }, []);
+
+  // Recompute registrations when event changes
+  useEffect(() => {
+    if (!selectedEvent) {
+      setRegistrations([]);
+      return;
+    }
+    const filtered = eligibleUsers.filter(u => Number(u.event_id) === Number(selectedEvent.id));
+    setRegistrations(filtered);
+  }, [selectedEvent, eligibleUsers]);
 
   // Removed unused fetchEventInfo with undefined setter to satisfy linter
 
@@ -242,6 +250,35 @@ const RaffleSpinPage = () => {
           {/* Title */}
           <h1 className="raffle-title">Spin the Wheel to Reveal the Winner!</h1>
 
+          {/* Event selector */}
+          <div style={{ maxWidth: '480px', margin: '0 auto 12px', textAlign: 'center' }}>
+            <label htmlFor="eventSelect" style={{ display: 'block', marginBottom: 6, fontWeight: 600 }}>Select Event</label>
+            <select
+              id="eventSelect"
+              value={selectedEvent?.id || ''}
+              onChange={(e) => {
+                const id = Number(e.target.value);
+                const ev = events.find(evt => Number(evt.id) === id) || null;
+                setSelectedEvent(ev);
+              }}
+              style={{ width: '100%', padding: '8px 10px', borderRadius: 6 }}
+            >
+              <option value="" disabled>Select an event</option>
+              {events.map(ev => {
+                const datePart = typeof ev.date === 'string' ? ev.date.split('T')[0] : new Date(ev.date).toISOString().split('T')[0];
+                const timePart = ev.time && ev.time.length >= 5 ? ev.time : '00:00:00';
+                const dt = new Date(`${datePart}T${timePart}`);
+                const dateStr = dt.toLocaleDateString('en-US', { weekday: 'long', month: 'short', day: 'numeric', year: 'numeric' });
+                const timeStr = ev.time ? dt.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true }) : '';
+                return (
+                  <option key={ev.id} value={ev.id}>
+                    {ev.name} ({dateStr}{timeStr ? ` at ${timeStr}` : ''})
+                  </option>
+                );
+              })}
+            </select>
+          </div>
+
           {/* Event Info and Date */}
           <div className="event-info-card">
             <div className="event-name">
@@ -259,7 +296,7 @@ const RaffleSpinPage = () => {
 
           {/* Wheel */}
           <div className="wheel-container">
-            {registrations.length > 0 && (
+            {selectedEvent && registrations.length > 0 && (
               <Wheel
                 mustStartSpinning={mustSpin}
                 prizeNumber={prizeNumber}
@@ -289,6 +326,10 @@ const RaffleSpinPage = () => {
               />
             )}
           </div>
+
+          {!selectedEvent && (
+            <div className="no-registrations"><p>Please select an event to load eligible participants.</p></div>
+          )}
 
           {/* Compact winner card below the wheel */}
           {winner && (
