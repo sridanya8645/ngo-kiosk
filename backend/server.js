@@ -12,6 +12,14 @@ const app = express();
 // Add a simple app version tag for deployments
 const APP_VERSION = 'iaf-redeploy-001';
 
+// Global error handlers to avoid process crash on Azure
+process.on('uncaughtException', (err) => {
+  try { console.error('UNCAUGHT EXCEPTION:', err && err.stack ? err.stack : err); } catch (_) {}
+});
+process.on('unhandledRejection', (reason, promise) => {
+  try { console.error('UNHANDLED REJECTION:', reason); } catch (_) {}
+});
+
 // Debug middleware - log all requests
 app.use((req, res, next) => {
   console.log(`${new Date().toISOString()} - ${req.method} ${req.path}`);
