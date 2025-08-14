@@ -365,7 +365,7 @@ export default function CheckinPage() {
               <img 
                 src={`${selectedEvent.banner}`}
                 alt={`${selectedEvent.name} Banner`}
-                className="event-banner"
+                className="event-banner-img"
                 style={{ maxWidth: '100%', width: '450px', height: 'auto', maxHeight: '300px', borderRadius: '12px', objectFit: 'contain' }}
               />
             </div>
