@@ -56,7 +56,22 @@ export default function CheckinPage() {
         const next = sorted.find(e => normalize(e.date) > todayTs);
         const chosen = todays || next || null; // do not auto-select; keep null by default
         setEvents(sorted);
-        setSelectedEvent(null);
+        // If an eventId is passed via querystring, select it
+        try {
+          const params = new URLSearchParams(window.location.search);
+          const idParam = params.get('eventId');
+          if (idParam) {
+            const id = Number(idParam);
+            const ev = sorted.find(e => Number(e.id) === id) || null;
+            if (ev) {
+              setSelectedEvent(ev);
+            }
+          } else {
+            setSelectedEvent(null);
+          }
+        } catch (_) {
+          setSelectedEvent(null);
+        }
       })
       .catch(error => {
         console.error('Error fetching events:', error);

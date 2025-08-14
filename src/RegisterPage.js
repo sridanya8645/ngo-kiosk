@@ -139,9 +139,10 @@ const RegisterPage = () => {
           setSubmitSuccess(true);
           console.log('✅ submitSuccess state should now be true');
           setTimeout(() => {
-            console.log('🔄 Redirecting to home page...');
-            navigate('/');
-          }, 5000);
+            const target = selectedEvent?.id ? `/checkin?eventId=${selectedEvent.id}` : '/checkin';
+            console.log('🔄 Redirecting to check-in page...', target);
+            navigate(target);
+          }, 3000);
         } else {
           console.error('❌ Registration failed:', responseData.message);
           setErrors({ submit: responseData.message || 'Registration failed. Please try again.' });
@@ -185,7 +186,7 @@ const RegisterPage = () => {
       <p className="success-message">
         Thank you for registering with Shirdi Sai Dham. You will receive an email with your QR code for check-in shortly.
       </p>
-      <p style={{ fontSize: '0.9rem', color: '#666', marginTop: '10px' }}>Redirecting to home page in 5 seconds...</p>
+      <p style={{ fontSize: '0.9rem', color: '#666', marginTop: '10px' }}>Redirecting to check-in page in 3 seconds...</p>
     </div>
   );
 
