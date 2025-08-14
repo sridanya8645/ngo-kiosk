@@ -9,6 +9,9 @@ const fs = require('fs');
 
 const app = express();
 
+// Add a simple app version tag for deployments
+const APP_VERSION = 'iaf-redeploy-001';
+
 // Debug middleware - log all requests
 app.use((req, res, next) => {
   console.log(`${new Date().toISOString()} - ${req.method} ${req.path}`);
@@ -30,7 +33,8 @@ app.get('/health', (req, res) => {
   console.log('Health check hit!');
   res.status(200).json({
     status: 'OK',
-    message: 'NGO Kiosk is running!',
+    message: 'Kiosk API healthy',
+    version: APP_VERSION,
     timestamp: new Date().toISOString()
   });
 });
