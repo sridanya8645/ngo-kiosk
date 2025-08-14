@@ -323,11 +323,12 @@ export default function CheckinPage() {
       )}
 
       {/* Navigation Bar */}
-      <div className="admin-bar">
+      <div className="admin-bar" style={IS_IAF ? { background: '#000' } : undefined}>
         <div className="admin-nav-buttons">
           <button 
             onClick={() => navigate('/')}
             className="admin-button"
+            style={IS_IAF ? { background: '#000', color: '#fff', border: '1px solid #fff' } : undefined}
           >
             Home
           </button>
@@ -395,7 +396,7 @@ export default function CheckinPage() {
 
           {/* QR Scanner Section - only show when an event is selected */}
           <div className="scanner-section" style={{ display: selectedEvent ? 'block' : 'none' }}>
-            <h3 className="scanner-title">Scan QR Code to Check-In</h3>
+            <h3 className="scanner-title" style={IS_IAF ? { color: '#000' } : undefined}>Scan QR Code to Check-In</h3>
                          <div id="reader-container" className="scanner-container" />
             
 

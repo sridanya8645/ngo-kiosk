@@ -345,35 +345,40 @@ function EventDetailsPage() {
       )}
 
       {/* Admin Bar */}
-      <div className="admin-bar">
+      <div className="admin-bar" style={IS_IAF ? { background: '#000' } : undefined}>
         <div className="admin-nav-buttons">
           <button 
             onClick={() => navigate('/admin/registrations')}
             className="admin-button"
+            style={IS_IAF ? { background: '#000', color: '#fff', border: '1px solid #fff' } : undefined}
           >
             Registration Details
           </button>
           <button 
             onClick={() => navigate('/admin/raffle-spin')}
             className="admin-button"
+            style={IS_IAF ? { background: '#000', color: '#fff', border: '1px solid #fff' } : undefined}
           >
             Raffle Spin
           </button>
           <button 
             onClick={() => navigate('/admin/raffle-winners')}
             className="admin-button"
+            style={IS_IAF ? { background: '#000', color: '#fff', border: '1px solid #fff' } : undefined}
           >
             Raffle Winners
           </button>
           <button 
             onClick={() => navigate('/event-details')}
             className="admin-button"
+            style={IS_IAF ? { background: '#000', color: '#fff', border: '1px solid #fff' } : undefined}
           >
             Event Details
           </button>
           <button 
             onClick={handleLogout}
             className="admin-button"
+            style={IS_IAF ? { background: '#000', color: '#fff', border: '1px solid #fff' } : undefined}
           >
             Logout
           </button>
@@ -383,7 +388,7 @@ function EventDetailsPage() {
       {/* Main Content */}
       <main className="event-details-main">
         <div className="event-details-content">
-          <h1 className="event-details-title">Event Details</h1>
+          <h1 className="event-details-title" style={IS_IAF ? { color: '#000' } : undefined}>Event Details</h1>
           
           {/* Events Table */}
           <div className="events-table-container">

@@ -120,35 +120,35 @@ function AdminRegistrationsPage() {
         )}
 
       {/* Admin Bar */}
-      <div className="admin-bar">
+      <div className="admin-bar" style={IS_IAF ? { background: '#000' } : undefined}>
         <div className="admin-nav-buttons">
           <button 
             onClick={() => navigate('/admin/registrations')}
-            className="admin-button"
+            className="admin-button" style={IS_IAF ? { background: '#000', color: '#fff', border: '1px solid #fff' } : undefined}
           >
             Registration Details
           </button>
           <button 
             onClick={() => navigate('/admin/raffle-spin')}
-            className="admin-button"
+            className="admin-button" style={IS_IAF ? { background: '#000', color: '#fff', border: '1px solid #fff' } : undefined}
           >
             Raffle Spin
           </button>
           <button 
             onClick={() => navigate('/admin/raffle-winners')}
-            className="admin-button"
+            className="admin-button" style={IS_IAF ? { background: '#000', color: '#fff', border: '1px solid #fff' } : undefined}
           >
             Raffle Winners
           </button>
           <button 
             onClick={() => navigate('/event-details')}
-            className="admin-button"
+            className="admin-button" style={IS_IAF ? { background: '#000', color: '#fff', border: '1px solid #fff' } : undefined}
           >
             Event Details
           </button>
           <button 
-            onClick={handleLogout}
-            className="admin-button"
+            onClick={() => navigate('/admin')}
+            className="admin-button" style={IS_IAF ? { background: '#000', color: '#fff', border: '1px solid #fff' } : undefined}
           >
             Logout
           </button>
@@ -158,7 +158,7 @@ function AdminRegistrationsPage() {
       {/* Main Content */}
       <main className="admin-registrations-main">
         <div className="admin-registrations-content">
-          <h1 className="admin-registrations-title">Registration Details</h1>
+          <h1 className="admin-registrations-title" style={IS_IAF ? { color: '#000' } : undefined}>Registration Details</h1>
           
           {/* Stats and Download Section */}
           <div className="registrations-stats-section">

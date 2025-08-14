@@ -39,10 +39,11 @@ const HomePage = () => {
       )}
 
       {/* Admin Bar */}
-      <div className="admin-bar">
+      <div className="admin-bar" style={IS_IAF ? { background: '#000' } : undefined}>
         <button 
           onClick={() => navigate('/admin')}
           className="admin-button"
+          style={IS_IAF ? { background: '#000', color: '#fff', border: '1px solid #fff' } : undefined}
         >
           Admin
         </button>
@@ -50,7 +51,7 @@ const HomePage = () => {
 
       {/* Main Content */}
       <main className="home-main">
-        <h1 className="welcome-title">{IS_IAF ? 'Welcome to Indo American Fair 2025' : 'Welcome to Shirdi Sai Dham'}</h1>
+        <h1 className="welcome-title" style={IS_IAF ? { color: '#000' } : undefined}>{IS_IAF ? 'Welcome to Indo American Fair 2025' : 'Welcome to Shirdi Sai Dham'}</h1>
         
         <div className="main-image-container">
           <img 

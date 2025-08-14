@@ -252,7 +252,7 @@ const RegisterPage = () => {
       <main className="register-main">
         <div className="register-form-container">
           {/* Heading first */}
-          <h1 className="register-title">
+          <h1 className="register-title" style={IS_IAF ? { color: '#000' } : undefined}>
             Register for Event
           </h1>
           

@@ -214,35 +214,35 @@ const RaffleSpinPage = () => {
         )}
         
         {/* Navigation Bar */}
-        <div className="admin-bar">
+        <div className="admin-bar" style={IS_IAF ? { background: '#000' } : undefined}>
           <div className="admin-nav-buttons">
             <button
               onClick={goToRegistrationDetails}
-              className="admin-button"
+              className="admin-button" style={IS_IAF ? { background: '#000', color: '#fff', border: '1px solid #fff' } : undefined}
             >
               Registration Details
             </button>
             <button
               onClick={() => navigate('/admin/raffle-spin')}
-              className="admin-button"
+              className="admin-button" style={IS_IAF ? { background: '#000', color: '#fff', border: '1px solid #fff' } : undefined}
             >
               Raffle Spin
             </button>
             <button
               onClick={goToWinnersPage}
-              className="admin-button"
+              className="admin-button" style={IS_IAF ? { background: '#000', color: '#fff', border: '1px solid #fff' } : undefined}
             >
               Raffle Winners
             </button>
             <button
               onClick={goToEventDetails}
-              className="admin-button"
+              className="admin-button" style={IS_IAF ? { background: '#000', color: '#fff', border: '1px solid #fff' } : undefined}
             >
               Event Details
             </button>
             <button
               onClick={logout}
-              className="admin-button"
+              className="admin-button" style={IS_IAF ? { background: '#000', color: '#fff', border: '1px solid #fff' } : undefined}
             >
               Logout
             </button>
@@ -251,7 +251,7 @@ const RaffleSpinPage = () => {
 
         <div className="raffle-main">
           {/* Title */}
-          <h1 className="raffle-title">Spin the Wheel to Reveal the Winner!</h1>
+          <h1 className="raffle-title" style={IS_IAF ? { color: '#000' } : undefined}>Spin the Wheel to Reveal the Winner!</h1>
 
           {/* Event selector */}
           <div style={{ maxWidth: '480px', margin: '0 auto 12px', textAlign: 'center' }}>
