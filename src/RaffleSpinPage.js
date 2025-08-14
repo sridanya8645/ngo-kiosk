@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { Wheel } from 'react-custom-roulette';
 import Confetti from 'react-confetti';
 import './RaffleSpinPage.css';
+import { IS_IAF } from './orgToggle';
 
 const RaffleSpinPage = () => {
   const [registrations, setRegistrations] = useState([]);
@@ -185,7 +186,7 @@ const RaffleSpinPage = () => {
   };
 
   return (
-    <div className="raffle-bg">
+    <div className="raffle-bg" style={IS_IAF ? { background: 'linear-gradient(180deg, #9D4279 50%, #D5A4E9 100%)' } : undefined}>
       {showConfetti && (
         <Confetti
           width={window.innerWidth}
@@ -199,16 +200,18 @@ const RaffleSpinPage = () => {
         />
       )}
       <div className="raffle-aspect">
-        <header className="raffle-header">
-          <div className="header-content">
-            <div className="logo-section">
-              <img src="/sai-baba.png" alt="Sai Baba" className="logo-image" />
+        {!IS_IAF && (
+          <header className="raffle-header">
+            <div className="header-content">
+              <div className="logo-section">
+                <img src="/sai-baba.png" alt="Sai Baba" className="logo-image" />
+              </div>
+              <div className="org-info">
+                A 501 (C) 3 non profit Organization | Tax Exempt Tax Id - 91-2190340 | All donations are tax exempt
+              </div>
             </div>
-            <div className="org-info">
-              A 501 (C) 3 non profit Organization | Tax Exempt Tax Id - 91-2190340 | All donations are tax exempt
-            </div>
-          </div>
-        </header>
+          </header>
+        )}
         
         {/* Navigation Bar */}
         <div className="admin-bar">
@@ -391,34 +394,37 @@ const RaffleSpinPage = () => {
         </div>
 
         {/* Footer */}
-        <footer className="raffle-footer">
-          <div className="footer-content">
-            <div className="footer-section">
-              <span className="footer-icon">📍</span>
-              <div className="footer-text">
-                <div>Shirdi Sai Dham Inc, 12 Perrine Road,</div>
-                <div>Monmouth Junction NJ 08852</div>
-              </div>
-            </div>
-            
-            <div className="footer-section">
-              <span className="footer-icon">📞</span>
-              <div className="footer-text">
-                <div>609 937 2800 /</div>
-                <div>609 937 2806</div>
-              </div>
-            </div>
-            
-            <div className="footer-section">
-              <span className="footer-icon">✉️</span>
-              <span className="footer-text">shirdisaidham1@gmail.com</span>
-            </div>
-            
-            <div className="footer-section">
-              <span className="powered-text">Powered by</span>
+        <footer className="raffle-footer" style={IS_IAF ? { background: 'transparent' } : undefined}>
+          {IS_IAF ? (
+            <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', width: '100%' }}>
               <img src="/PITS-removebg-preview.png" alt="Princeton IT Services" className="pits-logo" />
             </div>
-          </div>
+          ) : (
+            <div className="footer-content">
+              <div className="footer-section">
+                <span className="footer-icon">📍</span>
+                <div className="footer-text">
+                  <div>Shirdi Sai Dham Inc, 12 Perrine Road,</div>
+                  <div>Monmouth Junction NJ 08852</div>
+                </div>
+              </div>
+              <div className="footer-section">
+                <span className="footer-icon">📞</span>
+                <div className="footer-text">
+                  <div>609 937 2800 /</div>
+                  <div>609 937 2806</div>
+                </div>
+              </div>
+              <div className="footer-section">
+                <span className="footer-icon">✉️</span>
+                <span className="footer-text">shirdisaidham1@gmail.com</span>
+              </div>
+              <div className="footer-section">
+                <span className="powered-text">Powered by</span>
+                <img src="/PITS-removebg-preview.png" alt="Princeton IT Services" className="pits-logo" />
+              </div>
+            </div>
+          )}
         </footer>
       </div>
     </div>

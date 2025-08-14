@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './RegisterPage.css';
+import { IS_IAF } from './orgToggle';
 
 const RegisterPage = () => {
   const navigate = useNavigate();
@@ -223,28 +224,29 @@ const RegisterPage = () => {
   };
 
   return (
-    <div className="register-container">
+    <div className="register-container" style={IS_IAF ? { background: 'linear-gradient(180deg, #9D4279 50%, #D5A4E9 100%)' } : undefined}>
       {/* Header Section */}
-      <header className="register-header">
-        <div className="header-content">
-          <div className="logo-section">
-            <img 
-              src="/sai-baba.png" 
-              alt="Sai Baba" 
-              className="logo-image" 
-              onLoad={() => console.log('Logo loaded successfully')}
-              onError={(e) => {
-                console.error('Logo failed to load:', e.target.src);
-                // Try fallback path
-                e.target.src = process.env.PUBLIC_URL + '/sai-baba.png';
-              }}
-            />
+      {!IS_IAF && (
+        <header className="register-header">
+          <div className="header-content">
+            <div className="logo-section">
+              <img 
+                src="/sai-baba.png" 
+                alt="Sai Baba" 
+                className="logo-image" 
+                onLoad={() => console.log('Logo loaded successfully')}
+                onError={(e) => {
+                  console.error('Logo failed to load:', e.target.src);
+                  e.target.src = process.env.PUBLIC_URL + '/sai-baba.png';
+                }}
+              />
+            </div>
+            <div className="org-info">
+              A 501 (C) 3 non profit Organization | Tax Exempt Tax Id - 91-2190340 | All donations are tax exempt
+            </div>
           </div>
-          <div className="org-info">
-            A 501 (C) 3 non profit Organization | Tax Exempt Tax Id - 91-2190340 | All donations are tax exempt
-          </div>
-        </div>
-      </header>
+        </header>
+      )}
 
       {/* Main Content */}
       <main className="register-main">
@@ -381,34 +383,37 @@ const RegisterPage = () => {
       </main>
 
       {/* Footer */}
-      <footer className="register-footer">
-        <div className="footer-content">
-          <div className="footer-section">
-            <span className="footer-icon">📍</span>
-            <div className="footer-text">
-              <div>Shirdi Sai Dham Inc, 12 Perrine Road,</div>
-              <div>Monmouth Junction NJ 08852</div>
-            </div>
-          </div>
-          
-          <div className="footer-section">
-            <span className="footer-icon">📞</span>
-            <div className="footer-text">
-              <div>609 937 2800 /</div>
-              <div>609 937 2806</div>
-            </div>
-          </div>
-          
-          <div className="footer-section">
-            <span className="footer-icon">✉️</span>
-            <span className="footer-text">shirdisaidham1@gmail.com</span>
-          </div>
-          
-          <div className="footer-section">
-            <span className="powered-text">Powered by</span>
+      <footer className="register-footer" style={IS_IAF ? { background: 'transparent' } : undefined}>
+        {IS_IAF ? (
+          <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', width: '100%' }}>
             <img src="/PITS-removebg-preview.png" alt="Princeton IT Services" className="pits-logo" />
           </div>
-        </div>
+        ) : (
+          <div className="footer-content">
+            <div className="footer-section">
+              <span className="footer-icon">📍</span>
+              <div className="footer-text">
+                <div>Shirdi Sai Dham Inc, 12 Perrine Road,</div>
+                <div>Monmouth Junction NJ 08852</div>
+              </div>
+            </div>
+            <div className="footer-section">
+              <span className="footer-icon">📞</span>
+              <div className="footer-text">
+                <div>609 937 2800 /</div>
+                <div>609 937 2806</div>
+              </div>
+            </div>
+            <div className="footer-section">
+              <span className="footer-icon">✉️</span>
+              <span className="footer-text">shirdisaidham1@gmail.com</span>
+            </div>
+            <div className="footer-section">
+              <span className="powered-text">Powered by</span>
+              <img src="/PITS-removebg-preview.png" alt="Princeton IT Services" className="pits-logo" />
+            </div>
+          </div>
+        )}
       </footer>
     </div>
   );
