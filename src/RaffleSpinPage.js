@@ -186,7 +186,7 @@ const RaffleSpinPage = () => {
   };
 
   return (
-    <div className="raffle-bg" style={IS_IAF ? { background: 'linear-gradient(180deg, #9D4279 50%, #D5A4E9 100%)' } : undefined}>
+    <div className="raffle-bg" style={IS_IAF ? { background: 'linear-gradient(180deg, #9375AD 0%, #411F5E 100%)' } : undefined}>
       {showConfetti && (
         <Confetti
           width={window.innerWidth}

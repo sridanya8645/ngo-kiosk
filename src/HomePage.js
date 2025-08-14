@@ -23,7 +23,7 @@ const HomePage = () => {
   }, []);
 
   return (
-    <div className="home-container" style={IS_IAF ? { background: 'linear-gradient(180deg, #9D4279 50%, #D5A4E9 100%)' } : undefined}>
+    <div className="home-container" style={IS_IAF ? { background: 'linear-gradient(180deg, #9375AD 0%, #BC29C9 100%)' } : undefined}>
       {/* Header Section */}
       {!IS_IAF && (
         <header className="home-header">
@@ -50,12 +50,12 @@ const HomePage = () => {
 
       {/* Main Content */}
       <main className="home-main">
-        <h1 className="welcome-title">Welcome to Shirdi Sai Dham</h1>
+        <h1 className="welcome-title">{IS_IAF ? 'Welcome to Indo American Fair 2025' : 'Welcome to Shirdi Sai Dham'}</h1>
         
         <div className="main-image-container">
           <img 
-            src="/81tJnr3gLaL._AC_UF1000,1000_QL80_.jpg" 
-            alt="Shirdi Sai Baba" 
+            src={IS_IAF ? '/Image (4).jpg' : '/81tJnr3gLaL._AC_UF1000,1000_QL80_.jpg'} 
+            alt={IS_IAF ? 'Indo American Fair Banner' : 'Shirdi Sai Baba'} 
             className="main-image" 
           />
         </div>
