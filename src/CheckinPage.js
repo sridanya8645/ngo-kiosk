@@ -298,7 +298,7 @@ export default function CheckinPage() {
 
 
   return (
-    <div className="checkin-container" data-build-tag="iaf-redeploy-004" style={IS_IAF ? { background: 'linear-gradient(180deg, #9375AD 0%, #BC29C9 100%)' } : undefined}>
+    <div className="checkin-container" data-build-tag="iaf-redeploy-004" style={IS_IAF ? { background: 'linear-gradient(180deg, #CAA3EB 0%, #A566AA 100%)' } : undefined}>
       {/* Header Section */}
       {!IS_IAF && (
         <header className="checkin-header">
@@ -338,7 +338,7 @@ export default function CheckinPage() {
       {/* Main Content */}
       <main className="checkin-main">
         <div className="checkin-content">
-          <h1 className="checkin-title">Check-In</h1>
+          <h1 className="checkin-title" style={IS_IAF ? { color: '#000' } : undefined}>Check-In</h1>
           <div className="form-group" style={{ maxWidth: '420px', margin: '0 auto 8px' }}>
             <label htmlFor="event" className="form-label">Select Event *</label>
             <select

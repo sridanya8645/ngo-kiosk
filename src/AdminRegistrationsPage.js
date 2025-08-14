@@ -103,7 +103,7 @@ function AdminRegistrationsPage() {
   };
 
   return (
-    <div className="admin-registrations-bg" style={IS_IAF ? { background: 'linear-gradient(180deg, #9375AD 0%, #BC29C9 100%)' } : undefined}>
+    <div className="admin-registrations-bg" style={IS_IAF ? { background: 'linear-gradient(180deg, #CAA3EB 0%, #A566AA 100%)' } : undefined}>
       <div className="admin-registrations-aspect">
         {/* Header Section */}
         {!IS_IAF && (

@@ -329,7 +329,7 @@ function EventDetailsPage() {
   };
 
   return (
-    <div className="event-details-container" data-build-tag="iaf-redeploy-006" style={IS_IAF ? { background: 'linear-gradient(180deg, #9375AD 0%, #BC29C9 100%)' } : undefined}>
+    <div className="event-details-container" data-build-tag="iaf-redeploy-006" style={IS_IAF ? { background: 'linear-gradient(180deg, #CAA3EB 0%, #A566AA 100%)' } : undefined}>
       {/* Header Section */}
       {!IS_IAF && (
         <header className="event-details-header">
