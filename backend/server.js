@@ -42,7 +42,20 @@ app.get('/health', (req, res) => {
 // Root path - serve React app
 app.get('/', (req, res) => {
   console.log('Serving React app for root path');
-  res.sendFile(path.join(__dirname, 'public', 'index.html'));
+  const indexPath = path.join(__dirname, 'public', 'index.html');
+  try {
+    if (fs.existsSync(indexPath)) {
+      return res.sendFile(indexPath);
+    }
+    // Fallback minimal page if build not present
+    return res
+      .status(200)
+      .set('Content-Type', 'text/html')
+      .send(`<!doctype html><html><head><meta charset="utf-8"><title>NGO Kiosk Backend</title></head><body><h2>API is running</h2><p>No React build found (backend/public/index.html). Use /health to check status.</p></body></html>`);
+  } catch (e) {
+    console.error('Error serving index.html:', e);
+    return res.status(200).send('API is running (no frontend build). Visit /health');
+  }
 });
 
 // Azure App Service configuration
