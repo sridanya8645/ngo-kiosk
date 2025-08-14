@@ -602,7 +602,9 @@ app.post('/api/checkin', async (req, res) => {
       return res.status(400).json({
         success: false,
         message: 'QR not valid for selected event',
-        error: 'QR not valid for selected event'
+        error: `QR not valid for selected event. This QR belongs to "${rows[0].event_name}"`,
+        eventName: rows[0].event_name,
+        eventId: rows[0].event_id
       });
     }
     

@@ -274,7 +274,8 @@ export default function CheckinPage() {
         if (data.message && (data.message.includes("already checked in") || data.message.includes("already been scanned"))) {
           setErrorMsg(`❌ QR already scanned! This registration has already been checked in.`);
         } else if (data.error && data.error.includes('QR not valid for selected event')) {
-          setErrorMsg('❌ QR not valid for the selected event');
+          const extra = data.eventName ? ` This QR belongs to ${data.eventName}.` : '';
+          setErrorMsg(`❌ QR not valid for the selected event.${extra}`);
         } else if (data.error) {
           setErrorMsg(`❌ ${data.error}`);
         } else {
