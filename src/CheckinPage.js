@@ -178,6 +178,8 @@ export default function CheckinPage() {
     setErrorMsg("");
     
     try {
+      const eventIdToSend = selectedEvent?.id || null;
+      console.log('Sending eventId in check-in request:', eventIdToSend);
       const response = await fetch("/api/checkin", {
         method: 'POST',
         headers: {
@@ -185,7 +187,7 @@ export default function CheckinPage() {
         },
         body: JSON.stringify({
           registrationId: registrationId,
-          eventId: selectedEvent?.id || null
+          eventId: eventIdToSend
         })
       });
 
@@ -290,7 +292,7 @@ export default function CheckinPage() {
       setScanComplete(false);
         isProcessingScan.current = false;
     }
-  }, [scanComplete]);
+  }, [scanComplete, selectedEvent]);
 
 
 
