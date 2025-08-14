@@ -224,7 +224,7 @@ const RegisterPage = () => {
   };
 
   return (
-    <div className="register-container" style={IS_IAF ? { background: 'linear-gradient(180deg, #9375AD 0%, #BC29C9 100%)' } : undefined}>
+    <div className="register-container" data-build-tag="iaf-redeploy-003" style={IS_IAF ? { background: 'linear-gradient(180deg, #9375AD 0%, #BC29C9 100%)' } : undefined}>
       {/* Header Section */}
       {!IS_IAF && (
         <header className="register-header">
