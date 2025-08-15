@@ -1,0 +1,36 @@
+@import './theme.css';
+
+.header-content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 var(--space-20);
+}
+
+.logo-section {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  z-index: 1001;
+}
+
+.logo-image {
+  height: 50px;
+  width: 50px;
+  object-fit: contain;
+  border-radius: 50%;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.org-info {
+  font-size: 1rem;
+  color: white;
+  text-align: center;
+  flex: 1;
+  margin: 0 20px;
+  font-weight: 500;
+}
+

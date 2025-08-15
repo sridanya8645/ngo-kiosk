@@ -1,0 +1,602 @@
+/* Main Container */
+.checkin-container {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: linear-gradient(135deg, #f9b233 0%, #c86d3a 100%);
+  font-family: 'Arial', sans-serif;
+}
+
+/* Header Section */
+.checkin-header {
+  background: linear-gradient(135deg, #f9b233 0%, #c86d3a 100%);
+  padding: 20px;
+  border-bottom: 2px solid #8B1C1C;
+}
+
+.header-content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  max-width: 1200px;
+  margin: 0 auto;
+  position: relative;
+}
+
+.logo-section {
+  display: flex;
+  align-items: center;
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  margin-left: 20px;
+}
+
+.logo-image {
+  width: 60px;
+  height: 60px;
+  object-fit: contain;
+  border: none !important;
+  background: none !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+}
+
+.org-info {
+  flex: 1;
+  text-align: center;
+  font-size: 1rem;
+  color: #222;
+  font-weight: 600;
+  margin-left: 20px;
+  line-height: 1.4;
+}
+
+/* Navigation Bar */
+.admin-bar {
+  background: #8B1C1C;
+  padding: 6px 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.admin-nav-buttons {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+.admin-nav-buttons .admin-button:not(:last-child)::after {
+  content: '|';
+  color: rgba(255, 255, 255, 0.6);
+  margin-left: 12px;
+  font-weight: 300;
+}
+
+.admin-button {
+  background: none;
+  color: white;
+  border: none;
+  padding: 6px 12px;
+  font-size: 0.9rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border-radius: 8px;
+  position: relative;
+  overflow: hidden;
+}
+
+.admin-button::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: left 0.5s;
+}
+
+.admin-button:hover {
+  background-color: rgba(255, 255, 255, 0.15);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.admin-button:hover::before {
+  left: 100%;
+}
+
+/* Main Content */
+.checkin-main {
+  flex: 1;
+  padding: 30px 20px;
+}
+
+.checkin-content {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.checkin-title {
+  font-size: 2.2rem;
+  font-weight: bold;
+  color: #8B1C1C;
+  text-align: center;
+  margin-bottom: 30px;
+  text-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+/* Event/Newsletter Section */
+.event-newsletter-section {
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 12px;
+  padding: 25px;
+  margin-bottom: 25px;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+}
+
+.section-title {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #8B1C1C;
+  margin-bottom: 15px;
+  text-align: center;
+}
+
+.event-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.event-item {
+  background: rgba(139, 28, 28, 0.1);
+  border: 2px solid #8B1C1C;
+  border-radius: 8px;
+  padding: 15px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.event-item:hover {
+  background: rgba(139, 28, 28, 0.2);
+  transform: translateY(-2px);
+}
+
+.event-item.selected {
+  background: #8B1C1C;
+  color: white;
+}
+
+.event-name {
+  font-size: 1.2rem;
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
+.event-details {
+  font-size: 0.9rem;
+  opacity: 0.8;
+}
+
+.event-item.selected .event-details {
+  opacity: 1;
+}
+
+/* Event Section Styles */
+.event-section {
+  text-align: center;
+  margin-bottom: 25px;
+}
+
+.event-title {
+  font-size: 1.8rem;
+  font-weight: bold;
+  color: #8B1C1C;
+  margin-bottom: 15px;
+  text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.event-banner {
+  margin: 20px 0;
+  display: flex;
+  justify-content: center;
+}
+
+.event-banner-img {
+  max-width: 100%;
+  max-height: 300px;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+}
+
+/* Newsletter Section Styles */
+.newsletter-section {
+  text-align: center;
+  margin-bottom: 25px;
+}
+
+.newsletter-title {
+  font-size: 1.6rem;
+  font-weight: bold;
+  color: #8B1C1C;
+  margin-bottom: 15px;
+  text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.newsletter-banner {
+  margin: 20px 0;
+  display: flex;
+  justify-content: center;
+}
+
+.newsletter-banner-img {
+  max-width: 100%;
+  max-height: 250px;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+}
+
+.scanner-section {
+  text-align: center;
+  margin-bottom: 25px;
+}
+
+.scanner-container {
+  display: flex;
+  justify-content: center;
+  margin: 20px 0;
+  border: none;
+  background: none;
+}
+
+.scanner-title {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #8B1C1C;
+  margin-bottom: 15px;
+}
+
+.scanner-instructions {
+  font-size: 1rem;
+  color: #666;
+  margin-bottom: 20px;
+}
+
+.scanner-element {
+  border: 3px solid #8B1C1C;
+  border-radius: 15px;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+}
+
+.status-message {
+  margin-top: 20px;
+  padding: 15px;
+  border-radius: 8px;
+  font-weight: bold;
+  font-size: 1.1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+.success-message {
+  color: #28a745;
+  font-size: 1.8rem;
+  font-weight: bold;
+  text-align: center;
+  margin-top: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+.error-message {
+  color: #dc3545;
+  font-size: 1.8rem;
+  font-weight: bold;
+  text-align: center;
+  margin-top: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+.success-icon {
+  font-size: 3rem;
+  margin-bottom: 0;
+}
+
+.error-icon {
+  font-size: 3rem;
+  margin-bottom: 0;
+}
+
+/* Checkin Actions */
+.checkin-actions {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.register-button {
+  background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+  color: white;
+  border: none;
+  padding: 12px 30px;
+  border-radius: 8px;
+  font-size: 1.2rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 8px rgba(40, 167, 69, 0.3);
+}
+
+.register-button:hover {
+  background: linear-gradient(135deg, #20c997 0%, #28a745 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 12px rgba(40, 167, 69, 0.4);
+}
+
+.register-button:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 4px rgba(40, 167, 69, 0.3);
+}
+
+/* Footer */
+.checkin-footer {
+  padding: 16px 24px;
+  margin-top: auto;
+  flex-shrink: 0;
+}
+
+.footer-content {
+  display: flex !important;
+  flex-direction: row !important;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+  font-size: 1.9rem;
+  color: #000;
+  font-weight: bold;
+}
+
+.footer-section {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex: 1;
+}
+
+.footer-section:has(.powered-text) {
+  justify-content: flex-end;
+}
+
+.footer-icon {
+  font-size: 1.5rem;
+  color: #000;
+}
+
+.footer-text {
+  font-size: 1.9rem;
+  color: #000;
+  font-weight: bold;
+  line-height: 1.2;
+}
+
+.powered-text {
+  font-size: 1.8rem;
+  color: #000;
+  font-weight: bold;
+  margin-right: 8px;
+  display: inline-block;
+}
+
+.pits-logo {
+  height: 12rem;
+  width: 20rem;
+  object-fit: contain;
+}
+
+/* Responsive Design for iPad Pro (1024x1366) */
+@media screen and (max-width: 1024px) {
+  .header-content {
+    flex-direction: column;
+    gap: 15px;
+  }
+  
+  .org-info {
+    margin-left: 0;
+    text-align: center;
+    font-size: 0.8rem;
+  }
+  
+  .checkin-title {
+    font-size: 2rem;
+  }
+  
+  .section-title {
+    font-size: 1.3rem;
+  }
+  
+  .event-newsletter-section,
+  .scanner-section,
+  .event-section,
+  .newsletter-section {
+    padding: 20px;
+  }
+  
+  .event-title {
+    font-size: 1.6rem;
+  }
+  
+  .newsletter-title {
+    font-size: 1.4rem;
+  }
+  
+  .footer-content {
+    flex-direction: column;
+    gap: 12px;
+  }
+  
+  .footer-section {
+    justify-content: center;
+    min-width: auto;
+  }
+}
+
+/* Responsive Design for smaller tablets */
+@media screen and (max-width: 768px) {
+  .checkin-header {
+    padding: 12px 15px;
+  }
+  
+  .checkin-main {
+    padding: 20px 15px;
+  }
+  
+  .checkin-title {
+    font-size: 1.8rem;
+    margin-bottom: 20px;
+  }
+  
+  .section-title {
+    font-size: 1.2rem;
+  }
+  
+  .event-newsletter-section,
+  .scanner-section,
+  .event-section,
+  .newsletter-section {
+    padding: 15px;
+  }
+  
+  .event-title {
+    font-size: 1.5rem;
+  }
+  
+  .newsletter-title {
+    font-size: 1.3rem;
+  }
+  
+  .event-name {
+    font-size: 1.1rem;
+  }
+  
+  .event-details {
+    font-size: 0.8rem;
+  }
+  
+  .scanner-title {
+    font-size: 1.3rem;
+  }
+  
+  .scanner-instructions {
+    font-size: 0.9rem;
+  }
+  
+  .footer-content {
+    padding: 0 8px;
+  }
+  
+  .footer-text {
+    font-size: 0.8rem;
+  }
+}
+
+/* Responsive Design for mobile */
+@media screen and (max-width: 480px) {
+  .checkin-header {
+    padding: 10px 12px;
+  }
+  
+  .circular-logo {
+    width: 70px;
+    height: 70px;
+  }
+  
+  .logo-image {
+    width: 50px;
+    height: 50px;
+  }
+  
+  .logo-text {
+    font-size: 0.7rem;
+    bottom: -18px;
+  }
+  
+  .org-info {
+    font-size: 0.7rem;
+  }
+  
+  .checkin-title {
+    font-size: 1.6rem;
+    margin-bottom: 15px;
+  }
+  
+  .section-title {
+    font-size: 1.1rem;
+  }
+  
+  .event-newsletter-section,
+  .scanner-section,
+  .event-section,
+  .newsletter-section {
+    padding: 12px;
+  }
+  
+  .event-title {
+    font-size: 1.3rem;
+  }
+  
+  .newsletter-title {
+    font-size: 1.1rem;
+  }
+  
+  .event-item {
+    padding: 12px;
+  }
+  
+  .event-name {
+    font-size: 1rem;
+  }
+  
+  .event-details {
+    font-size: 0.7rem;
+  }
+  
+  .scanner-title {
+    font-size: 1.2rem;
+  }
+  
+  .scanner-instructions {
+    font-size: 0.8rem;
+  }
+  
+  .status-message {
+    font-size: 1rem;
+    padding: 12px;
+  }
+  
+  .footer-content {
+    gap: 8px;
+  }
+  
+  .footer-text {
+    font-size: 0.7rem;
+  }
+  
+  .pits-logo {
+    height: 25px;
+  }
+}

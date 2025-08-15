@@ -1,0 +1,435 @@
+/* Main Container */
+.admin-container {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: linear-gradient(135deg, #f9b233 0%, #c86d3a 100%);
+  font-family: 'Arial', sans-serif;
+}
+
+/* Header Section */
+.admin-header {
+  background: linear-gradient(135deg, #f9b233 0%, #c86d3a 100%);
+  padding: 20px;
+  border-bottom: 2px solid #8B1C1C;
+}
+
+.header-content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  max-width: 1200px;
+  margin: 0 auto;
+  position: relative;
+}
+
+.logo-section {
+  display: flex;
+  align-items: center;
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  margin-left: 20px;
+}
+
+.logo-image {
+  width: 60px;
+  height: 60px;
+  object-fit: contain;
+  border: none !important;
+  background: none !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+}
+
+.org-info {
+  flex: 1;
+  text-align: center;
+  font-size: 1rem;
+  color: #222;
+  font-weight: 600;
+  margin-left: 20px;
+  line-height: 1.4;
+}
+
+/* Admin Bar */
+.admin-bar {
+  background: #8B1C1C;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.admin-nav-buttons {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+.admin-nav-buttons .admin-button:not(:last-child)::after {
+  content: '|';
+  color: rgba(255, 255, 255, 0.6);
+  margin-left: 12px;
+  font-weight: 300;
+}
+
+.admin-button {
+  background: none;
+  color: white;
+  border: none;
+  padding: 6px 12px;
+  font-size: 0.9rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border-radius: 8px;
+  position: relative;
+  overflow: hidden;
+}
+
+.admin-button::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: left 0.5s;
+}
+
+.admin-button:hover {
+  background-color: rgba(255, 255, 255, 0.15);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.admin-button:hover::before {
+  left: 100%;
+}
+
+/* Main Content */
+.admin-main {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 30px 20px;
+}
+
+.admin-login-container {
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 12px;
+  padding: 30px;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+  max-width: 500px;
+  width: 100%;
+  text-align: center;
+}
+
+.admin-login-title {
+  font-size: 2.2rem;
+  font-weight: bold;
+  color: #8B1C1C;
+  margin-bottom: 25px;
+  text-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.admin-lottie-container {
+  display: flex;
+  justify-content: center;
+  margin: 25px 0;
+}
+
+.admin-lottie {
+  width: 180px;
+  height: 180px;
+}
+
+.admin-login-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.form-label {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #333;
+  text-align: left;
+}
+
+.form-input {
+  padding: 12px;
+  border: 2px solid #ddd;
+  border-radius: 6px;
+  font-size: 1rem;
+  transition: border-color 0.3s ease;
+  background: white;
+}
+
+.form-input:focus {
+  outline: none;
+  border-color: #8B1C1C;
+  box-shadow: 0 0 0 3px rgba(139, 28, 28, 0.1);
+}
+
+.error-message {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 12px 15px;
+  border-radius: 6px;
+  font-size: 1rem;
+  font-weight: bold;
+  background: rgba(220, 53, 69, 0.1);
+  color: #dc3545;
+  border: 2px solid #dc3545;
+}
+
+.error-icon {
+  font-size: 1.3rem;
+}
+
+.form-actions {
+  display: flex;
+  gap: 15px;
+  margin-top: 15px;
+}
+
+.cancel-button,
+.submit-button {
+  flex: 1;
+  padding: 12px 20px;
+  font-size: 1.1rem;
+  font-weight: bold;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.cancel-button {
+  background: #6c757d;
+  color: white;
+}
+
+.cancel-button:hover {
+  background: #5a6268;
+}
+
+.submit-button {
+  background: #8B1C1C;
+  color: white;
+}
+
+.submit-button:hover {
+  background: #6B0F0F;
+}
+
+.submit-button:disabled,
+.cancel-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Footer */
+.admin-footer {
+  padding: 16px 24px;
+  margin-top: auto;
+  flex-shrink: 0;
+}
+
+.footer-content {
+  display: flex !important;
+  flex-direction: row !important;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+  font-size: 1.9rem;
+  color: #000;
+  font-weight: bold;
+}
+
+.footer-section {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex: 1;
+}
+
+.footer-section:has(.powered-text) {
+  justify-content: flex-end;
+}
+
+.footer-icon {
+  font-size: 1.5rem;
+  color: #000;
+}
+
+.footer-text {
+  font-size: 1.9rem;
+  color: #000;
+  font-weight: bold;
+  line-height: 1.2;
+}
+
+.powered-text {
+  font-size: 1.8rem;
+  color: #000;
+  font-weight: bold;
+  margin-right: 8px;
+  display: inline-block;
+}
+
+.pits-logo {
+  height: 12rem;
+  width: 20rem;
+  object-fit: contain;
+}
+
+/* Responsive Design for iPad Pro (1024x1336) */
+@media screen and (max-width: 1024px) {
+  .header-content {
+    flex-direction: column;
+    gap: 15px;
+  }
+  
+  .org-info {
+    margin-left: 0;
+    text-align: center;
+    font-size: 0.8rem;
+  }
+  
+  .admin-login-title {
+    font-size: 2rem;
+  }
+  
+  .admin-login-container {
+    padding: 25px;
+    max-width: 450px;
+  }
+  
+  .footer-content {
+    flex-direction: column;
+    gap: 12px;
+  }
+  
+  .footer-section {
+    justify-content: center;
+    min-width: auto;
+  }
+}
+
+/* Responsive Design for smaller tablets */
+@media screen and (max-width: 768px) {
+  .admin-header {
+    padding: 12px 15px;
+  }
+  
+  .admin-login-title {
+    font-size: 1.8rem;
+    margin-bottom: 20px;
+  }
+  
+  .admin-login-container {
+    padding: 20px;
+    margin: 0 15px;
+  }
+  
+  .form-label {
+    font-size: 0.9rem;
+  }
+  
+  .form-input {
+    padding: 10px;
+    font-size: 0.9rem;
+  }
+  
+  .form-actions {
+    flex-direction: column;
+    gap: 12px;
+  }
+  
+  .footer-content {
+    padding: 0 8px;
+  }
+  
+  .footer-text {
+    font-size: 0.8rem;
+  }
+}
+
+/* Responsive Design for mobile */
+@media screen and (max-width: 480px) {
+  .admin-header {
+    padding: 10px 12px;
+  }
+  
+  .circular-logo {
+    width: 70px;
+    height: 70px;
+  }
+  
+  .logo-image {
+    width: 50px;
+    height: 50px;
+  }
+  
+  .logo-text {
+    font-size: 0.7rem;
+    bottom: -18px;
+  }
+  
+  .org-info {
+    font-size: 0.7rem;
+  }
+  
+  .admin-login-title {
+    font-size: 1.6rem;
+    margin-bottom: 15px;
+  }
+  
+  .admin-login-container {
+    padding: 15px;
+    margin: 0 8px;
+  }
+  
+  .form-label {
+    font-size: 0.8rem;
+  }
+  
+  .form-input {
+    padding: 8px;
+    font-size: 0.8rem;
+  }
+  
+  .cancel-button,
+  .submit-button {
+    font-size: 1.1rem;
+    padding: 10px 18px;
+  }
+  
+  .footer-content {
+    gap: 8px;
+  }
+  
+  .footer-text {
+    font-size: 0.7rem;
+  }
+  
+  .pits-logo {
+    height: 25px;
+  }
+}

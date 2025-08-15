@@ -1,39 +1,65 @@
 {
-  "name": "ngo-kiosk-backend",
-  "version": "1.0.0",
-  "description": "NGO Kiosk Backend API",
-  "main": "server.js",
-  "scripts": {
-    "start": "node server.js",
-    "dev": "nodemon server.js",
-    "build": "echo 'Backend build completed'",
-    "test": "echo 'No tests specified'",
-    "seed:checkedin": "node seed-checkedin-registrations.js"
-  },
+  "name": "ngo-kiosk",
+  "version": "0.1.0",
+  "private": true,
+  "homepage": ".",
+  "proxy": "http://localhost:5000",
   "dependencies": {
+    "@testing-library/dom": "^10.4.0",
+    "@testing-library/jest-dom": "^6.6.3",
+    "@testing-library/react": "^16.3.0",
+    "@testing-library/user-event": "^13.5.0",
+    "ajv": "^8.17.1",
     "cors": "^2.8.5",
     "dotenv": "^16.3.1",
     "express": "^4.18.2",
     "fs": "^0.0.1-security",
+    "html5-qrcode": "^2.3.8",
+    "lottie-react": "^2.4.1",
     "multer": "^1.4.5-lts.1",
     "mysql2": "^3.14.3",
     "nodemailer": "^6.9.4",
     "path": "^0.12.7",
-    "qrcode": "^1.5.3"
+    "qrcode": "^1.5.3",
+    "react": "^18.2.0",
+    "react-confetti": "^6.4.0",
+    "react-custom-roulette": "^1.4.1",
+    "react-dom": "^18.2.0",
+    "react-router-dom": "^6.0.0",
+    "react-scripts": "5.0.1",
+    "web-vitals": "^2.1.4"
+  },
+  "scripts": {
+    "start": "node server.js",
+    "react-start": "react-scripts start",
+    "backend": "cd backend && node server.js",
+    "dev": "concurrently \"npm run backend\" \"npm run react-start\"",
+    "build": "CI=false react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject",
+    "postbuild": "node -e \"const fs=require('fs');const path=require('path');function copyDir(src,dest){if(!fs.existsSync(dest))fs.mkdirSync(dest,{recursive:true});const items=fs.readdirSync(src);items.forEach(item=>{const srcPath=path.join(src,item);const destPath=path.join(dest,item);if(fs.statSync(srcPath).isDirectory()){copyDir(srcPath,destPath)}else{fs.copyFileSync(srcPath,destPath)}})}copyDir('build','backend/public')\"",
+    "deploy": "npm run build && npm run postbuild"
+  },
+  "eslintConfig": {
+    "extends": [
+      "react-app"
+    ]
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
   },
   "devDependencies": {
+    "concurrently": "^8.2.2",
+    "eslint-config-react-app": "^7.0.1",
     "nodemon": "^3.0.1"
-  },
-  "engines": {
-    "node": "20.x"
-  },
-  "keywords": [
-    "ngo",
-    "kiosk",
-    "registration",
-    "checkin",
-    "mysql"
-  ],
-  "author": "NGO Kiosk Team",
-  "license": "MIT"
+  }
 }

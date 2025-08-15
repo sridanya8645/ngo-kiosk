@@ -1,0 +1,864 @@
+/* Main Container */
+.home-container {
+  min-height: 100vh;
+  height: 100vh;
+  max-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: linear-gradient(135deg, #f9b233 0%, #c86d3a 100%);
+  font-family: 'Arial', sans-serif;
+  overflow: hidden;
+}
+
+/* Custom Scrollbar Styles */
+.home-container::-webkit-scrollbar,
+.home-main::-webkit-scrollbar {
+  width: 12px;
+}
+
+.home-container::-webkit-scrollbar-track,
+.home-main::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+  margin: 5px;
+}
+
+.home-container::-webkit-scrollbar-thumb,
+.home-main::-webkit-scrollbar-thumb {
+  background: linear-gradient(135deg, #8B1C1C 0%, #c86d3a 100%);
+  border-radius: 10px;
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  transition: all 0.3s ease;
+}
+
+.home-container::-webkit-scrollbar-thumb:hover,
+.home-main::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(135deg, #6B0F0F 0%, #a85a2a 100%);
+  transform: scale(1.05);
+}
+
+.home-container::-webkit-scrollbar-corner,
+.home-main::-webkit-scrollbar-corner {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+}
+
+/* Firefox Scrollbar */
+.home-container,
+.home-main {
+  scrollbar-width: thin;
+  scrollbar-color: #8B1C1C rgba(255, 255, 255, 0.1);
+}
+
+/* Header Section */
+.home-header {
+  background: linear-gradient(135deg, #f9b233 0%, #c86d3a 100%);
+  padding: 15px 20px;
+  border-bottom: 2px solid #8B1C1C;
+  flex-shrink: 0;
+}
+
+.header-content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  max-width: 100%;
+  width: 100%;
+  margin: 0 auto;
+  position: relative;
+  padding: 0 20px;
+}
+
+.logo-section {
+  display: flex;
+  align-items: center;
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  margin-left: 20px;
+}
+
+.logo-image {
+  width: 60px;
+  height: 60px;
+  object-fit: contain;
+  border: none !important;
+  background: none !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  display: block !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  z-index: 1000 !important;
+  min-width: 60px !important;
+  min-height: 60px !important;
+  position: relative !important;
+}
+
+.org-info {
+  flex: 1;
+  text-align: center;
+  font-size: 0.7rem; /* Reduced by 3 points from 1rem */
+  color: #000 !important;
+  font-weight: 600;
+  margin-left: 20px;
+  line-height: 1.4;
+}
+
+/* Admin Bar */
+.admin-bar {
+  background: #8B1C1C;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.admin-button {
+  background: none;
+  color: #000 !important;
+  border: none;
+  padding: 6px 12px;
+  font-size: 0.9rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border-radius: 8px;
+  position: relative;
+  overflow: hidden;
+}
+
+.admin-button::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: left 0.5s;
+}
+
+.admin-button:hover {
+  background-color: rgba(255, 255, 255, 0.15);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.admin-button:hover::before {
+  left: 100%;
+}
+
+/* Main Content */
+.home-main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 30px 20px;
+  text-align: center;
+  overflow-y: auto;
+  max-height: calc(100vh - 200px);
+  scroll-behavior: smooth;
+}
+
+.welcome-title {
+  font-size: 2.5rem;
+  font-weight: bold;
+  color: #8B1C1C;
+  margin-bottom: 30px;
+  margin-top: 0;
+  text-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.main-image-container {
+  margin: 30px 0;
+  max-width: 500px;
+  width: 100%;
+}
+
+.main-image {
+  width: 100%;
+  height: auto;
+  border-radius: 12px;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+}
+
+.action-container {
+  margin-top: 30px;
+}
+
+.checkin-button {
+  background: #8B1C1C;
+  color: white;
+  border: none;
+  padding: 15px 30px;
+  font-size: 1.5rem;
+  font-weight: bold;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+}
+
+.checkin-button:hover {
+  background: #6B0F0F;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(0,0,0,0.3);
+}
+
+/* Footer */
+.home-footer {
+  background: #8B1C1C;
+  color: white;
+  text-align: center;
+  padding: 15px 20px;
+  min-height: 60px;
+  flex-shrink: 0;
+  margin-top: -90px; /* Raised by additional ~10px as requested */
+}
+
+.footer-content {
+  display: flex !important;
+  flex-direction: row !important;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 0;
+  gap: 20px;
+  font-size: 1.9rem;
+  color: #000;
+  font-weight: bold;
+  width: 100%;
+  max-width: 100%;
+  padding: 0 20px;
+  position: relative;
+  z-index: 10;
+}
+
+.footer-section {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex: 1;
+}
+
+.footer-section:has(.powered-text) {
+  justify-content: flex-end;
+}
+
+.footer-icon {
+  font-size: 1.5rem;
+  color: #000;
+}
+
+.footer-text {
+  font-size: 1.9rem;
+  color: #000;
+  font-weight: bold;
+  line-height: 1.2;
+}
+
+.powered-text {
+  font-size: 1.8rem;
+  color: #000;
+  font-weight: bold;
+  margin-right: 8px;
+  display: inline-block;
+}
+
+.pits-logo {
+  height: 45px;
+  width: auto;
+  object-fit: contain;
+}
+
+/* Enhanced iPad Pro Responsive Design */
+/* iPad Pro 11" (834x1194) */
+@media screen and (min-width: 834px) and (max-width: 1194px) and (min-height: 1194px) and (max-height: 1200px) {
+  .home-container {
+    min-height: 100vh;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+  
+  .home-header {
+    padding: 15px 25px;
+    flex-shrink: 0;
+  }
+  
+  .header-content {
+    flex-direction: row;
+    gap: 25px;
+    align-items: center;
+  }
+  
+  .org-info {
+    margin-left: 25px;
+    text-align: left;
+    font-size: 1.1rem;
+    flex: 1;
+  }
+  
+  .home-main {
+    flex: 1;
+    padding: 25px 40px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    overflow-y: auto;
+    max-height: calc(100vh - 250px);
+  }
+  
+  .welcome-title {
+    font-size: 2.8rem;
+    margin-bottom: 30px;
+    margin-top: 0;
+  }
+  
+  .main-image-container {
+    max-width: 450px;
+    margin: 25px 0;
+  }
+  
+  .checkin-button {
+    font-size: 1.6rem;
+    padding: 18px 35px;
+    margin-top: 15px;
+    margin-bottom: 20px;
+  }
+  
+  .home-footer {
+    flex-shrink: 0;
+    padding: 18px 30px;
+    background: #8B1C1C;
+    border-top: 1px solid rgba(255, 255, 255, 0.2);
+    min-height: 75px;
+  }
+  
+  .footer-content {
+    flex-direction: row;
+    gap: 25px;
+    font-size: 1.4rem;
+  }
+  
+  .footer-section {
+    justify-content: flex-start;
+    min-width: auto;
+    flex: 1;
+  }
+  
+  .footer-text {
+    font-size: 1.2rem;
+  }
+  
+  .pits-logo {
+    width: 95px;
+    height: 48px;
+  }
+}
+
+/* iPad Pro 12.9" (1024x1366) */
+@media screen and (min-width: 1024px) and (max-width: 1366px) and (min-height: 1366px) and (max-height: 1400px) {
+  .home-container {
+    min-height: 100vh;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+  
+  .home-header {
+    padding: 15px 25px;
+    flex-shrink: 0;
+  }
+  
+  .header-content {
+    flex-direction: row;
+    gap: 30px;
+    align-items: center;
+  }
+  
+  .org-info {
+    margin-left: 30px;
+    text-align: left;
+    font-size: 1.2rem;
+    flex: 1;
+  }
+  
+  .home-main {
+    flex: 1;
+    padding: 30px 50px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    overflow-y: auto;
+    max-height: calc(100vh - 280px);
+  }
+  
+  .welcome-title {
+    font-size: 3.2rem;
+    margin-bottom: 35px;
+    margin-top: 0;
+  }
+  
+  .main-image-container {
+    max-width: 550px;
+    margin: 30px 0;
+  }
+  
+  .checkin-button {
+    font-size: 1.8rem;
+    padding: 20px 40px;
+    margin-top: 20px;
+    margin-bottom: 25px;
+  }
+  
+  .home-footer {
+    flex-shrink: 0;
+    padding: 20px 35px;
+    background: #8B1C1C;
+    border-top: 1px solid rgba(255, 255, 255, 0.2);
+    min-height: 85px;
+  }
+  
+  .footer-content {
+    flex-direction: row;
+    gap: 30px;
+    font-size: 1.5rem;
+  }
+  
+  .footer-section {
+    justify-content: flex-start;
+    min-width: auto;
+    flex: 1;
+  }
+  
+  .footer-text {
+    font-size: 1.3rem;
+  }
+  
+  .pits-logo {
+    width: 110px;
+    height: 55px;
+  }
+}
+
+/* iPad Pro Landscape (1024x768) */
+@media screen and (min-width: 1024px) and (max-width: 1366px) and (min-height: 768px) and (max-height: 1024px) {
+  .home-container {
+    min-height: 100vh;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+  
+  .home-header {
+    padding: 12px 20px;
+    flex-shrink: 0;
+  }
+  
+  .header-content {
+    flex-direction: row;
+    gap: 25px;
+    align-items: center;
+  }
+  
+  .org-info {
+    margin-left: 25px;
+    text-align: left;
+    font-size: 1rem;
+    flex: 1;
+  }
+  
+  .home-main {
+    flex: 1;
+    padding: 20px 35px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    overflow-y: auto;
+    max-height: calc(100vh - 200px);
+  }
+  
+  .welcome-title {
+    font-size: 2.8rem;
+    margin-bottom: 25px;
+    margin-top: 0;
+  }
+  
+  .main-image-container {
+    max-width: 500px;
+    margin: 20px 0;
+  }
+  
+  .checkin-button {
+    font-size: 1.6rem;
+    padding: 16px 32px;
+    margin-top: 15px;
+    margin-bottom: 20px;
+  }
+  
+  .home-footer {
+    flex-shrink: 0;
+    padding: 15px 25px;
+    background: #8B1C1C;
+    border-top: 1px solid rgba(255, 255, 255, 0.2);
+    min-height: 70px;
+  }
+  
+  .footer-content {
+    flex-direction: row;
+    gap: 25px;
+    font-size: 1.3rem;
+  }
+  
+  .footer-section {
+    justify-content: flex-start;
+    min-width: auto;
+    flex: 1;
+  }
+  
+  .footer-text {
+    font-size: 1.1rem;
+  }
+  
+  .pits-logo {
+    width: 90px;
+    height: 45px;
+  }
+}
+
+/* iPad Pro 11" Landscape (1194x834) */
+@media screen and (min-width: 1194px) and (max-width: 1200px) and (min-height: 834px) and (max-height: 1194px) {
+  .home-container {
+    min-height: 100vh;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+  
+  .home-header {
+    padding: 12px 20px;
+    flex-shrink: 0;
+  }
+  
+  .header-content {
+    flex-direction: row;
+    gap: 25px;
+    align-items: center;
+  }
+  
+  .org-info {
+    margin-left: 25px;
+    text-align: left;
+    font-size: 1rem;
+    flex: 1;
+  }
+  
+  .home-main {
+    flex: 1;
+    padding: 20px 35px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    overflow-y: auto;
+    max-height: calc(100vh - 200px);
+  }
+  
+  .welcome-title {
+    font-size: 2.6rem;
+    margin-bottom: 25px;
+    margin-top: 0;
+  }
+  
+  .main-image-container {
+    max-width: 480px;
+    margin: 20px 0;
+  }
+  
+  .checkin-button {
+    font-size: 1.5rem;
+    padding: 15px 30px;
+    margin-top: 15px;
+    margin-bottom: 20px;
+  }
+  
+  .home-footer {
+    flex-shrink: 0;
+    padding: 15px 25px;
+    background: #8B1C1C;
+    border-top: 1px solid rgba(255, 255, 255, 0.2);
+    min-height: 70px;
+  }
+  
+  .footer-content {
+    flex-direction: row;
+    gap: 25px;
+    font-size: 1.3rem;
+  }
+  
+  .footer-section {
+    justify-content: flex-start;
+    min-width: auto;
+    flex: 1;
+  }
+  
+  .footer-text {
+    font-size: 1.1rem;
+  }
+  
+  .pits-logo {
+    width: 90px;
+    height: 45px;
+  }
+}
+
+/* Viewport-based scaling for better dynamic fitting */
+@media screen and (min-width: 768px) and (max-width: 1366px) {
+  .home-container {
+    font-size: clamp(14px, 2vw, 18px);
+  }
+  
+  .welcome-title {
+    font-size: clamp(2rem, 4vw, 3.5rem);
+  }
+  
+  .checkin-button {
+    font-size: clamp(1.2rem, 2.5vw, 2rem);
+    padding: clamp(10px, 2vw, 20px) clamp(20px, 4vw, 40px);
+  }
+  
+  .main-image-container {
+    max-width: clamp(300px, 50vw, 600px);
+  }
+  
+  .footer-text {
+    font-size: clamp(0.9rem, 1.5vw, 1.3rem);
+  }
+  
+  .pits-logo {
+    width: clamp(60px, 8vw, 110px);
+    height: clamp(30px, 4vw, 55px);
+  }
+}
+
+/* Force specific iPad Pro dimensions */
+@media screen and (width: 1024px) and (height: 1366px) {
+  .home-container {
+    height: 100vh !important;
+    max-height: 100vh !important;
+    overflow: hidden !important;
+  }
+  
+  .home-main {
+    max-height: calc(100vh - 350px) !important;
+    overflow-y: auto !important;
+  }
+  
+  .home-footer {
+    min-height: 100px !important;
+    padding: 20px 24px !important;
+    background: #8B1C1C;
+    border-top: 3px solid rgba(255, 255, 255, 0.4) !important;
+    position: relative !important;
+    z-index: 100 !important;
+  }
+  
+  .welcome-title {
+    font-size: 2.2rem !important;
+    margin-bottom: 15px !important;
+  }
+  
+  .main-image-container {
+    max-width: 350px !important;
+    margin: 10px 0 !important;
+  }
+  
+  .checkin-button {
+    font-size: 1.4rem !important;
+    padding: 12px 25px !important;
+    margin-top: 10px !important;
+    margin-bottom: 15px !important;
+  }
+}
+
+/* Responsive Design for smaller tablets */
+@media screen and (max-width: 768px) {
+  .home-header {
+    padding: 12px 15px;
+  }
+  
+  .home-main {
+    padding: 20px 15px;
+  }
+  
+  .welcome-title {
+    font-size: 2rem;
+    margin-bottom: 20px;
+  }
+  
+  .main-image-container {
+    margin: 20px 0;
+    max-width: 350px;
+  }
+  
+  .checkin-button {
+    font-size: 1.2rem;
+    padding: 10px 20px;
+  }
+  
+  .footer-content {
+    padding: 0 8px;
+  }
+  
+  .footer-text {
+    font-size: 0.8rem;
+  }
+}
+
+/* Responsive Design for mobile */
+@media screen and (max-width: 480px) {
+  .home-header {
+    padding: 10px 12px;
+  }
+  
+  .circular-logo {
+    width: 70px;
+    height: 70px;
+  }
+  
+  .logo-image {
+    width: 50px;
+    height: 50px;
+  }
+  
+  .logo-text {
+    font-size: 0.7rem;
+    bottom: -18px;
+  }
+  
+  .org-info {
+    font-size: 0.7rem;
+  }
+  
+  .welcome-title {
+    font-size: 1.8rem;
+    margin-bottom: 15px;
+  }
+  
+  .home-main {
+    padding: 15px 8px;
+  }
+  
+  .main-image-container {
+    max-width: 300px;
+  }
+  
+  .checkin-button {
+    font-size: 1.1rem;
+    padding: 8px 18px;
+  }
+  
+  .footer-content {
+    gap: 8px;
+  }
+  
+  .footer-text {
+    font-size: 0.7rem;
+  }
+  
+  .pits-logo {
+    height: 25px;
+  }
+} 
+@import './styles/footer.css';
+
+.footer-section {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #000 !important;
+  font-weight: 600;
+  font-size: 0.9rem;
+  flex: 1;
+}
+
+.footer-section:has(.powered-text) {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.footer-icon {
+  font-size: 1.1rem;
+  color: #000 !important;
+  flex-shrink: 0;
+}
+
+.footer-text {
+  font-size: 0.9rem;
+  line-height: 1.2;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  color: #000 !important;
+}
+
+.powered-text {
+  font-size: 0.8rem;
+  color: #000 !important;
+  font-weight: 600;
+  margin-right: 8px;
+}
+
+.pits-logo {
+  height: 45px;
+  width: auto;
+  object-fit: contain;
+}
+
+@import './styles/header.css';
+
+.admin-bar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.admin-nav-buttons {
+  display: flex;
+  gap: 10px;
+}
+
+.admin-button {
+  background: rgba(255, 255, 255, 0.2);
+  color: white;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.admin-button:hover {
+  background: rgba(255, 255, 255, 0.3);
+  transform: translateY(-1px);
+}

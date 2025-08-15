@@ -1,0 +1,1142 @@
+/* Main Container */
+.register-container {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: linear-gradient(135deg, #f9b233 0%, #c86d3a 100%);
+  font-family: 'Arial', sans-serif;
+}
+
+/* Custom Scrollbar Styles */
+.register-container::-webkit-scrollbar,
+.register-main::-webkit-scrollbar {
+  width: 12px;
+}
+
+.register-container::-webkit-scrollbar-track,
+.register-main::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+  margin: 5px;
+}
+
+.register-container::-webkit-scrollbar-thumb,
+.register-main::-webkit-scrollbar-thumb {
+  background: linear-gradient(135deg, #8B1C1C 0%, #c86d3a 100%);
+  border-radius: 10px;
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  transition: all 0.3s ease;
+}
+
+.register-container::-webkit-scrollbar-thumb:hover,
+.register-main::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(135deg, #6B0F0F 0%, #a85a2a 100%);
+  transform: scale(1.05);
+}
+
+.register-container::-webkit-scrollbar-corner,
+.register-main::-webkit-scrollbar-corner {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+}
+
+/* Firefox Scrollbar */
+.register-container,
+.register-main {
+  scrollbar-width: thin;
+  scrollbar-color: #8B1C1C rgba(255, 255, 255, 0.1);
+}
+
+/* Header Section */
+.register-header {
+  background: linear-gradient(135deg, #f9b233 0%, #c86d3a 100%);
+  padding: 20px;
+  border-bottom: 2px solid #8B1C1C;
+}
+
+.header-content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  max-width: 100%;
+  width: 100%;
+  margin: 0 auto;
+  position: relative;
+  padding: 0 20px;
+}
+
+.logo-section {
+  display: flex;
+  align-items: center;
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  margin-left: 20px;
+}
+
+.logo-image {
+  width: 60px;
+  height: 60px;
+  object-fit: contain;
+  border: none !important;
+  background: none !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  display: block !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  z-index: 1000 !important;
+  min-width: 60px !important;
+  min-height: 60px !important;
+  position: relative !important;
+}
+
+.org-info {
+  flex: 1;
+  text-align: center;
+  font-size: 1rem;
+  color: #222;
+  font-weight: 600;
+  margin-left: 20px;
+  line-height: 1.4;
+}
+
+/* Admin Bar */
+.admin-bar {
+  background: #8B1C1C;
+  padding: 6px 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.admin-button {
+  background: none;
+  color: white;
+  border: none;
+  padding: 6px 12px;
+  font-size: 0.9rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border-radius: 8px;
+  position: relative;
+  overflow: hidden;
+}
+
+.admin-button::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: left 0.5s;
+}
+
+.admin-button:hover {
+  background-color: rgba(255, 255, 255, 0.15);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.admin-button:hover::before {
+  left: 100%;
+}
+
+/* Main Content */
+.register-main {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 30px 20px;
+  overflow-y: auto;
+  max-height: calc(100vh - 200px);
+  scroll-behavior: smooth;
+}
+
+.register-form-container {
+  max-width: 500px;
+  width: 100%;
+  text-align: center;
+}
+
+.lottie-container {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+.register-title {
+  font-size: 2.2rem;
+  font-weight: bold;
+  color: #8B1C1C;
+  text-align: center;
+  margin-bottom: 25px;
+  text-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.register-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.form-label {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #8B1C1C;
+  text-align: left;
+}
+
+.form-input {
+  padding: 12px;
+  border: 2px solid #ddd;
+  border-radius: 6px;
+  font-size: 1rem;
+  transition: border-color 0.3s ease;
+  background: rgba(255, 255, 255, 0.9);
+  backdrop-filter: blur(10px);
+}
+
+.form-input:focus {
+  outline: none;
+  border-color: #8B1C1C;
+  box-shadow: 0 0 0 3px rgba(139, 28, 28, 0.1);
+}
+
+.form-select {
+  padding: 12px;
+  border: 2px solid #ddd;
+  border-radius: 6px;
+  font-size: 1rem;
+  background: rgba(255, 255, 255, 0.9);
+  backdrop-filter: blur(10px);
+  cursor: pointer;
+  transition: border-color 0.3s ease;
+}
+
+.form-select:focus {
+  outline: none;
+  border-color: #8B1C1C;
+  box-shadow: 0 0 0 3px rgba(139, 28, 28, 0.1);
+}
+
+.cancel-button,
+.submit-button {
+  flex: 1;
+  padding: 12px 20px;
+  font-size: 1.1rem;
+  font-weight: bold;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.cancel-button {
+  background: #6c757d;
+  color: white;
+}
+
+.cancel-button:hover {
+  background: #5a6268;
+}
+
+.submit-button {
+  background: #8B1C1C;
+  color: white;
+}
+
+.submit-button:hover {
+  background: #6B0F0F;
+}
+
+.submit-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.error-message {
+  color: #dc3545;
+  font-size: 0.9rem;
+  font-weight: bold;
+  margin-top: 4px;
+}
+
+.form-input.error {
+  border-color: #dc3545;
+}
+
+/* Success Message Container */
+.success-message-container {
+  text-align: center;
+  margin-top: 30px;
+  padding: 20px 0;
+}
+
+.success-icon {
+  font-size: 3rem;
+  color: #28a745;
+  margin-bottom: 15px;
+}
+
+.success-title {
+  font-size: 1.8rem;
+  color: #28a745;
+  margin-bottom: 10px;
+  font-weight: 600;
+}
+
+.success-message {
+  font-size: 1.3rem;
+  color: #28a745;
+  margin-bottom: 10px;
+  line-height: 1.4;
+  font-weight: 500;
+}
+
+.redirect-message {
+  font-size: 1.1rem;
+  color: #28a745;
+  font-style: italic;
+  margin-top: 10px;
+}
+
+/* Footer */
+.register-footer {
+  padding: 16px 24px;
+  margin-top: auto;
+  flex-shrink: 0;
+}
+
+.footer-content {
+  display: flex !important;
+  flex-direction: row !important;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+  font-size: 1.9rem;
+  color: #000;
+  font-weight: bold;
+}
+
+.footer-section {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex: 1;
+}
+
+.footer-section:has(.powered-text) {
+  justify-content: flex-end;
+}
+
+.footer-icon {
+  font-size: 1.5rem;
+  color: #000;
+}
+
+.footer-text {
+  font-size: 1.9rem;
+  color: #000;
+  font-weight: bold;
+  line-height: 1.2;
+}
+
+.powered-text {
+  font-size: 1.8rem;
+  color: #000;
+  font-weight: bold;
+  margin-right: 8px;
+  display: inline-block;
+}
+
+.pits-logo {
+  height: 12rem;
+  width: 20rem;
+  object-fit: contain;
+}
+
+/* Enhanced iPad Pro Responsive Design */
+/* iPad Pro 11" (834x1194) */
+@media screen and (min-width: 834px) and (max-width: 1194px) and (min-height: 1194px) and (max-height: 1200px) {
+  .register-container {
+    min-height: 100vh;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+  
+  .register-header {
+    padding: 15px 25px;
+    flex-shrink: 0;
+  }
+  
+  .header-content {
+    flex-direction: row;
+    gap: 25px;
+    align-items: center;
+  }
+  
+  .org-info {
+    margin-left: 25px;
+    text-align: left;
+    font-size: 1.1rem;
+    flex: 1;
+  }
+  
+  .register-main {
+    flex: 1;
+    padding: 25px 40px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    overflow-y: auto;
+    max-height: calc(100vh - 200px);
+  }
+  
+  .register-content {
+    max-width: 900px;
+    width: 100%;
+    gap: 50px;
+  }
+  
+  .register-title {
+    font-size: 2.8rem;
+    margin-bottom: 30px;
+  }
+  
+  .register-form-container {
+    max-width: 550px;
+    padding: 45px;
+  }
+  
+  .form-group {
+    margin-bottom: 28px;
+  }
+  
+  .form-label {
+    font-size: 1.2rem;
+    margin-bottom: 10px;
+  }
+  
+  .form-input,
+  .form-select {
+    padding: 15px 18px;
+    font-size: 1.1rem;
+  }
+  
+  .form-actions {
+    gap: 25px;
+    margin-top: 35px;
+  }
+  
+  .cancel-button,
+  .submit-button {
+    padding: 15px 30px;
+    font-size: 1.2rem;
+  }
+  
+  .lottie-container {
+    width: 450px;
+    height: 450px;
+  }
+  
+  .success-message-container {
+    margin-top: 45px;
+  }
+  
+  .success-icon {
+    font-size: 4.5rem;
+  }
+  
+  .success-title {
+    font-size: 2.4rem;
+  }
+  
+  .success-message {
+    font-size: 1.7rem;
+  }
+  
+  .register-footer {
+    flex-shrink: 0;
+    padding: 18px 30px;
+    background: rgba(255, 255, 255, 0.1);
+    border-top: 1px solid rgba(255, 255, 255, 0.2);
+    min-height: 75px;
+  }
+  
+  .footer-content {
+    flex-direction: row;
+    gap: 25px;
+    font-size: 1.4rem;
+  }
+  
+  .footer-section {
+    justify-content: flex-start;
+    min-width: auto;
+    flex: 1;
+  }
+  
+  .footer-text {
+    font-size: 1.2rem;
+  }
+  
+  .pits-logo {
+    width: 95px;
+    height: 48px;
+  }
+}
+
+/* iPad Pro 12.9" (1024x1366) */
+@media screen and (min-width: 1024px) and (max-width: 1366px) and (min-height: 1366px) and (max-height: 1400px) {
+  .register-container {
+    min-height: 100vh;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+  
+  .register-header {
+    padding: 15px 25px;
+    flex-shrink: 0;
+  }
+  
+  .header-content {
+    flex-direction: row;
+    gap: 30px;
+    align-items: center;
+  }
+  
+  .org-info {
+    margin-left: 30px;
+    text-align: left;
+    font-size: 1.2rem;
+    flex: 1;
+  }
+  
+  .register-main {
+    flex: 1;
+    padding: 30px 50px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    overflow-y: auto;
+    max-height: calc(100vh - 220px);
+  }
+  
+  .register-content {
+    max-width: 1000px;
+    width: 100%;
+    gap: 60px;
+  }
+  
+  .register-title {
+    font-size: 3.2rem;
+    margin-bottom: 35px;
+  }
+  
+  .register-form-container {
+    max-width: 600px;
+    padding: 55px;
+  }
+  
+  .form-group {
+    margin-bottom: 32px;
+  }
+  
+  .form-label {
+    font-size: 1.3rem;
+    margin-bottom: 12px;
+  }
+  
+  .form-input, .form-select {
+    padding: 18px 22px;
+    font-size: 1.2rem;
+  }
+  
+  .form-actions {
+    gap: 30px;
+    margin-top: 40px;
+  }
+  
+  .cancel-button, .submit-button {
+    padding: 18px 35px;
+    font-size: 1.3rem;
+  }
+  
+  .lottie-container {
+    width: 550px;
+    height: 550px;
+  }
+  
+  .success-message-container {
+    margin-top: 55px;
+  }
+  
+  .success-icon {
+    font-size: 5.5rem;
+  }
+  
+  .success-title {
+    font-size: 2.8rem;
+  }
+  
+  .success-message {
+    font-size: 1.9rem;
+  }
+  
+  .register-footer {
+    flex-shrink: 0;
+    padding: 20px 35px;
+    background: rgba(255, 255, 255, 0.1);
+    border-top: 1px solid rgba(255, 255, 255, 0.2);
+    min-height: 85px;
+  }
+  
+  .footer-content {
+    flex-direction: row;
+    gap: 30px;
+    font-size: 1.5rem;
+  }
+  
+  .footer-section {
+    justify-content: flex-start;
+    min-width: auto;
+    flex: 1;
+  }
+  
+  .footer-text {
+    font-size: 1.3rem;
+  }
+  
+  .pits-logo {
+    width: 110px;
+    height: 55px;
+  }
+}
+
+/* iPad Pro Landscape (1024x768) */
+@media screen and (min-width: 1024px) and (max-width: 1366px) and (min-height: 768px) and (max-height: 1024px) {
+  .register-container {
+    min-height: 100vh;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+  
+  .register-header {
+    padding: 12px 20px;
+    flex-shrink: 0;
+  }
+  
+  .header-content {
+    flex-direction: row;
+    gap: 25px;
+    align-items: center;
+  }
+  
+  .org-info {
+    margin-left: 25px;
+    text-align: left;
+    font-size: 1rem;
+    flex: 1;
+  }
+  
+  .register-main {
+    flex: 1;
+    padding: 20px 35px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    overflow-y: auto;
+    max-height: calc(100vh - 180px);
+  }
+  
+  .register-content {
+    max-width: 900px;
+    width: 100%;
+    gap: 40px;
+  }
+  
+  .register-title {
+    font-size: 2.8rem;
+    margin-bottom: 25px;
+  }
+  
+  .register-form-container {
+    max-width: 550px;
+    padding: 40px;
+  }
+  
+  .form-group {
+    margin-bottom: 28px;
+  }
+  
+  .form-label {
+    font-size: 1.2rem;
+    margin-bottom: 10px;
+  }
+  
+  .form-input, .form-select {
+    padding: 15px 18px;
+    font-size: 1.1rem;
+  }
+  
+  .form-actions {
+    gap: 25px;
+    margin-top: 35px;
+  }
+  
+  .cancel-button, .submit-button {
+    padding: 15px 30px;
+    font-size: 1.2rem;
+  }
+  
+  .lottie-container {
+    width: 450px;
+    height: 450px;
+  }
+  
+  .success-message-container {
+    margin-top: 40px;
+  }
+  
+  .success-icon {
+    font-size: 4.5rem;
+  }
+  
+  .success-title {
+    font-size: 2.4rem;
+  }
+  
+  .success-message {
+    font-size: 1.7rem;
+  }
+  
+  .register-footer {
+    flex-shrink: 0;
+    padding: 15px 25px;
+    background: rgba(255, 255, 255, 0.1);
+    border-top: 1px solid rgba(255, 255, 255, 0.2);
+    min-height: 70px;
+  }
+  
+  .footer-content {
+    flex-direction: row;
+    gap: 25px;
+    font-size: 1.3rem;
+  }
+  
+  .footer-section {
+    justify-content: flex-start;
+    min-width: auto;
+    flex: 1;
+  }
+  
+  .footer-text {
+    font-size: 1.1rem;
+  }
+  
+  .pits-logo {
+    width: 90px;
+    height: 45px;
+  }
+}
+
+/* iPad Pro 11" Landscape (1194x834) */
+@media screen and (min-width: 1194px) and (max-width: 1200px) and (min-height: 834px) and (max-height: 1194px) {
+  .register-container {
+    min-height: 100vh;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+  
+  .register-header {
+    padding: 12px 20px;
+    flex-shrink: 0;
+  }
+  
+  .header-content {
+    flex-direction: row;
+    gap: 25px;
+    align-items: center;
+  }
+  
+  .org-info {
+    margin-left: 25px;
+    text-align: left;
+    font-size: 1rem;
+    flex: 1;
+  }
+  
+  .register-main {
+    flex: 1;
+    padding: 20px 35px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    overflow-y: auto;
+    max-height: calc(100vh - 180px);
+  }
+  
+  .register-content {
+    max-width: 900px;
+    width: 100%;
+    gap: 40px;
+  }
+  
+  .register-title {
+    font-size: 2.6rem;
+    margin-bottom: 25px;
+  }
+  
+  .register-form-container {
+    max-width: 520px;
+    padding: 38px;
+  }
+  
+  .form-group {
+    margin-bottom: 26px;
+  }
+  
+  .form-label {
+    font-size: 1.1rem;
+    margin-bottom: 9px;
+  }
+  
+  .form-input, .form-select {
+    padding: 14px 17px;
+    font-size: 1rem;
+  }
+  
+  .form-actions {
+    gap: 24px;
+    margin-top: 33px;
+  }
+  
+  .cancel-button, .submit-button {
+    padding: 14px 28px;
+    font-size: 1.1rem;
+  }
+  
+  .lottie-container {
+    width: 420px;
+    height: 420px;
+  }
+  
+  .success-message-container {
+    margin-top: 38px;
+  }
+  
+  .success-icon {
+    font-size: 4.2rem;
+  }
+  
+  .success-title {
+    font-size: 2.2rem;
+  }
+  
+  .success-message {
+    font-size: 1.6rem;
+  }
+  
+  .register-footer {
+    flex-shrink: 0;
+    padding: 15px 25px;
+    background: rgba(255, 255, 255, 0.1);
+    border-top: 1px solid rgba(255, 255, 255, 0.2);
+    min-height: 70px;
+  }
+  
+  .footer-content {
+    flex-direction: row;
+    gap: 25px;
+    font-size: 1.3rem;
+  }
+  
+  .footer-section {
+    justify-content: flex-start;
+    min-width: auto;
+    flex: 1;
+  }
+  
+  .footer-text {
+    font-size: 1.1rem;
+  }
+  
+  .pits-logo {
+    width: 90px;
+    height: 45px;
+  }
+}
+
+/* Viewport-based scaling for better dynamic fitting */
+@media screen and (min-width: 768px) and (max-width: 1366px) {
+  .register-container {
+    font-size: clamp(14px, 2vw, 18px);
+  }
+  
+  .register-title {
+    font-size: clamp(2rem, 4vw, 3.5rem);
+  }
+  
+  .form-label {
+    font-size: clamp(0.9rem, 1.5vw, 1.3rem);
+  }
+  
+  .form-input, .form-select {
+    font-size: clamp(0.9rem, 1.5vw, 1.2rem);
+    padding: clamp(10px, 2vw, 18px) clamp(12px, 2.5vw, 22px);
+  }
+  
+  .cancel-button, .submit-button {
+    font-size: clamp(1rem, 2vw, 1.3rem);
+    padding: clamp(10px, 2vw, 18px) clamp(20px, 3vw, 35px);
+  }
+  
+  .lottie-container {
+    width: clamp(350px, 45vw, 550px);
+    height: clamp(350px, 45vw, 550px);
+  }
+  
+  .register-form-container {
+    max-width: clamp(450px, 60vw, 600px);
+    padding: clamp(25px, 4vw, 55px);
+  }
+  
+  .footer-text {
+    font-size: clamp(0.9rem, 1.5vw, 1.3rem);
+  }
+  
+  .pits-logo {
+    width: clamp(60px, 8vw, 110px);
+    height: clamp(30px, 4vw, 55px);
+  }
+}
+
+/* Force specific iPad Pro dimensions */
+@media screen and (width: 1024px) and (height: 1366px) {
+  .register-container {
+    height: 100vh !important;
+    max-height: 100vh !important;
+    overflow: hidden !important;
+  }
+  
+  .register-main {
+    max-height: calc(100vh - 350px) !important;
+    overflow-y: auto !important;
+  }
+  
+  .register-footer {
+    min-height: 100px !important;
+    padding: 20px 24px !important;
+    background: rgba(255, 255, 255, 0.2) !important;
+    border-top: 3px solid rgba(255, 255, 255, 0.4) !important;
+    position: relative !important;
+    z-index: 100 !important;
+  }
+  
+  .register-title {
+    font-size: 2.4rem !important;
+    margin-bottom: 20px !important;
+  }
+  
+  .register-form-container {
+    max-width: 500px !important;
+    padding: 35px !important;
+  }
+  
+  .lottie-container {
+    width: 400px !important;
+    height: 400px !important;
+  }
+  
+  .form-input, .form-select {
+    padding: 12px 16px !important;
+    font-size: 1.1rem !important;
+  }
+  
+  .cancel-button, .submit-button {
+    padding: 12px 25px !important;
+    font-size: 1.1rem !important;
+  }
+  
+  .logo-image {
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    width: 60px !important;
+    height: 60px !important;
+    position: relative !important;
+    z-index: 9999 !important;
+  }
+  
+  .logo-section {
+    display: flex !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+  }
+}
+
+/* Responsive Design for smaller tablets */
+@media screen and (max-width: 1024px) and (max-height: 1365px) {
+  .header-content {
+    flex-direction: column;
+    gap: 15px;
+  }
+  
+  .org-info {
+    margin-left: 0;
+    text-align: center;
+    font-size: 0.8rem;
+  }
+  
+  .register-title {
+    font-size: 2rem;
+  }
+  
+  .register-form-container {
+    padding: 25px;
+    max-width: 450px;
+  }
+  
+  .footer-content {
+    flex-direction: column;
+    gap: 12px;
+  }
+  
+  .footer-section {
+    justify-content: center;
+    min-width: auto;
+  }
+}
+
+/* Responsive Design for smaller tablets */
+@media screen and (max-width: 768px) {
+  .register-header {
+    padding: 12px 15px;
+  }
+  
+  .register-main {
+    padding: 20px 15px;
+  }
+  
+  .register-title {
+    font-size: 1.8rem;
+    margin-bottom: 20px;
+  }
+  
+  .register-form-container {
+    padding: 20px;
+    margin: 0 15px;
+  }
+  
+  .form-label {
+    font-size: 0.9rem;
+  }
+  
+  .form-input,
+  .form-select {
+    padding: 10px;
+    font-size: 0.9rem;
+  }
+  
+  .form-actions {
+    flex-direction: column;
+    gap: 12px;
+  }
+  
+  .footer-content {
+    padding: 0 8px;
+  }
+  
+  .footer-text {
+    font-size: 0.8rem;
+  }
+}
+
+/* Responsive Design for mobile */
+@media screen and (max-width: 480px) {
+  .register-header {
+    padding: 10px 12px;
+  }
+  
+  .circular-logo {
+    width: 70px;
+    height: 70px;
+  }
+  
+  .logo-image {
+    width: 50px;
+    height: 50px;
+  }
+  
+  .logo-text {
+    font-size: 0.7rem;
+    bottom: -18px;
+  }
+  
+  .org-info {
+    font-size: 0.7rem;
+  }
+  
+  .register-title {
+    font-size: 1.6rem;
+    margin-bottom: 15px;
+  }
+  
+  .register-form-container {
+    padding: 15px;
+    margin: 0 8px;
+  }
+  
+  .form-label {
+    font-size: 0.8rem;
+  }
+  
+  .form-input,
+  .form-select {
+    padding: 8px;
+    font-size: 0.8rem;
+  }
+  
+  .cancel-button,
+  .submit-button {
+    font-size: 1.1rem;
+    padding: 10px 18px;
+  }
+  
+  .footer-content {
+    gap: 8px;
+  }
+  
+  .footer-text {
+    font-size: 0.7rem;
+  }
+  
+  .pits-logo {
+    height: 25px;
+  }
+} 
