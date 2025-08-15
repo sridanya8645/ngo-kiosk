@@ -1,1 +1,1 @@
-web: node server.js 
+web: bash -lc "npm ci --omit=dev --no-audit --no-fund && node server.js" 
