@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./AdminRegistrationsPage.css";
-import { IS_IAF } from "./orgToggle";
 
 const columns = [
   { key: "name", label: "Full Name" },
@@ -103,52 +102,50 @@ function AdminRegistrationsPage() {
   };
 
   return (
-    <div className="admin-registrations-bg" style={IS_IAF ? { background: 'linear-gradient(180deg, #CAA3EB 0%, #A566AA 100%)' } : undefined}>
+    <div className="admin-registrations-bg">
       <div className="admin-registrations-aspect">
         {/* Header Section */}
-        {!IS_IAF && (
-          <header className="admin-registrations-header">
-            <div className="header-content">
-              <div className="logo-section">
-                <img src="/sai-baba.png" alt="Sai Baba" className="logo-image" />
-              </div>
-              <div className="org-info">
-                A 501 (C) 3 non profit Organization | Tax Exempt Tax Id - 91-2190340 | All donations are tax exempt
-              </div>
-            </div>
-          </header>
-        )}
+        <header className="admin-registrations-header">
+        <div className="header-content">
+          <div className="logo-section">
+            <img src="/sai-baba.png" alt="Sai Baba" className="logo-image" />
+          </div>
+          <div className="org-info">
+            A 501 (C) 3 non profit Organization | Tax Exempt Tax Id - 91-2190340 | All donations are tax exempt
+          </div>
+        </div>
+      </header>
 
       {/* Admin Bar */}
-      <div className="admin-bar" style={IS_IAF ? { background: '#000' } : undefined}>
+      <div className="admin-bar">
         <div className="admin-nav-buttons">
           <button 
             onClick={() => navigate('/admin/registrations')}
-            className="admin-button" style={IS_IAF ? { background: '#000', color: '#fff', border: '1px solid #fff' } : undefined}
+            className="admin-button"
           >
             Registration Details
           </button>
           <button 
             onClick={() => navigate('/admin/raffle-spin')}
-            className="admin-button" style={IS_IAF ? { background: '#000', color: '#fff', border: '1px solid #fff' } : undefined}
+            className="admin-button"
           >
             Raffle Spin
           </button>
           <button 
             onClick={() => navigate('/admin/raffle-winners')}
-            className="admin-button" style={IS_IAF ? { background: '#000', color: '#fff', border: '1px solid #fff' } : undefined}
+            className="admin-button"
           >
             Raffle Winners
           </button>
           <button 
             onClick={() => navigate('/event-details')}
-            className="admin-button" style={IS_IAF ? { background: '#000', color: '#fff', border: '1px solid #fff' } : undefined}
+            className="admin-button"
           >
             Event Details
           </button>
           <button 
-            onClick={() => navigate('/admin')}
-            className="admin-button" style={IS_IAF ? { background: '#000', color: '#fff', border: '1px solid #fff' } : undefined}
+            onClick={handleLogout}
+            className="admin-button"
           >
             Logout
           </button>
@@ -158,7 +155,7 @@ function AdminRegistrationsPage() {
       {/* Main Content */}
       <main className="admin-registrations-main">
         <div className="admin-registrations-content">
-          <h1 className="admin-registrations-title" style={IS_IAF ? { color: '#000' } : undefined}>Registration Details</h1>
+          <h1 className="admin-registrations-title">Registration Details</h1>
           
           {/* Stats and Download Section */}
           <div className="registrations-stats-section">
@@ -306,37 +303,34 @@ function AdminRegistrationsPage() {
 
 
       {/* Footer */}
-      <footer className="admin-registrations-footer" style={IS_IAF ? { background: 'transparent' } : undefined}>
-        {IS_IAF ? (
-          <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', width: '100%' }}>
+      <footer className="admin-registrations-footer">
+        <div className="footer-content">
+          <div className="footer-section">
+            <span className="footer-icon">📍</span>
+            <div className="footer-text">
+              <div>Shirdi Sai Dham Inc, 12 Perrine Road,</div>
+              <div>Monmouth Junction NJ 08852</div>
+            </div>
+          </div>
+          
+          <div className="footer-section">
+            <span className="footer-icon">📞</span>
+            <div className="footer-text">
+              <div>609 937 2800 /</div>
+              <div>609 937 2806</div>
+            </div>
+          </div>
+          
+          <div className="footer-section">
+            <span className="footer-icon">✉️</span>
+            <span className="footer-text">shirdisaidham1@gmail.com</span>
+          </div>
+          
+          <div className="footer-section">
+            <span className="powered-text">Powered by</span>
             <img src="/PITS-removebg-preview.png" alt="Princeton IT Services" className="pits-logo" />
           </div>
-        ) : (
-          <div className="footer-content">
-            <div className="footer-section">
-              <span className="footer-icon">📍</span>
-              <div className="footer-text">
-                <div>Shirdi Sai Dham Inc, 12 Perrine Road,</div>
-                <div>Monmouth Junction NJ 08852</div>
-              </div>
-            </div>
-            <div className="footer-section">
-              <span className="footer-icon">📞</span>
-              <div className="footer-text">
-                <div>609 937 2800 /</div>
-                <div>609 937 2806</div>
-              </div>
-            </div>
-            <div className="footer-section">
-              <span className="footer-icon">✉️</span>
-              <span className="footer-text">shirdisaidham1@gmail.com</span>
-            </div>
-            <div className="footer-section">
-              <span className="powered-text">Powered by</span>
-              <img src="/PITS-removebg-preview.png" alt="Princeton IT Services" className="pits-logo" />
-            </div>
-          </div>
-        )}
+        </div>
       </footer>
       </div>
     </div>

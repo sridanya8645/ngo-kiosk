@@ -3,7 +3,6 @@ import { useNavigate } from 'react-router-dom';
 import { Wheel } from 'react-custom-roulette';
 import Confetti from 'react-confetti';
 import './RaffleSpinPage.css';
-import { IS_IAF } from './orgToggle';
 
 const RaffleSpinPage = () => {
   const [registrations, setRegistrations] = useState([]);
@@ -186,7 +185,7 @@ const RaffleSpinPage = () => {
   };
 
   return (
-    <div className="raffle-bg" style={IS_IAF ? { background: 'linear-gradient(180deg, #CAA3EB 0%, #A566AA 100%)' } : undefined}>
+    <div className="raffle-bg">
       {showConfetti && (
         <Confetti
           width={window.innerWidth}
@@ -200,49 +199,47 @@ const RaffleSpinPage = () => {
         />
       )}
       <div className="raffle-aspect">
-        {!IS_IAF && (
-          <header className="raffle-header">
-            <div className="header-content">
-              <div className="logo-section">
-                <img src="/sai-baba.png" alt="Sai Baba" className="logo-image" />
-              </div>
-              <div className="org-info">
-                A 501 (C) 3 non profit Organization | Tax Exempt Tax Id - 91-2190340 | All donations are tax exempt
-              </div>
+        <header className="raffle-header">
+          <div className="header-content">
+            <div className="logo-section">
+              <img src="/sai-baba.png" alt="Sai Baba" className="logo-image" />
             </div>
-          </header>
-        )}
+            <div className="org-info">
+              A 501 (C) 3 non profit Organization | Tax Exempt Tax Id - 91-2190340 | All donations are tax exempt
+            </div>
+          </div>
+        </header>
         
         {/* Navigation Bar */}
-        <div className="admin-bar" style={IS_IAF ? { background: '#000' } : undefined}>
+        <div className="admin-bar">
           <div className="admin-nav-buttons">
             <button
               onClick={goToRegistrationDetails}
-              className="admin-button" style={IS_IAF ? { background: '#000', color: '#fff', border: '1px solid #fff' } : undefined}
+              className="admin-button"
             >
               Registration Details
             </button>
             <button
               onClick={() => navigate('/admin/raffle-spin')}
-              className="admin-button" style={IS_IAF ? { background: '#000', color: '#fff', border: '1px solid #fff' } : undefined}
+              className="admin-button"
             >
               Raffle Spin
             </button>
             <button
               onClick={goToWinnersPage}
-              className="admin-button" style={IS_IAF ? { background: '#000', color: '#fff', border: '1px solid #fff' } : undefined}
+              className="admin-button"
             >
               Raffle Winners
             </button>
             <button
               onClick={goToEventDetails}
-              className="admin-button" style={IS_IAF ? { background: '#000', color: '#fff', border: '1px solid #fff' } : undefined}
+              className="admin-button"
             >
               Event Details
             </button>
             <button
               onClick={logout}
-              className="admin-button" style={IS_IAF ? { background: '#000', color: '#fff', border: '1px solid #fff' } : undefined}
+              className="admin-button"
             >
               Logout
             </button>
@@ -251,7 +248,7 @@ const RaffleSpinPage = () => {
 
         <div className="raffle-main">
           {/* Title */}
-          <h1 className="raffle-title" style={IS_IAF ? { color: '#000' } : undefined}>Spin the Wheel to Reveal the Winner!</h1>
+          <h1 className="raffle-title">Spin the Wheel to Reveal the Winner!</h1>
 
           {/* Event selector */}
           <div style={{ maxWidth: '480px', margin: '0 auto 12px', textAlign: 'center' }}>
@@ -394,37 +391,34 @@ const RaffleSpinPage = () => {
         </div>
 
         {/* Footer */}
-        <footer className="raffle-footer" style={IS_IAF ? { background: 'transparent' } : undefined}>
-          {IS_IAF ? (
-            <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', width: '100%' }}>
+        <footer className="raffle-footer">
+          <div className="footer-content">
+            <div className="footer-section">
+              <span className="footer-icon">📍</span>
+              <div className="footer-text">
+                <div>Shirdi Sai Dham Inc, 12 Perrine Road,</div>
+                <div>Monmouth Junction NJ 08852</div>
+              </div>
+            </div>
+            
+            <div className="footer-section">
+              <span className="footer-icon">📞</span>
+              <div className="footer-text">
+                <div>609 937 2800 /</div>
+                <div>609 937 2806</div>
+              </div>
+            </div>
+            
+            <div className="footer-section">
+              <span className="footer-icon">✉️</span>
+              <span className="footer-text">shirdisaidham1@gmail.com</span>
+            </div>
+            
+            <div className="footer-section">
+              <span className="powered-text">Powered by</span>
               <img src="/PITS-removebg-preview.png" alt="Princeton IT Services" className="pits-logo" />
             </div>
-          ) : (
-            <div className="footer-content">
-              <div className="footer-section">
-                <span className="footer-icon">📍</span>
-                <div className="footer-text">
-                  <div>Shirdi Sai Dham Inc, 12 Perrine Road,</div>
-                  <div>Monmouth Junction NJ 08852</div>
-                </div>
-              </div>
-              <div className="footer-section">
-                <span className="footer-icon">📞</span>
-                <div className="footer-text">
-                  <div>609 937 2800 /</div>
-                  <div>609 937 2806</div>
-                </div>
-              </div>
-              <div className="footer-section">
-                <span className="footer-icon">✉️</span>
-                <span className="footer-text">shirdisaidham1@gmail.com</span>
-              </div>
-              <div className="footer-section">
-                <span className="powered-text">Powered by</span>
-                <img src="/PITS-removebg-preview.png" alt="Princeton IT Services" className="pits-logo" />
-              </div>
-            </div>
-          )}
+          </div>
         </footer>
       </div>
     </div>

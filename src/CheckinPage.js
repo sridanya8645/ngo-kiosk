@@ -2,7 +2,6 @@ import React, { useEffect, useRef, useState, useCallback } from "react";
 import { Html5Qrcode } from "html5-qrcode";
 import { useNavigate } from "react-router-dom";
 import "./CheckinPage.css";
-import { IS_IAF } from "./orgToggle";
 
 export default function CheckinPage() {
   const html5QrCodeRef = useRef(null);
@@ -298,37 +297,35 @@ export default function CheckinPage() {
 
 
   return (
-    <div className="checkin-container" data-build-tag="iaf-redeploy-004" style={IS_IAF ? { background: 'linear-gradient(180deg, #CAA3EB 0%, #A566AA 100%)' } : undefined}>
+    <div className="checkin-container">
       {/* Header Section */}
-      {!IS_IAF && (
-        <header className="checkin-header">
-          <div className="header-content">
-            <div className="logo-section">
-              <img 
-                src="/sai-baba.png" 
-                alt="Sai Baba" 
-                className="logo-image" 
-                onLoad={() => console.log('Logo loaded successfully')}
-                onError={(e) => {
-                  console.error('Logo failed to load:', e.target.src);
-                  e.target.src = process.env.PUBLIC_URL + '/sai-baba.png';
-                }}
-              />
-            </div>
-            <div className="org-info">
-              A 501 (C) 3 non profit Organization | Tax Exempt Tax Id - 91-2190340 | All donations are tax exempt
-            </div>
+      <header className="checkin-header">
+        <div className="header-content">
+          <div className="logo-section">
+            <img 
+              src="/sai-baba.png" 
+              alt="Sai Baba" 
+              className="logo-image" 
+              onLoad={() => console.log('Logo loaded successfully')}
+              onError={(e) => {
+                console.error('Logo failed to load:', e.target.src);
+                // Try fallback path
+                e.target.src = process.env.PUBLIC_URL + '/sai-baba.png';
+              }}
+            />
           </div>
-        </header>
-      )}
+          <div className="org-info">
+            A 501 (C) 3 non profit Organization | Tax Exempt Tax Id - 91-2190340 | All donations are tax exempt
+          </div>
+        </div>
+      </header>
 
       {/* Navigation Bar */}
-      <div className="admin-bar" style={IS_IAF ? { background: '#000' } : undefined}>
+      <div className="admin-bar">
         <div className="admin-nav-buttons">
           <button 
             onClick={() => navigate('/')}
             className="admin-button"
-            style={IS_IAF ? { background: '#000', color: '#fff', border: '1px solid #fff' } : undefined}
           >
             Home
           </button>
@@ -338,7 +335,7 @@ export default function CheckinPage() {
       {/* Main Content */}
       <main className="checkin-main">
         <div className="checkin-content">
-          <h1 className="checkin-title" style={IS_IAF ? { color: '#000' } : undefined}>Check-In</h1>
+          <h1 className="checkin-title">Check-In</h1>
           <div className="form-group" style={{ maxWidth: '420px', margin: '0 auto 8px' }}>
             <label htmlFor="event" className="form-label">Select Event *</label>
             <select
@@ -396,7 +393,7 @@ export default function CheckinPage() {
 
           {/* QR Scanner Section - only show when an event is selected */}
           <div className="scanner-section" style={{ display: selectedEvent ? 'block' : 'none' }}>
-            <h3 className="scanner-title" style={IS_IAF ? { color: '#000' } : undefined}>Scan QR Code to Check-In</h3>
+            <h3 className="scanner-title">Scan QR Code to Check-In</h3>
                          <div id="reader-container" className="scanner-container" />
             
 
@@ -444,37 +441,34 @@ export default function CheckinPage() {
       </main>
 
       {/* Footer */}
-      <footer className="checkin-footer" style={IS_IAF ? { background: 'transparent' } : undefined}>
-        {IS_IAF ? (
-          <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', width: '100%' }}>
+      <footer className="checkin-footer">
+        <div className="footer-content">
+          <div className="footer-section">
+            <span className="footer-icon">📍</span>
+            <div className="footer-text">
+              <div>Shirdi Sai Dham Inc, 12 Perrine Road,</div>
+              <div>Monmouth Junction NJ 08852</div>
+            </div>
+          </div>
+          
+          <div className="footer-section">
+            <span className="footer-icon">📞</span>
+            <div className="footer-text">
+              <div>609 937 2800 /</div>
+              <div>609 937 2806</div>
+            </div>
+          </div>
+          
+          <div className="footer-section">
+            <span className="footer-icon">✉️</span>
+            <span className="footer-text">shirdisaidham1@gmail.com</span>
+          </div>
+          
+          <div className="footer-section">
+            <span className="powered-text">Powered by</span>
             <img src="/PITS-removebg-preview.png" alt="Princeton IT Services" className="pits-logo" />
           </div>
-        ) : (
-          <div className="footer-content">
-            <div className="footer-section">
-              <span className="footer-icon">📍</span>
-              <div className="footer-text">
-                <div>Shirdi Sai Dham Inc, 12 Perrine Road,</div>
-                <div>Monmouth Junction NJ 08852</div>
-              </div>
-            </div>
-            <div className="footer-section">
-              <span className="footer-icon">📞</span>
-              <div className="footer-text">
-                <div>609 937 2800 /</div>
-                <div>609 937 2806</div>
-              </div>
-            </div>
-            <div className="footer-section">
-              <span className="footer-icon">✉️</span>
-              <span className="footer-text">shirdisaidham1@gmail.com</span>
-            </div>
-            <div className="footer-section">
-              <span className="powered-text">Powered by</span>
-              <img src="/PITS-removebg-preview.png" alt="Princeton IT Services" className="pits-logo" />
-            </div>
-          </div>
-        )}
+        </div>
       </footer>
     </div>
   );
