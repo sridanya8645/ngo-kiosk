@@ -84,7 +84,9 @@ app.use('/', express.static(path.join(__dirname, 'public'), {
 }));
 
 // Serve uploaded files
-app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+// Use a writable path in App Service so this works with Run From Package
+const UPLOAD_DIR_ENV = process.env.UPLOAD_DIR || '/home/site/uploads';
+app.use('/uploads', express.static(UPLOAD_DIR_ENV));
 
 // Explicit routes for static files
 app.get('/static/js/*', (req, res) => {
@@ -100,8 +102,8 @@ app.get('/static/css/*', (req, res) => {
 });
 
 // Set up storage for banner images
-const uploadDir = path.join(__dirname, 'uploads');
-if (!fs.existsSync(uploadDir)) fs.mkdirSync(uploadDir);
+const uploadDir = process.env.UPLOAD_DIR || '/home/site/uploads';
+if (!fs.existsSync(uploadDir)) fs.mkdirSync(uploadDir, { recursive: true });
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => cb(null, uploadDir),
@@ -203,8 +205,8 @@ app.post('/api/register', async (req, res) => {
         },
         secure: true,
         port: 465,
-        debug: true, // Enable debug output
-        logger: true // Enable logging
+        debug: true,
+        logger: true
       });
       
       // Test the connection first
@@ -817,7 +819,7 @@ app.post('/api/test-email-send', async (req, res) => {
       service: 'gmail',
       auth: {
         user: 'sridanyaravi07@gmail.com',
-        pass: 'tmelitcykiowoiiz'
+        pass: 'unbrjskatwupajsd'
       },
       tls: {
         rejectUnauthorized: false
@@ -880,7 +882,7 @@ app.get('/api/test-email', async (req, res) => {
       service: 'gmail',
       auth: {
         user: 'sridanyaravi07@gmail.com',
-        pass: 'oqgebicylgtqjman'
+        pass: 'unbrjskatwupajsd'
       },
       tls: {
         rejectUnauthorized: false
