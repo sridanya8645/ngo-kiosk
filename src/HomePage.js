@@ -1,6 +1,8 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import './HomePage.css';
+import SiteHeader from './components/SiteHeader';
+import SiteFooter from './components/SiteFooter';
 
 const HomePage = () => {
   const navigate = useNavigate();
@@ -23,15 +25,7 @@ const HomePage = () => {
 
   return (
     <div className="home-container">
-      {/* Navigation */}
-      <div className="admin-bar">
-        <button 
-          onClick={() => navigate('/admin')}
-          className="admin-button"
-        >
-          Admin
-        </button>
-      </div>
+      <SiteHeader />
 
       {/* Main Content */}
       <main className="home-main">
@@ -55,13 +49,7 @@ const HomePage = () => {
         </div>
       </main>
 
-      {/* Footer minimal */}
-      <footer className="home-footer">
-        <div className="footer-content center">
-          <span className="powered-text">Powered by</span>
-          <img src="/PITS-removebg-preview.png" alt="Princeton IT Services" className="pits-logo" />
-        </div>
-      </footer>
+      <SiteFooter />
     </div>
   );
 };

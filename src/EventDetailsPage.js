@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from "react";
 import "./EventDetailsPage.css";
+import SiteHeader from './components/SiteHeader';
+import SiteFooter from './components/SiteFooter';
 import { useNavigate } from "react-router-dom";
 
 function EventDetailsPage() {
@@ -329,17 +331,7 @@ function EventDetailsPage() {
 
   return (
     <div className="event-details-container">
-      {/* Header Section */}
-      <header className="event-details-header">
-        <div className="header-content">
-          <div className="logo-section">
-            <img src="/sai-baba.png" alt="Sai Baba" className="logo-image" />
-          </div>
-          <div className="org-info">
-            A 501 (C) 3 non profit Organization | Tax Exempt Tax Id - 91-2190340 | All donations are tax exempt
-          </div>
-        </div>
-      </header>
+      <SiteHeader />
 
       {/* Admin Bar */}
       <div className="admin-bar">
@@ -928,36 +920,7 @@ function EventDetailsPage() {
 
 
 
-      {/* Footer */}
-      <footer className="event-details-footer">
-        <div className="footer-content">
-          <div className="footer-section">
-            <span className="footer-icon">📍</span>
-            <div className="footer-text">
-              <div>Shirdi Sai Dham Inc, 12 Perrine Road,</div>
-              <div>Monmouth Junction NJ 08852</div>
-            </div>
-          </div>
-          
-          <div className="footer-section">
-            <span className="footer-icon">📞</span>
-            <div className="footer-text">
-              <div>609 937 2800 /</div>
-              <div>609 937 2806</div>
-            </div>
-          </div>
-          
-          <div className="footer-section">
-            <span className="footer-icon">✉️</span>
-            <span className="footer-text">shirdisaidham1@gmail.com</span>
-          </div>
-          
-          <div className="footer-section">
-            <span className="powered-text">Powered by</span>
-            <img src="/PITS-removebg-preview.png" alt="Princeton IT Services" className="pits-logo" />
-          </div>
-        </div>
-      </footer>
+      <SiteFooter />
     </div>
   );
 }
