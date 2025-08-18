@@ -44,8 +44,9 @@
 }
 
 .award-image {
-  height: 60px;
+  height: 62px;
   width: auto;
   object-fit: contain;
+  margin-left: 6px;
 }
 
