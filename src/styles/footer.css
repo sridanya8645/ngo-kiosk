@@ -54,6 +54,7 @@
   color: var(--text-primary) !important;
   font-weight: 600;
   margin-right: var(--space-8);
+  letter-spacing: 0.3px;
 }
 
 .pits-logo {
