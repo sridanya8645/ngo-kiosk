@@ -242,7 +242,7 @@
 }
 
 /* Footer */
-.admin-footer { background: transparent; padding:10px 0; }
+.admin-footer { background: transparent; padding:10px 0; letter-spacing:0.3px; }
 
 .footer-content { display:flex !important; justify-content:center; align-items:center; gap:8px; }
 
