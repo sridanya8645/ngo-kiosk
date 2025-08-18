@@ -17,7 +17,7 @@
   flex-direction: column;
   overflow: hidden;
   position: relative;
-  background: linear-gradient(135deg, #f9b233 0%, #c86d3a 100%);
+  background: linear-gradient(90deg, #CAA3EB 0%, #A566AA 100%);
   border-radius: 0;
   box-shadow: none;
 }
@@ -27,15 +27,10 @@
   flex-direction: column;
   height: 100vh;
   overflow: hidden;
-  background: linear-gradient(135deg, #f9b233 0%, #c86d3a 100%);
+  background: linear-gradient(90deg, #CAA3EB 0%, #A566AA 100%);
 }
 
-.admin-registrations-header {
-  background: linear-gradient(135deg, #f9b233 0%, #c86d3a 100%);
-  padding: 8px 20px; /* Reduced from 15px */
-  border-bottom: 2px solid #8B1C1C;
-  flex-shrink: 0;
-}
+.admin-registrations-header { display:none; }
 
 .header-content {
   display: flex;
@@ -92,7 +87,7 @@
 
 /* Admin Bar */
 .admin-bar {
-  background: #8B1C1C;
+  background: #000;
   padding: 0;
   display: flex;
   justify-content: center;
@@ -115,9 +110,9 @@
 }
 
 .admin-button {
-  background: none;
-  color: white;
-  border: none;
+  background: #000;
+  color: #fff;
+  border: 1px solid #fff;
   padding: 6px 12px;
   font-size: 0.9rem;
   font-weight: bold;
@@ -419,32 +414,9 @@
 }
 
 /* Footer */
-.admin-registrations-footer {
-  background: #8B1C1C;
-  color: white;
-  text-align: center;
-  padding: 15px 20px;
-  min-height: 60px;
-  flex-shrink: 0;
-  margin-top: -15px; /* raise footer per request */
-}
+.admin-registrations-footer { background: transparent; padding:10px 0; }
 
-.footer-content {
-  display: flex !important;
-  flex-direction: row !important;
-  justify-content: space-between;
-  align-items: center;
-  margin-top: 0;
-  gap: 20px;
-  font-size: 1.9rem;
-  color: #000;
-  font-weight: bold;
-  width: 100%;
-  max-width: 100%;
-  padding: 0 20px;
-  position: relative;
-  z-index: 10;
-}
+.footer-content { display:flex !important; justify-content:center; align-items:center; gap:8px; }
 
 .footer-section {
   display: flex;

@@ -4,7 +4,7 @@
   flex-direction: column;
   height: 100vh;
   overflow: auto; /* allow page to scroll so footer is always reachable */
-  background: linear-gradient(135deg, #f9b233 0%, #c86d3a 100%);
+  background: linear-gradient(90deg, #CAA3EB 0%, #A566AA 100%);
 }
 
 /* Custom Scrollbar Styles */
@@ -48,12 +48,7 @@
 }
 
 /* Header Section */
-.checkin-header {
-  background: linear-gradient(135deg, #f9b233 0%, #c86d3a 100%);
-  padding: 15px 20px;
-  border-bottom: 2px solid #8B1C1C;
-  flex-shrink: 0;
-}
+.checkin-header { display:none; }
 
 .header-content {
   display: flex;
@@ -106,7 +101,7 @@
 
 /* Navigation Bar */
 .admin-bar {
-  background: #8B1C1C;
+  background: #000;
   padding: 0;
   display: flex;
   justify-content: center;
@@ -129,9 +124,9 @@
 }
 
 .admin-button {
-  background: none;
-  color: white;
-  border: none;
+  background: #000;
+  color: #fff;
+  border: 1px solid #fff;
   padding: 6px 12px;
   font-size: 0.9rem;
   font-weight: bold;
@@ -430,9 +425,9 @@
 }
 
 .register-button {
-  background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
-  color: white;
-  border: none;
+  background: #000;
+  color: #fff;
+  border: 1px solid #fff;
   padding: 12px 30px;
   border-radius: 8px;
   font-size: 1.2rem;
@@ -454,9 +449,9 @@
 }
 
 .checkin-button {
-  background: #8B1C1C;
-  color: white;
-  border: none;
+  background: #000;
+  color: #fff;
+  border: 1px solid #fff;
   padding: 10px 25px; /* Reduced padding */
   border-radius: 25px;
   font-size: 1rem; /* Reduced font size */
@@ -468,35 +463,9 @@
 }
 
 /* Footer */
-.checkin-footer {
-  background: #8B1C1C;
-  color: white;
-  text-align: center;
-  padding: 15px 20px;
-  min-height: 60px;
-  flex-shrink: 0;
-  margin-top: 0;
-  position: sticky;
-  bottom: 45px; /* move up 20px more from previous 25px */
-  z-index: 5;
-}
+.checkin-footer { background: transparent; padding: 10px 0; position: static; }
 
-.footer-content {
-  display: flex !important;
-  flex-direction: row !important;
-  justify-content: space-between;
-  align-items: center;
-  margin-top: 0;
-  gap: 20px;
-  font-size: 1.9rem;
-  color: #000;
-  font-weight: bold;
-  width: 100%;
-  max-width: 100%;
-  padding: 0 20px;
-  position: relative;
-  z-index: 10;
-}
+.footer-content { display:flex !important; justify-content:center; align-items:center; gap:8px; }
 
 .footer-section {
   display: flex;

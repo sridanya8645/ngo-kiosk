@@ -23,19 +23,7 @@ const HomePage = () => {
 
   return (
     <div className="home-container">
-      {/* Header Section */}
-      <header className="home-header">
-        <div className="header-content">
-          <div className="logo-section">
-            <img src="/sai-baba.png" alt="Sai Baba" className="logo-image" />
-          </div>
-          <div className="org-info">
-            A 501 (C) 3 non profit Organization | Tax Exempt Tax Id - 91-2190340 | All donations are tax exempt
-          </div>
-        </div>
-      </header>
-
-      {/* Admin Bar */}
+      {/* Navigation */}
       <div className="admin-bar">
         <button 
           onClick={() => navigate('/admin')}
@@ -47,12 +35,12 @@ const HomePage = () => {
 
       {/* Main Content */}
       <main className="home-main">
-        <h1 className="welcome-title">Welcome to Shirdi Sai Dham</h1>
+        <h1 className="welcome-title">Welcome to Indo American Fair 2025</h1>
         
         <div className="main-image-container">
           <img 
-            src="/81tJnr3gLaL._AC_UF1000,1000_QL80_.jpg" 
-            alt="Shirdi Sai Baba" 
+            src="/Image (4).jpg" 
+            alt="Event" 
             className="main-image" 
           />
         </div>
@@ -67,34 +55,11 @@ const HomePage = () => {
         </div>
       </main>
 
-      {/* Footer */}
+      {/* Footer minimal */}
       <footer className="home-footer">
-        <div className="footer-content">
-          <div className="footer-section">
-            <span className="footer-icon">📍</span>
-            <div className="footer-text">
-              <div>Shirdi Sai Dham Inc, 12 Perrine Road,</div>
-              <div>Monmouth Junction NJ 08852</div>
-            </div>
-          </div>
-          
-          <div className="footer-section">
-            <span className="footer-icon">📞</span>
-            <div className="footer-text">
-              <div>609 937 2800 /</div>
-              <div>609 937 2806</div>
-            </div>
-          </div>
-          
-          <div className="footer-section">
-            <span className="footer-icon">✉️</span>
-            <span className="footer-text">shirdisaidham1@gmail.com</span>
-          </div>
-          
-          <div className="footer-section">
-            <span className="powered-text">Powered by</span>
-            <img src="/PITS-removebg-preview.png" alt="Princeton IT Services" className="pits-logo" />
-          </div>
+        <div className="footer-content center">
+          <span className="powered-text">Powered by</span>
+          <img src="/PITS-removebg-preview.png" alt="Princeton IT Services" className="pits-logo" />
         </div>
       </footer>
     </div>
