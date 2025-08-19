@@ -2,34 +2,57 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../styles/header.css';
 
-function SiteHeader() {
+function SiteHeader({ navVariant }) {
 	const navigate = useNavigate();
+
+	const renderNav = () => {
+		const go = (path) => () => navigate(path);
+		if (navVariant === 'none') {
+			return null;
+		}
+		if (navVariant === 'admin-only') {
+			return (
+				<div className="admin-nav-buttons">
+					<button className="admin-button" onClick={go('/admin')}>Admin</button>
+				</div>
+			);
+		}
+		if (navVariant === 'home-only') {
+			return (
+				<div className="admin-nav-buttons">
+					<button className="admin-button" onClick={go('/')}>Home</button>
+				</div>
+			);
+		}
+		// default full nav
+		return (
+			<div className="admin-nav-buttons">
+				<button className="admin-button" onClick={go('/')}>Home</button>
+				<button className="admin-button" onClick={go('/checkin')}>Check-In</button>
+				<button className="admin-button" onClick={go('/register')}>Register</button>
+				<button className="admin-button" onClick={go('/event-details')}>Event Details</button>
+				<button className="admin-button" onClick={go('/admin/raffle-spin')}>Raffle Spin</button>
+				<button className="admin-button" onClick={go('/admin/raffle-winners')}>Winners</button>
+				<button className="admin-button" onClick={go('/admin')}>Admin</button>
+			</div>
+		);
+	};
 
 	return (
 		<div className="site-header">
 			{/* Top header with logo, title and award badge */}
-			<div className="header-content" style={{ paddingTop: '8px', paddingBottom: '8px' }}>
-				<div className="logo-section">
-					<img src="/web_logo.png" alt="IAF Logo" className="logo-image" />
-					<div className="header-title">Indo American Fair 2025</div>
-				</div>
-				<div className="header-right">
-					<img src="/header_award.png" alt="Award" className="award-image" />
-				</div>
+			<div className="header-content">
+				<img src="/web_logo.png" alt="IAF Logo" className="logo-image" />
+				<div className="header-title">Indo American Fair 2025</div>
+				{/* right award logo removed */}
 			</div>
 
 			{/* Navigation bar below header */}
-			<div className="admin-bar" style={{ marginTop: 0 }}>
-				<div className="admin-nav-buttons">
-					<button className="admin-button" onClick={() => navigate('/')}>Home</button>
-					<button className="admin-button" onClick={() => navigate('/checkin')}>Check-In</button>
-					<button className="admin-button" onClick={() => navigate('/register')}>Register</button>
-					<button className="admin-button" onClick={() => navigate('/event-details')}>Event Details</button>
-					<button className="admin-button" onClick={() => navigate('/admin/raffle-spin')}>Raffle Spin</button>
-					<button className="admin-button" onClick={() => navigate('/admin/raffle-winners')}>Winners</button>
-					<button className="admin-button" onClick={() => navigate('/admin')}>Admin</button>
+			{renderNav() && (
+				<div className="admin-bar" style={{ marginTop: 0 }}>
+					{renderNav()}
 				</div>
-			</div>
+			)}
 		</div>
 	);
 }

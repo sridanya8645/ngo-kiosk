@@ -1,13 +1,21 @@
 @import './theme.css';
 
 .header-content {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  width: 100%;
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 0 var(--space-20);
+  display: flex !important;
+  flex-direction: row !important;
+  align-items: center !important;
+  justify-content: center !important;
+  flex-wrap: nowrap !important;
+  gap: 8px !important;
+  width: 100% !important;
+  max-width: 1200px !important;
+  margin: 0 auto !important;
+  padding: 4px var(--space-12) !important;
+  padding-left: 96px !important; /* reserve space for left logo */
+  padding-right: 96px !important; /* keep symmetric space to truly center title */
+  overflow: hidden !important;
+  min-height: 72px !important;
+  position: relative !important;
 }
 
 .logo-section {
@@ -18,11 +26,17 @@
 }
 
 .logo-image {
-  height: 50px;
-  width: 50px;
+  height: 60px !important;
+  width: 60px !important;
   object-fit: contain;
-  border-radius: 50%;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  border-radius: 0;
+  box-shadow: none;
+  flex: 0 0 auto;
+  position: absolute;
+  left: 64px; /* keep clear of Safari close button */
+  top: 50%;
+  transform: translateY(-12%); /* align with text baseline */
+  z-index: 1002;
 }
 
 .org-info {
@@ -36,17 +50,55 @@
 
 /* New global header elements */
 .header-title {
-  font-size: 1.4rem;
+  font-size: 18px;
   font-weight: 800;
   color: #fff;
-  letter-spacing: 0.6px;
-  margin-left: 6px;
+  letter-spacing: 0.3px;
+  text-align: center;
+  line-height: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  flex: 0 1 auto;
+  min-width: 0;
+  max-width: calc(100vw - 180px);
 }
 
-.award-image {
-  height: 62px;
-  width: auto;
-  object-fit: contain;
-  margin-left: 6px;
+/* right award image removed */
+
+/* Ensure logos and title never wrap to multiple lines on tablets */
+@media (max-width: 1024px) {
+  .header-content {
+    white-space: nowrap;
+    gap: 6px;
+    padding-left: 44px;
+    padding-right: 44px;
+  }
+  .header-title { 
+    overflow: hidden; 
+    text-overflow: ellipsis; 
+    max-width: 62vw; 
+  }
+  .logo-image { height: 60px !important; width: 60px !important; left: 12px; }
+  /* no award image on tablet */
+}
+
+/* iPad portrait widths (768–834px); aggressively shrink to stay on one line */
+@media (max-width: 834px) {
+  .header-title {
+    font-size: clamp(0.8rem, 1.8vw, 1.05rem);
+    max-width: 60vw;
+  }
+  .logo-image { height: 60px !important; width: 60px !important; left: 12px; }
+  /* no award image on ipad widths */
+}
+
+@media (max-width: 768px) {
+  .header-title {
+    font-size: clamp(0.75rem, 1.6vw, 0.95rem);
+    max-width: 56vw;
+  }
+  .logo-image { height: 60px !important; width: 60px !important; left: 12px; }
+  /* no award image on mobile widths */
 }
 
