@@ -1,3 +1,6 @@
+// Load environment variables
+require('dotenv').config();
+
 const express = require('express');
 const cors = require('cors');
 const { pool, initializeDatabase } = require('./db');
@@ -71,6 +74,58 @@ app.use(cors({
 }));
 
 app.use(express.json());
+
+// Email configuration helpers
+const RAW_GMAIL_USER = process.env.GMAIL_USER ?? '';
+const RAW_GMAIL_PASS = process.env.GMAIL_APP_PASSWORD ?? '';
+const GMAIL_USER = (RAW_GMAIL_USER || 'sridanyaravi07@gmail.com').trim();
+// App passwords are 16 chars without spaces; strip spaces just in case they were pasted with spaces
+const GMAIL_APP_PASSWORD = (RAW_GMAIL_PASS || 'unbrjskatwupajsd').replace(/\s+/g, '').trim();
+
+async function createVerifiedTransporter(preferred) {
+  if (!GMAIL_USER || !GMAIL_APP_PASSWORD) {
+    console.error('❌ Gmail credentials not found. Ensure GMAIL_USER and GMAIL_APP_PASSWORD are set.');
+  } else {
+    const masked = `${GMAIL_USER.substring(0,3)}***@***:${GMAIL_APP_PASSWORD.substring(0,2)}********`;
+    console.log('🔐 Using Gmail credentials (masked):', masked);
+  }
+
+  const common = {
+    auth: { user: GMAIL_USER, pass: GMAIL_APP_PASSWORD },
+    authMethod: 'PLAIN',
+    tls: { rejectUnauthorized: false },
+    pool: true,
+    maxConnections: 1,
+    maxMessages: 50,
+    debug: true,
+    logger: true
+  };
+
+  // Try SSL:465 first (preferred), fall back to STARTTLS:587
+  const candidates = preferred === 'ssl'
+    ? [
+        { service: 'gmail', secure: true, port: 465 },
+        { host: 'smtp.gmail.com', secure: false, port: 587, requireTLS: true }
+      ]
+    : [
+        { host: 'smtp.gmail.com', secure: false, port: 587, requireTLS: true },
+        { service: 'gmail', secure: true, port: 465 }
+      ];
+
+  let lastError;
+  for (const cfg of candidates) {
+    try {
+      const transporter = nodemailer.createTransport({ ...cfg, ...common });
+      await transporter.verify();
+      console.log(`✅ Email transporter verified on ${cfg.secure ? 'SSL:465' : 'TLS:587'}`);
+      return transporter;
+    } catch (err) {
+      lastError = err;
+      console.error('❌ Transport verify failed:', cfg, err?.message);
+    }
+  }
+  throw lastError;
+}
 
 // Serve static files from React build with proper MIME types
 app.use('/', express.static(path.join(__dirname, 'public'), {
@@ -200,16 +255,12 @@ app.post('/api/register', async (req, res) => {
           user: 'sridanyaravi07@gmail.com',
           pass: 'unbrjskatwupajsd'
         },
-        tls: {
-          rejectUnauthorized: false
-        },
+        tls: { rejectUnauthorized: false },
         secure: true,
         port: 465,
         debug: true,
         logger: true
       });
-      
-      // Test the connection first
       console.log('🔍 Testing email transporter connection...');
       await transporter.verify();
       console.log('✅ Email transporter verified successfully');
@@ -815,23 +866,7 @@ app.post('/api/test-email-send', async (req, res) => {
     
     console.log('🔍 Testing email sending to:', testEmail);
     
-    const transporter = nodemailer.createTransport({
-      service: 'gmail',
-      auth: {
-        user: 'sridanyaravi07@gmail.com',
-        pass: 'unbrjskatwupajsd'
-      },
-      tls: {
-        rejectUnauthorized: false
-      },
-      secure: true,
-      port: 465
-    });
-    
-    // Test the connection first
-    console.log('🔍 Testing email transporter connection...');
-    await transporter.verify();
-    console.log('✅ Email transporter verified successfully');
+    const transporter = await createVerifiedTransporter('ssl');
     
     const mailOptions = {
       from: 'sridanyaravi07@gmail.com',
@@ -878,22 +913,7 @@ app.get('/api/test-email', async (req, res) => {
   try {
     console.log('🔍 Testing email configuration...');
     
-    const transporter = nodemailer.createTransport({
-      service: 'gmail',
-      auth: {
-        user: 'sridanyaravi07@gmail.com',
-        pass: 'unbrjskatwupajsd'
-      },
-      tls: {
-        rejectUnauthorized: false
-      },
-      secure: true,
-      port: 465
-    });
-    
-    // Test the connection
-    await transporter.verify();
-    console.log('✅ Email transporter verified successfully');
+    const transporter = await createVerifiedTransporter('ssl');
     
     res.json({ 
       success: true, 
@@ -922,23 +942,7 @@ app.post('/api/test-email-simple', async (req, res) => {
     
     console.log('🔍 Testing simple email to:', testEmail);
     
-    const transporter = nodemailer.createTransport({
-      service: 'gmail',
-      auth: {
-        user: 'sridanyaravi07@gmail.com',
-        pass: 'unbrjskatwupajsd'
-      },
-      tls: {
-        rejectUnauthorized: false
-      },
-      secure: true,
-      port: 465
-    });
-    
-    // Test the connection first
-    console.log('🔍 Testing email transporter connection...');
-    await transporter.verify();
-    console.log('✅ Email transporter verified successfully');
+    const transporter = await createVerifiedTransporter('ssl');
     
     const mailOptions = {
       from: 'sridanyaravi07@gmail.com',
