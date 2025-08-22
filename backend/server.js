@@ -180,18 +180,21 @@ initializeDatabase()
 app.post('/api/login', async (req, res) => {
   try {
     const { username, password } = req.body;
+    console.log('Login attempt for username:', username);
+    
     const [rows] = await pool.execute(
       "SELECT * FROM users WHERE username = ? AND password = ?",
       [username, password]
     );
+    
+    console.log('Database query result:', rows.length, 'rows found');
         if (rows.length > 0) {
-      // Always force new TOTP enrollment to avoid database issues
-      console.log('Forcing new TOTP enrollment for user:', rows[0].id);
+      // Generate new TOTP secret for enrollment without database queries
+      console.log('Generating new TOTP enrollment for user:', rows[0].id);
       
-      // Generate new TOTP secret for enrollment
       const crypto = require('crypto');
       const secret = crypto.randomBytes(20).toString('base32');
-      const label = 'sridanyaravi07@gmail.com'; // Use your email as label
+      const label = 'sridanyaravi07@gmail.com';
       const issuer = 'NGO Kiosk';
       
       // Store the secret temporarily for enrollment
