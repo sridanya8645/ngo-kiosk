@@ -225,7 +225,7 @@ const AdminPage = () => {
           {stage !== 'login' && stage !== 'totp-enroll' && (
             <form onSubmit={stage === 'totp-mfa' ? handleVerifyTotp : handleVerifyEmailMfa} className="admin-login-form">
               <div className="form-group">
-                <label className="form-label">{stage === 'totp-mfa' ? 'Enter 6-digit authenticator code' : 'Enter the code sent to your email'}</label>
+                <label className="form-label">{stage === 'totp-mfa' ? 'Enter 6-digit authenticator code' : 'Enter 6-digit authenticator code'}</label>
                 <input
                   type="text"
                   inputMode="numeric"
