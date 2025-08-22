@@ -194,8 +194,8 @@ app.post('/api/login', async (req, res) => {
       console.log('Generating new TOTP enrollment for user:', rows[0].id);
       
       const crypto = require('crypto');
-      // Generate a proper base32 secret for TOTP
-      const secret = crypto.randomBytes(20).toString('base64').replace(/[^A-Z2-7]/g, '').substring(0, 32);
+      // Generate a proper base32 secret for TOTP - authenticator app compatible
+      const secret = crypto.randomBytes(20).toString('base64').replace(/[^A-Z2-7]/g, '').substring(0, 32).toUpperCase();
                      const label = 'Indoamericanexpo@gmail.com';
       const issuer = 'NGO Kiosk';
       
@@ -270,6 +270,30 @@ app.post('/api/verify-mfa', async (req, res) => {
   }
 });
 
+// Base32 decoding function for TOTP
+function base32Decode(str) {
+  const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ234567';
+  let bits = 0;
+  let value = 0;
+  let output = [];
+  
+  for (let i = 0; i < str.length; i++) {
+    const char = str[i].toUpperCase();
+    const index = alphabet.indexOf(char);
+    if (index === -1) continue;
+    
+    value = (value << 5) | index;
+    bits += 5;
+    
+    if (bits >= 8) {
+      output.push((value >>> (bits - 8)) & 0xFF);
+      bits -= 8;
+    }
+  }
+  
+  return Buffer.from(output);
+}
+
 // TOTP MFA endpoints
 app.post('/api/mfa/totp/login', async (req, res) => {
   try {
@@ -296,7 +320,7 @@ app.post('/api/mfa/totp/login', async (req, res) => {
       const timeBuffer = Buffer.alloc(8);
       timeBuffer.writeBigUInt64BE(BigInt(time + i), 0);
       
-      const hmac = crypto.createHmac('sha1', Buffer.from(secret, 'hex'));
+      const hmac = crypto.createHmac('sha1', base32Decode(secret));
       hmac.update(timeBuffer);
       const hash = hmac.digest();
       
@@ -342,7 +366,7 @@ app.post('/api/mfa/totp/verify', async (req, res) => {
       const timeBuffer = Buffer.alloc(8);
       timeBuffer.writeBigUInt64BE(BigInt(time + i), 0);
       
-      const hmac = crypto.createHmac('sha1', Buffer.from(secret, 'hex'));
+      const hmac = crypto.createHmac('sha1', base32Decode(secret));
       hmac.update(timeBuffer);
       const hash = hmac.digest();
       
