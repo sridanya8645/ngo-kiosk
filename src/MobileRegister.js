@@ -335,7 +335,12 @@ const MobileRegister = () => {
           {submitSuccess && (
             <>
               {console.log('🎉 Success message should be rendering!')}
-              <SuccessMessage />
+              <div className="success-message">
+                <h2>Registration Successful!</h2>
+                <p>Thank you for registering for {selectedEvent?.name || 'the event'}.</p>
+                <p>You will receive a confirmation email with your QR code shortly.</p>
+                <p>Please scan the QR code at the kiosk during check-in.</p>
+              </div>
             </>
           )}
         </div>
