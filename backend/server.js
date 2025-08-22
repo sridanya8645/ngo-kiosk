@@ -184,42 +184,12 @@ app.post('/api/login', async (req, res) => {
       "SELECT * FROM users WHERE username = ? AND password = ?",
       [username, password]
     );
-    if (rows.length > 0) {
-      // Check if user has TOTP secret set up
-      const [totpRows] = await pool.execute(
-        "SELECT totp_secret FROM users WHERE id = ?",
-        [rows[0].id]
-      );
-      
-      if (totpRows.length > 0 && totpRows[0].totp_secret) {
-        // User has TOTP set up - require TOTP verification
-        res.json({ 
-          success: true, 
-          mfa: 'totp', 
-          userId: rows[0].id 
-        });
-             } else {
-         // User needs to set up TOTP - show enrollment
-         const crypto = require('crypto');
-         const secret = crypto.randomBytes(20).toString('base32');
-         const label = 'Admin';
-         const issuer = 'NGO Kiosk';
-         
-         // Store the secret temporarily for enrollment
-         if (!global.totpEnrollment) global.totpEnrollment = new Map();
-         global.totpEnrollment.set(rows[0].id, {
-           secret: secret,
-           timestamp: Date.now()
-         });
-         
-         res.json({ 
-           success: true, 
-           mfa: 'totp-enroll', 
-           userId: rows[0].id,
-           manualSecret: secret,
-           label: `${issuer}:${label}`
-         });
-       }
+        if (rows.length > 0) {
+      // For now, skip TOTP and go directly to admin panel
+      res.json({ 
+        success: true,
+        redirect: '/event-details'
+      });
     } else {
       res.status(401).json({ success: false, message: "Invalid username or password" });
     }
