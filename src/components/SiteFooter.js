@@ -3,25 +3,24 @@ import '../styles/footer.css';
 
 function SiteFooter() {
 	return (
-		<footer className="global-footer">
+		<footer className="global-footer" style={{ background: 'transparent' }}>
 			<div className="footer-content">
 				<div className="footer-section">
 					<span className="footer-icon">📍</span>
 					<div className="footer-text">
-						<div>Shirdi Sai Dham Inc, 12 Perrine Road,</div>
-						<div>Monmouth Junction NJ 08852</div>
+						<div>Mercer County Park</div>
+						<div>1638 Old Trenton Rd, West Windsor Township, NJ 08550</div>
 					</div>
 				</div>
 				<div className="footer-section">
 					<span className="footer-icon">📞</span>
 					<div className="footer-text">
-						<div>609 937 2800 /</div>
-						<div>609 937 2806</div>
+						<div>609-937-2806 | 609-937-2800</div>
 					</div>
 				</div>
 				<div className="footer-section">
 					<span className="footer-icon">✉️</span>
-					<span className="footer-text">shirdisaidham1@gmail.com</span>
+					<span className="footer-text">Indoamericanfair2016@gmail.com</span>
 				</div>
 				<div className="footer-section">
 					<span className="powered-text">Powered by</span>

@@ -129,19 +129,20 @@
   flex-direction: column;
   align-items: center;
   justify-content: flex-start;
-  padding: 20px;
+  padding: 10px;
   overflow-y: auto;
   min-height: 0;
-  gap: 20px;
-  max-height: calc(100dvh - 200px);
+  gap: 15px;
+  max-height: calc(100dvh - 150px);
 }
 
 /* Title like other pages */
 .raffle-title {
-  font-size: 2.2rem;
+  font-size: 1.8rem;
   font-weight: bold;
   color: #8B1C1C;
-  margin-top: 10px;
+  margin-top: 5px;
+  margin-bottom: 5px;
   text-align: center;
   text-shadow: 0 2px 8px rgba(0,0,0,0.1);
 }
@@ -149,40 +150,53 @@
 /* Event info card below title */
 .event-info-card {
   text-align: center;
-  padding: 12px 16px;
+  padding: 8px 12px;
   background: rgba(255,255,255,0.9);
-  border-radius: 10px;
+  border-radius: 8px;
   border: 2px solid #8B1C1C;
   display: inline-flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 4px;
+  margin-bottom: 5px;
 }
 .event-info-card .event-name {
-  font-size: 1.3rem;
+  font-size: 1.1rem;
   font-weight: 700;
   color: #8B1C1C;
 }
 .event-info-card .event-date {
-  font-size: 1.1rem;
+  font-size: 0.9rem;
   color: #8B1C1C;
   font-weight: 600;
 }
+.event-info-card .registration-count {
+  font-size: 0.8rem;
+  color: #8B1C1C;
+  font-weight: 600;
+  background: rgba(139, 28, 28, 0.1);
+  padding: 3px 6px;
+  border-radius: 4px;
+  margin-top: 2px;
+}
 
-/* Wheel centered */
+/* Wheel centered - Much bigger for screen sharing */
 .wheel-container {
   display: flex;
   justify-content: center;
   align-items: center;
   width: 100%;
+  padding: 20px;
 }
 
 .wheel-container > div {
-  max-width: 80vw;
-  max-height: 80vh;
+  max-width: 90vw;
+  max-height: 85vh;
+  min-width: 600px;
+  min-height: 600px;
   aspect-ratio: 1;
   border-radius: 50%;
-  box-shadow: 0 8px 32px rgba(0,0,0,0.3);
-  border: 4px solid #fff;
+  box-shadow: 0 12px 48px rgba(0,0,0,0.4);
+  border: 6px solid #fff;
 }
 
 .custom-wheel-wrapper {
@@ -243,31 +257,57 @@
   line-height: 1.2;
 }
 
-@media (min-width: 1200px) {
+@media (min-width: 1920px) {
   .wheel-container > div {
-    max-width: 600px;
-    max-height: 600px;
+    max-width: 1200px;
+    max-height: 1200px;
+    min-width: 1000px;
+    min-height: 1000px;
+  }
+}
+
+@media (min-width: 1440px) and (max-width: 1919px) {
+  .wheel-container > div {
+    max-width: 1000px;
+    max-height: 1000px;
+    min-width: 800px;
+    min-height: 800px;
+  }
+}
+
+@media (min-width: 1200px) and (max-width: 1439px) {
+  .wheel-container > div {
+    max-width: 900px;
+    max-height: 900px;
+    min-width: 700px;
+    min-height: 700px;
   }
 }
 
 @media (min-width: 768px) and (max-width: 1199px) {
   .wheel-container > div {
-    max-width: 500px;
-    max-height: 500px;
+    max-width: 700px;
+    max-height: 700px;
+    min-width: 500px;
+    min-height: 500px;
   }
 }
 
 @media (max-width: 767px) {
   .wheel-container > div {
-    max-width: 400px;
-    max-height: 400px;
+    max-width: 500px;
+    max-height: 500px;
+    min-width: 300px;
+    min-height: 300px;
   }
 }
 
 @media (max-width: 480px) {
   .wheel-container > div {
-    max-width: 300px;
-    max-height: 300px;
+    max-width: 400px;
+    max-height: 400px;
+    min-width: 250px;
+    min-height: 250px;
   }
 }
 
@@ -347,13 +387,13 @@
 
 /* Primary button size like other pages */
 .raffle-button.primary {
-  font-size: 2rem;
+  font-size: 1.5rem;
   font-weight: bold;
-  padding: 16px 32px;
+  padding: 12px 24px;
   background: #000;
   color: #fff;
   border: 1px solid #fff;
-  border-radius: 12px;
+  border-radius: 10px;
   cursor: pointer;
   transition: all 0.3s ease;
   box-shadow: 0 5px 15px rgba(0,0,0,0.3);
@@ -368,6 +408,13 @@
   cursor: not-allowed;
   transform: none;
   box-shadow: none;
+}
+
+.spin-button-wrapper {
+  display: flex;
+  justify-content: center;
+  margin-top: 10px;
+  margin-bottom: 10px;
 }
 
 .raffle-button.secondary {
@@ -662,15 +709,8 @@
 }
 
 /* Header - Standard across all pages */
-.header-content {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  width: 100%;
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 0 20px;
-}
+/* Remove overrides so global header styles control layout */
+.header-content { all: revert !important; }
 
 .logo-section {
   display: flex;

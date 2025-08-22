@@ -78,9 +78,9 @@ app.use(express.json());
 // Email configuration helpers
 const RAW_GMAIL_USER = process.env.GMAIL_USER ?? '';
 const RAW_GMAIL_PASS = process.env.GMAIL_APP_PASSWORD ?? '';
-const GMAIL_USER = (RAW_GMAIL_USER || 'sridanyaravi07@gmail.com').trim();
+const GMAIL_USER = RAW_GMAIL_USER.trim();
 // App passwords are 16 chars without spaces; strip spaces just in case they were pasted with spaces
-const GMAIL_APP_PASSWORD = (RAW_GMAIL_PASS || 'unbrjskatwupajsd').replace(/\s+/g, '').trim();
+const GMAIL_APP_PASSWORD = RAW_GMAIL_PASS.replace(/\s+/g, '').trim();
 
 async function createVerifiedTransporter(preferred) {
   if (!GMAIL_USER || !GMAIL_APP_PASSWORD) {
@@ -213,9 +213,129 @@ app.post('/api/register', async (req, res) => {
     
     const event = eventRows[0];
     
-    // Insert registration with correct column names
+    // Insert registration with checked_in = 1 and checkin_date = NOW() for regular register
     const [result] = await pool.execute(
-      "INSERT INTO registrations (name, phone, email, event_id, event_name, event_date, interested_to_volunteer, registered_at) VALUES (?, ?, ?, ?, ?, ?, ?, NOW())",
+      "INSERT INTO registrations (name, phone, email, event_id, event_name, event_date, interested_to_volunteer, checked_in, checkin_date, registered_at) VALUES (?, ?, ?, ?, ?, ?, ?, 1, NOW(), NOW())",
+      [name, phone, email, eventId, event.name, event.date, interested_to_volunteer]
+    );
+    
+    const registrationId = result.insertId;
+    
+    // Send confirmation email without QR code for regular register
+    try {
+      console.log('🔍 Attempting to send email to:', email);
+      
+      const transporter = nodemailer.createTransport({
+        service: 'gmail',
+        auth: {
+          user: GMAIL_USER,
+          pass: GMAIL_APP_PASSWORD
+        },
+        tls: { rejectUnauthorized: false },
+        secure: true,
+        port: 465,
+        debug: true,
+        logger: true
+      });
+      console.log('🔍 Testing email transporter connection...');
+      await transporter.verify();
+      console.log('✅ Email transporter verified successfully');
+      
+      const mailOptions = {
+        from: GMAIL_USER,
+        to: email,
+        subject: `Registration Confirmed for ${event.name} at Non-Governmental Organization`,
+        html: `
+          <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
+            <div style="text-align: center; margin-bottom: 20px;">
+              <span style="color: #28a745; font-size: 24px;">✓</span>
+              <h2 style="color: #333; margin: 10px 0;">Registration Confirmed for ${event.name}</h2>
+            </div>
+            
+            <p style="font-size: 16px; color: #333;">Hello ${name},</p>
+            
+            <p style="font-size: 16px; color: #333;">You have successfully registered for the event <strong>${event.name}</strong> at Non-Governmental Organization.</p>
+            
+            <div style="background: #f8f9fa; padding: 20px; border-radius: 10px; margin: 20px 0;">
+              <h3 style="color: #333; margin-top: 0;">Event Details:</h3>
+              <p style="margin: 8px 0;"><span style="color: #666;">📅</span> <strong>Date:</strong> ${event.date}</p>
+              <p style="margin: 8px 0;"><span style="color: #666;">🕕</span> <strong>Time:</strong> ${event.time}</p>
+              <p style="margin: 8px 0;"><span style="color: #666;">📍</span> <strong>Venue:</strong> Non-Governmental Organization, 12 Perrine Road, Monmouth Junction, NJ 08852</p>
+              <p style="margin: 8px 0;"><span style="color: #666;">🆔</span> <strong>Registration ID:</strong> ${registrationId}</p>
+            </div>
+            
+            <p style="font-size: 16px; color: #333;">You have been automatically checked in for this event. We look forward to welcoming you!</p>
+            
+            <div style="text-align: center; margin: 30px 0;">
+              <div style="background: #f8f9fa; padding: 20px; border-radius: 10px; margin: 15px 0; border: 2px solid #ddd;">
+                <p style="font-size: 16px; color: #333; margin: 0 0 15px 0; font-weight: bold;">📱 <strong>Registration ID:</strong> ${registrationId}</p>
+                <p style="font-size: 14px; color: #666; margin: 5px 0; font-family: monospace;">Event: ${event.name}</p>
+                <p style="font-size: 14px; color: #666; margin: 5px 0; font-family: monospace;">Date: ${event.date} | Time: ${event.time}</p>
+                <p style="font-size: 12px; color: #999; margin: 10px 0 0 0;">You are automatically checked in</p>
+              </div>
+            </div>
+            
+            <p style="font-size: 16px; color: #333;">Warm regards,<br><strong>Non-Governmental Organization Team</strong></p>
+            
+            <div style="border-top: 1px solid #ddd; margin-top: 30px; padding-top: 20px;">
+              <p style="margin: 5px 0;"><span style="color: #666;">📧</span> <a href="mailto:NGO@gmail.com" style="color: #8B1C1C;">NGO@gmail.com</a></p>
+              <p style="margin: 5px 0;"><span style="color: #666;">📞</span> <a href="tel:609-937-2800" style="color: #8B1C1C;">609-937-2800</a></p>
+            </div>
+          </div>
+        `
+      };
+      
+      console.log('📧 Sending email with options:', {
+        from: mailOptions.from,
+        to: mailOptions.to,
+        subject: mailOptions.subject
+      });
+      
+      await transporter.sendMail(mailOptions);
+      console.log('✅ Email sent successfully to:', email);
+    } catch (emailError) {
+      console.error('❌ Email sending failed:', emailError);
+      console.error('Email error details:', {
+        message: emailError.message,
+        code: emailError.code,
+        command: emailError.command,
+        response: emailError.response
+      });
+      // Don't fail the registration if email fails
+    }
+    
+    res.json({ 
+      success: true, 
+      message: "Registration successful", 
+      registrationId: registrationId
+    });
+  } catch (error) {
+    console.error('Registration error:', error);
+    res.status(500).json({ success: false, message: "Registration failed" });
+  }
+});
+
+// Mobile register endpoint
+app.post('/api/mobile-register', async (req, res) => {
+  try {
+    console.log("Mobile register endpoint hit");
+    const { name, phone, email, eventId, interested_to_volunteer } = req.body;
+    
+    // Get event details
+    const [eventRows] = await pool.execute(
+      "SELECT * FROM events WHERE id = ?",
+      [eventId]
+    );
+    
+    if (eventRows.length === 0) {
+      return res.status(400).json({ success: false, message: "Event not found" });
+    }
+    
+    const event = eventRows[0];
+    
+    // Insert registration with checked_in = 0 for mobile register (needs QR check-in)
+    const [result] = await pool.execute(
+      "INSERT INTO registrations (name, phone, email, event_id, event_name, event_date, interested_to_volunteer, checked_in, registered_at) VALUES (?, ?, ?, ?, ?, ?, ?, 0, NOW())",
       [name, phone, email, eventId, event.name, event.date, interested_to_volunteer]
     );
     
@@ -240,10 +360,7 @@ app.post('/api/register', async (req, res) => {
       errorCorrectionLevel: 'L'
     });
     
-    console.log('🔍 QR code generated as buffer');
-    
-    // Also generate a simple text version for fallback
-    const qrText = `Registration ID: ${registrationId}\nEvent: ${event.name}\nDate: ${event.date}\nTime: ${event.time}`;
+    console.log('🔍 QR code generated as buffer for mobile register');
     
     // Send email with QR code
     try {
@@ -252,8 +369,8 @@ app.post('/api/register', async (req, res) => {
       const transporter = nodemailer.createTransport({
         service: 'gmail',
         auth: {
-          user: 'sridanyaravi07@gmail.com',
-          pass: 'unbrjskatwupajsd'
+          user: GMAIL_USER,
+          pass: GMAIL_APP_PASSWORD
         },
         tls: { rejectUnauthorized: false },
         secure: true,
@@ -266,7 +383,7 @@ app.post('/api/register', async (req, res) => {
       console.log('✅ Email transporter verified successfully');
       
       const mailOptions = {
-        from: 'sridanyaravi07@gmail.com',
+        from: GMAIL_USER,
         to: email,
         subject: `Registration Confirmed for ${event.name} at Non-Governmental Organization`,
         attachments: [
@@ -342,7 +459,7 @@ app.post('/api/register', async (req, res) => {
       registrationId: registrationId
     });
   } catch (error) {
-    console.error('Registration error:', error);
+    console.error('Mobile registration error:', error);
     res.status(500).json({ success: false, message: "Registration failed" });
   }
 });
@@ -869,7 +986,7 @@ app.post('/api/test-email-send', async (req, res) => {
     const transporter = await createVerifiedTransporter('ssl');
     
     const mailOptions = {
-      from: 'sridanyaravi07@gmail.com',
+      from: GMAIL_USER,
       to: testEmail,
       subject: 'Test Email from NGO Kiosk App',
       html: `
@@ -945,7 +1062,7 @@ app.post('/api/test-email-simple', async (req, res) => {
     const transporter = await createVerifiedTransporter('ssl');
     
     const mailOptions = {
-      from: 'sridanyaravi07@gmail.com',
+      from: GMAIL_USER,
       to: testEmail,
       subject: 'Test Email from NGO Kiosk',
       text: 'This is a test email to verify the email system is working.',

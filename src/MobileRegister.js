@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import './RegisterPage.css';
+import './MobileRegister.css';
 import SiteHeader from './components/SiteHeader';
 import SiteFooter from './components/SiteFooter';
 
-const RegisterPage = () => {
+const MobileRegister = () => {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
     name: '',
@@ -72,7 +72,7 @@ const RegisterPage = () => {
         // If dedicated endpoint didn't return, pick from computed
         setSelectedEvent(prev => prev && prev.id ? prev : todays);
       } catch (error) {
-        console.error('Error fetching events in RegisterPage:', error);
+        console.error('Error fetching events in MobileRegister:', error);
       }
     })();
   }, []);
@@ -144,7 +144,7 @@ const RegisterPage = () => {
         return;
       }
 
-      const response = await fetch('/api/register', {
+      const response = await fetch('/api/mobile-register', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -197,9 +197,17 @@ const RegisterPage = () => {
     }
   };
 
+  const handleCancel = () => {
+    // Reset form data instead of navigating to home
+    setFormData({ name: '', phone: '', email: '', volunteer: 'No' });
+    setErrors({});
+    setIsSubmitting(false);
+    setSubmitSuccess(false);
+  };
+
   // Success message component
   const SuccessMessage = () => (
-    <div className="registration-success" style={{
+    <div className="mobile-registration-success" style={{
       position: 'fixed',
       top: '50%',
       left: '50%',
@@ -220,53 +228,21 @@ const RegisterPage = () => {
       <div className="success-icon">✅</div>
       <h2 className="success-title">Registration Successful!</h2>
       <p className="success-message">
-        Thanks for registering for Indo American Fair 2025. You have successfully registered and checked in!
+        Thanks for registering for Indo American Fair 2025. You will receive an email with your QR code for check-in shortly.
       </p>
       <p style={{ fontSize: '0.9rem', color: '#666', marginTop: '10px' }}>Redirecting to check-in page in 3 seconds...</p>
     </div>
   );
 
-  // Event change handler
-  const handleEventChange = (e) => {
-    const id = Number(e.target.value);
-    const ev = events.find(evt => Number(evt.id) === id) || null;
-    setSelectedEvent(ev);
-    if (errors.event) {
-      setErrors(prev => ({ ...prev, event: '' }));
-    }
-  };
-
-  const formatEventDisplay = (ev) => {
-    try {
-      const datePart = typeof ev.date === 'string' ? ev.date.split('T')[0] : new Date(ev.date).toISOString().split('T')[0];
-      const timePart = ev.time && ev.time.length >= 5 ? ev.time : '00:00:00';
-      const dateTime = new Date(`${datePart}T${timePart}`);
-      const dateStr = dateTime.toLocaleDateString('en-US', {
-        weekday: 'long',
-        month: 'short',
-        day: 'numeric',
-        year: 'numeric'
-      });
-      const timeStr = ev.time ? dateTime.toLocaleTimeString('en-US', {
-        hour: 'numeric',
-        minute: '2-digit',
-        hour12: true
-      }) : '';
-      return `${ev.name} (${dateStr}${timeStr ? ` at ${timeStr}` : ''})`;
-    } catch (e) {
-      return `${ev.name} (${new Date(ev.date).toLocaleDateString('en-US')})`;
-    }
-  };
-
   return (
-    <div className="register-container">
-      <SiteHeader navVariant="home-only" />
+    <div className="mobile-register-container">
+      <SiteHeader navVariant="none" />
 
       {/* Main Content */}
-      <main className="register-main">
-        <div className="register-form-container">
+      <main className="mobile-register-main">
+        <div className="mobile-register-form-container">
           {/* Heading first */}
-          <h1 className="register-title" style={{ color: '#000' }}>
+          <h1 className="mobile-register-title" style={{ color: '#000' }}>
             {selectedEvent ? `Register for ${selectedEvent.name}` : 'Register'}
           </h1>
           
@@ -284,7 +260,7 @@ const RegisterPage = () => {
           {/* Form third - only show if not submitted */}
           {!submitSuccess && (
             <>
-              <form onSubmit={handleSubmit} className="register-form">
+              <form onSubmit={handleSubmit} className="mobile-register-form">
                 {/* Event is auto-selected for today; selector removed */}
                 {errors.event && <span className="error-message">{errors.event}</span>}
                 <div className="form-group">
@@ -334,12 +310,10 @@ const RegisterPage = () => {
                   {errors.email && <span className="error-message">{errors.email}</span>}
                 </div>
 
-                {/* Remove volunteer field as requested */}
-
                 <div className="form-actions">
                   <button
                     type="button"
-                    onClick={() => navigate('/')}
+                    onClick={handleCancel}
                     className="cancel-button"
                     disabled={isSubmitting}
                   >
@@ -372,4 +346,4 @@ const RegisterPage = () => {
   );
 };
 
-export default RegisterPage; 
+export default MobileRegister;

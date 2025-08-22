@@ -30,20 +30,21 @@ function AdminRegistrationsPage() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    fetch("/api/registrations")
-      .then(res => res.json())
-      .then(data => {
+    (async () => {
+      try {
+        const res = await fetch("/api/registrations");
+        if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
+        const data = await res.json();
         console.log('Registrations data:', data);
-        // Normalize volunteer value to 'Yes'/'No'
         const normalized = data.map(r => ({
           ...r,
           interested_to_volunteer: (r.interested_to_volunteer === 1 || r.interested_to_volunteer === true || r.interested_to_volunteer === '1') ? 'Yes' : (r.interested_to_volunteer === 'Yes' ? 'Yes' : 'No')
         }));
         setRegistrations(normalized);
-      })
-      .catch(error => {
+      } catch (error) {
         console.error('Error fetching registrations:', error);
-      });
+      }
+    })();
   }, []);
 
   const handleFilterChange = (e) => {
@@ -106,43 +107,9 @@ function AdminRegistrationsPage() {
   return (
     <div className="admin-registrations-bg">
       <div className="admin-registrations-aspect">
-        <SiteHeader />
+        <SiteHeader navVariant="admin-only" />
 
-      {/* Admin Bar */}
-      <div className="admin-bar">
-        <div className="admin-nav-buttons">
-          <button 
-            onClick={() => navigate('/admin/registrations')}
-            className="admin-button"
-          >
-            Registration Details
-          </button>
-          <button 
-            onClick={() => navigate('/admin/raffle-spin')}
-            className="admin-button"
-          >
-            Raffle Spin
-          </button>
-          <button 
-            onClick={() => navigate('/admin/raffle-winners')}
-            className="admin-button"
-          >
-            Raffle Winners
-          </button>
-          <button 
-            onClick={() => navigate('/event-details')}
-            className="admin-button"
-          >
-            Event Details
-          </button>
-          <button 
-            onClick={handleLogout}
-            className="admin-button"
-          >
-            Logout
-          </button>
-        </div>
-      </div>
+      {/* Admin nav handled by SiteHeader */}
 
       {/* Main Content */}
       <main className="admin-registrations-main">

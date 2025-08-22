@@ -10,8 +10,9 @@ function EventDetailsPage() {
     name: "",
     date: "",
     time: "",
+    end_date: "",
+    end_time: "",
     location: "",
-    banner: "",
     raffle: "",
     actions: ""
   });
@@ -20,6 +21,8 @@ function EventDetailsPage() {
     name: "",
     date: "",
     time: "",
+    end_date: "",
+    end_time: "",
     location: "",
     banner: null,
   });
@@ -118,32 +121,30 @@ function EventDetailsPage() {
 
   // Fetch all events on mount
   useEffect(() => {
-    console.log('Fetching events...');
-    fetch("/api/events")
-      .then(res => {
-        if (!res.ok) {
-          throw new Error(`HTTP error! status: ${res.status}`);
-        }
-        return res.json();
-      })
-      .then(data => {
+    (async () => {
+      try {
+        console.log('Fetching events...');
+        const res = await fetch("/api/events");
+        if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
+        const data = await res.json();
         console.log('Events data received:', data);
         setEvents(data);
-        setError(""); // Clear any previous errors
-      })
-      .catch((error) => {
+        setError("");
+      } catch (error) {
         console.error('Error fetching events:', error);
-        // Don't show error message for initial load, just log it
         console.log('Events will be loaded when backend is available');
-      });
+      }
+    })();
   }, []);
 
   // Filtered events
   const filteredEvents = events.filter(event =>
-    event.name.toLowerCase().includes(filters.name.toLowerCase()) &&
-    event.date.includes(filters.date) &&
-    event.time.includes(filters.time) &&
-    event.location.toLowerCase().includes(filters.location.toLowerCase())
+    event.name.toLowerCase().includes((filters.name||'').toLowerCase()) &&
+    (event.date||'').toString().includes(filters.date||'') &&
+    (event.time||'').toString().includes(filters.time||'') &&
+    (event.end_date||'').toString().includes(filters.end_date||'') &&
+    (event.end_time||'').toString().includes(filters.end_time||'') &&
+    (event.location||'').toLowerCase().includes((filters.location||'').toLowerCase())
   );
 
   // Handle add/edit form changes
@@ -174,6 +175,8 @@ function EventDetailsPage() {
     formData.append("name", newEvent.name);
     formData.append("date", newEvent.date);
     formData.append("time", newEvent.time);
+    if (newEvent.end_date) formData.append("end_date", newEvent.end_date);
+    if (newEvent.end_time) formData.append("end_time", newEvent.end_time);
     formData.append("location", newEvent.location);
     if (newEvent.banner) formData.append("banner", newEvent.banner);
 
@@ -195,7 +198,7 @@ function EventDetailsPage() {
       
       if (data.success) {
         setEvents([...events, data.event]);
-        setNewEvent({ name: "", date: "", time: "", location: "", banner: null });
+        setNewEvent({ name: "", date: "", time: "", end_date: "", end_time: "", location: "", banner: null });
         setMessage("Event added successfully!");
         setError(""); // Clear any previous errors
       } else {
@@ -216,6 +219,8 @@ function EventDetailsPage() {
     formData.append("name", editingEvent.name);
     formData.append("date", editingEvent.date);
     formData.append("time", editingEvent.time);
+    if (editingEvent.end_date) formData.append("end_date", editingEvent.end_date);
+    if (editingEvent.end_time) formData.append("end_time", editingEvent.end_time);
     formData.append("location", editingEvent.location);
     if (editingEvent.banner) formData.append("banner", editingEvent.banner);
 
@@ -329,45 +334,27 @@ function EventDetailsPage() {
     return null;
   };
 
+  // Normalize any stored banner value to a proper URL
+  const resolveBannerUrl = (value) => {
+    if (!value) return null;
+    if (typeof value === 'string') {
+      // Extract src if an entire <img ...> HTML string was stored
+      const imgMatch = value.match(/<img[^>]*src=['"]([^'"]+)['"][^>]*>/i);
+      if (imgMatch && imgMatch[1]) {
+        value = imgMatch[1];
+      }
+      if (value.startsWith('http') || value.startsWith('data:')) return value;
+      return value.startsWith('/') ? value : '/' + value;
+    }
+    if (value instanceof File) {
+      return URL.createObjectURL(value);
+    }
+    return null;
+  };
+
   return (
     <div className="event-details-container">
-      <SiteHeader />
-
-      {/* Admin Bar */}
-      <div className="admin-bar">
-        <div className="admin-nav-buttons">
-          <button 
-            onClick={() => navigate('/admin/registrations')}
-            className="admin-button"
-          >
-            Registration Details
-          </button>
-          <button 
-            onClick={() => navigate('/admin/raffle-spin')}
-            className="admin-button"
-          >
-            Raffle Spin
-          </button>
-          <button 
-            onClick={() => navigate('/admin/raffle-winners')}
-            className="admin-button"
-          >
-            Raffle Winners
-          </button>
-          <button 
-            onClick={() => navigate('/event-details')}
-            className="admin-button"
-          >
-            Event Details
-          </button>
-          <button 
-            onClick={handleLogout}
-            className="admin-button"
-          >
-            Logout
-          </button>
-        </div>
-      </div>
+      <SiteHeader navVariant="admin-only" />
 
       {/* Main Content */}
       <main className="event-details-main">
@@ -381,8 +368,9 @@ function EventDetailsPage() {
               <div className="header-cell">Event Name</div>
               <div className="header-cell">Date</div>
               <div className="header-cell">Time</div>
+              <div className="header-cell">End Date</div>
+              <div className="header-cell">End Time</div>
               <div className="header-cell">Location</div>
-              <div className="header-cell">Banner</div>
               <div className="header-cell">Raffle Tickets</div>
               <div className="header-cell">Actions</div>
             </div>
@@ -418,19 +406,28 @@ function EventDetailsPage() {
               </div>
               <div className="filter-cell">
                 <input
-                  name="location"
-                  value={filters.location || ''}
+                  name="end_date"
+                  value={filters.end_date || ''}
                   onChange={handleFilterChange}
-                  placeholder="Filter Location"
+                  placeholder="End Date"
                   className="filter-input"
                 />
               </div>
               <div className="filter-cell">
                 <input
-                  name="banner"
-                  value={filters.banner || ''}
+                  name="end_time"
+                  value={filters.end_time || ''}
                   onChange={handleFilterChange}
-                  placeholder="Filter Banner"
+                  placeholder="End Time"
+                  className="filter-input"
+                />
+              </div>
+              <div className="filter-cell">
+                <input
+                  name="location"
+                  value={filters.location || ''}
+                  onChange={handleFilterChange}
+                  placeholder="Filter Location"
                   className="filter-input"
                 />
               </div>
@@ -516,6 +513,52 @@ function EventDetailsPage() {
                 </div>
                 <div className="data-cell">
                   <input
+                    type="date"
+                    name="end_date"
+                    value={newEvent.end_date}
+                    onChange={(e) => handleInputChange(e)}
+                    className="table-input"
+                  />
+                </div>
+                <div className="data-cell">
+                  <select
+                    name="end_time"
+                    value={newEvent.end_time}
+                    onChange={(e) => handleInputChange(e)}
+                    className="table-input"
+                  >
+                    <option value="">End Time</option>
+                    <option value="9:00 AM">9:00 AM</option>
+                    <option value="9:30 AM">9:30 AM</option>
+                    <option value="10:00 AM">10:00 AM</option>
+                    <option value="10:30 AM">10:30 AM</option>
+                    <option value="11:00 AM">11:00 AM</option>
+                    <option value="11:30 AM">11:30 AM</option>
+                    <option value="12:00 PM">12:00 PM</option>
+                    <option value="12:30 PM">12:30 PM</option>
+                    <option value="1:00 PM">1:00 PM</option>
+                    <option value="1:30 PM">1:30 PM</option>
+                    <option value="2:00 PM">2:00 PM</option>
+                    <option value="2:30 PM">2:30 PM</option>
+                    <option value="3:00 PM">3:00 PM</option>
+                    <option value="3:30 PM">3:30 PM</option>
+                    <option value="4:00 PM">4:00 PM</option>
+                    <option value="4:30 PM">4:30 PM</option>
+                    <option value="5:00 PM">5:00 PM</option>
+                    <option value="5:30 PM">5:30 PM</option>
+                    <option value="6:00 PM">6:00 PM</option>
+                    <option value="6:30 PM">6:30 PM</option>
+                    <option value="7:00 PM">7:00 PM</option>
+                    <option value="7:30 PM">7:30 PM</option>
+                    <option value="8:00 PM">8:00 PM</option>
+                    <option value="8:30 PM">8:30 PM</option>
+                    <option value="9:00 PM">9:00 PM</option>
+                    <option value="9:30 PM">9:30 PM</option>
+                    <option value="10:00 PM">10:00 PM</option>
+                  </select>
+                </div>
+                <div className="data-cell">
+                  <input
                     type="text"
                     name="location"
                     value={newEvent.location}
@@ -523,38 +566,6 @@ function EventDetailsPage() {
                     className="table-input"
                     placeholder="Location"
                   />
-                </div>
-                <div className="data-cell">
-                  <input
-                    type="file"
-                    name="banner"
-                    onChange={(e) => handleInputChange(e)}
-                    className="file-input"
-                    accept="image/*"
-                    style={{ display: 'none' }}
-                    id="banner-input"
-                  />
-                  <div className="banner-upload-container">
-                    <button 
-                      type="button"
-                      onClick={() => document.getElementById('banner-input').click()}
-                      className="choose-file-button"
-                    >
-                      {newEvent.banner ? 'Change File' : 'Choose File'}
-                    </button>
-                    {newEvent.banner && (
-                      <div className="file-info">
-                        <span className="file-name">{newEvent.banner.name}</span>
-                        {getBannerPreview(newEvent.banner) && (
-                          <img 
-                            src={getBannerPreview(newEvent.banner)} 
-                            alt="Banner preview" 
-                            className="banner-preview"
-                          />
-                        )}
-                      </div>
-                    )}
-                  </div>
                 </div>
                 <div className="data-cell">
                   <span className="raffle-text">Register your details to win $200 raffle ticket</span>
@@ -638,41 +649,9 @@ function EventDetailsPage() {
                         className="table-input"
                       />
                     </div>
-                    <div className="data-cell">
-                      <input
-                        type="file"
-                        name="banner"
-                        onChange={handleNewsletterChange}
-                        className="file-input"
-                        accept="image/*"
-                        style={{ display: 'none' }}
-                        id="newsletter-banner-input"
-                      />
-                      <div className="banner-upload-container">
-                        <button 
-                          type="button"
-                          onClick={() => document.getElementById('newsletter-banner-input').click()}
-                          className="choose-file-button"
-                        >
-                          {newsletterEvent.banner ? 'Change File' : 'Choose File'}
-                        </button>
-                        {newsletterEvent.banner && (
-                          <div className="file-info">
-                            <span className="file-name">{newsletterEvent.banner.name}</span>
-                            {getBannerPreview(newsletterEvent.banner) && (
-                              <img 
-                                src={getBannerPreview(newsletterEvent.banner)} 
-                                alt="Banner preview" 
-                                className="banner-preview"
-                              />
-                            )}
-                          </div>
-                        )}
-                      </div>
-                    </div>
-                    <div className="data-cell">
-                      <span className="raffle-text">Register your details to win $200 raffle ticket</span>
-                    </div>
+                                         <div className="data-cell">
+                       <span className="raffle-text">Register your details to win $200 raffle ticket</span>
+                     </div>
                     <div className="data-cell">
                       <div className="action-buttons">
                         <button 
@@ -738,18 +717,9 @@ function EventDetailsPage() {
                     <div className="data-cell">{event.name}</div>
                     <div className="data-cell">{event.date}</div>
                     <div className="data-cell">{event.time}</div>
+                    <div className="data-cell">{event.end_date || '-'}</div>
+                    <div className="data-cell">{event.end_time || '-'}</div>
                     <div className="data-cell">{event.location}</div>
-                    <div className="data-cell">
-                      {event.banner ? (
-                        <img 
-                          src={event.banner} 
-                          alt="Banner" 
-                          className="banner-thumbnail"
-                        />
-                      ) : (
-                        <span className="banner-text">No banner</span>
-                      )}
-                    </div>
                     <div className="data-cell">
                       <span className="raffle-text">Register your details to win $200 raffle ticket</span>
                     </div>
@@ -838,44 +808,58 @@ function EventDetailsPage() {
                     </div>
                     <div className="data-cell">
                       <input
+                        type="date"
+                        name="end_date"
+                        value={editingEvent.end_date || ''}
+                        onChange={(e) => handleInputChange(e, true)}
+                        className="table-input"
+                      />
+                    </div>
+                    <div className="data-cell">
+                      <select
+                        name="end_time"
+                        value={editingEvent.end_time || ''}
+                        onChange={(e) => handleInputChange(e, true)}
+                        className="table-input"
+                      >
+                        <option value="">End Time</option>
+                        <option value="9:00 AM">9:00 AM</option>
+                        <option value="9:30 AM">9:30 AM</option>
+                        <option value="10:00 AM">10:00 AM</option>
+                        <option value="10:30 AM">10:30 AM</option>
+                        <option value="11:00 AM">11:00 AM</option>
+                        <option value="11:30 AM">11:30 AM</option>
+                        <option value="12:00 PM">12:00 PM</option>
+                        <option value="12:30 PM">12:30 PM</option>
+                        <option value="1:00 PM">1:00 PM</option>
+                        <option value="1:30 PM">1:30 PM</option>
+                        <option value="2:00 PM">2:00 PM</option>
+                        <option value="2:30 PM">2:30 PM</option>
+                        <option value="3:00 PM">3:00 PM</option>
+                        <option value="3:30 PM">3:30 PM</option>
+                        <option value="4:00 PM">4:00 PM</option>
+                        <option value="4:30 PM">4:30 PM</option>
+                        <option value="5:00 PM">5:00 PM</option>
+                        <option value="5:30 PM">5:30 PM</option>
+                        <option value="6:00 PM">6:00 PM</option>
+                        <option value="6:30 PM">6:30 PM</option>
+                        <option value="7:00 PM">7:00 PM</option>
+                        <option value="7:30 PM">7:30 PM</option>
+                        <option value="8:00 PM">8:00 PM</option>
+                        <option value="8:30 PM">8:30 PM</option>
+                        <option value="9:00 PM">9:00 PM</option>
+                        <option value="9:30 PM">9:30 PM</option>
+                        <option value="10:00 PM">10:00 PM</option>
+                      </select>
+                    </div>
+                    <div className="data-cell">
+                      <input
                         type="text"
                         name="location"
                         value={editingEvent.location}
                         onChange={(e) => handleInputChange(e, true)}
                         className="table-input"
                       />
-                    </div>
-                    <div className="data-cell">
-                      <input
-                        type="file"
-                        name="banner"
-                        onChange={(e) => handleInputChange(e, true)}
-                        className="file-input"
-                        accept="image/*"
-                        style={{ display: 'none' }}
-                        id="edit-banner-input"
-                      />
-                      <div className="banner-upload-container">
-                        <button 
-                          type="button"
-                          onClick={() => document.getElementById('edit-banner-input').click()}
-                          className="choose-file-button"
-                        >
-                          {editingEvent.banner ? 'Change File' : 'Choose File'}
-                        </button>
-                        {editingEvent.banner && (
-                          <div className="file-info">
-                            <span className="file-name">{editingEvent.banner.name}</span>
-                            {getBannerPreview(editingEvent.banner) && (
-                              <img 
-                                src={getBannerPreview(editingEvent.banner)} 
-                                alt="Banner preview" 
-                                className="banner-preview"
-                              />
-                            )}
-                          </div>
-                        )}
-                      </div>
                     </div>
                     <div className="data-cell">
                       <span className="raffle-text">Register your details to win $200 raffle ticket</span>

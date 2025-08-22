@@ -27,57 +27,45 @@ export default function CheckinPage() {
     testImage.src = '/sai-baba.png';
     console.log('Testing image path:', '/sai-baba.png');
     
-    fetch("/api/todays-event")
-      .then(res => res.json())
-      .then(data => {
-        console.log('Today\'s event data:', data);
-        if (data && data.banner) {
-          console.log('Banner path:', data.banner);
-          // Test banner image loading
-          const bannerImage = new Image();
-          bannerImage.onload = () => console.log('Banner image loaded successfully');
-          bannerImage.onerror = () => console.error('Banner image failed to load:', data.banner);
-          bannerImage.src = data.banner;
-        }
-        setTodaysEvent(data);
-      })
-      .catch(error => {
-        console.error('Error fetching today\'s event:', error);
-      });
-
-    // Fetch all events for banners and newsletter
-    fetch("/api/events")
-      .then(res => res.json())
-      .then(events => {
-        console.log('All events data:', events);
-        // Determine today's or next event using normalized dates
-        const normalize = (d) => { const dt = new Date(d); return new Date(dt.getFullYear(), dt.getMonth(), dt.getDate()).getTime(); };
-        const todayTs = normalize(new Date());
-        const sorted = [...events].sort((a,b) => normalize(a.date) - normalize(b.date));
-        const todays = sorted.find(e => normalize(e.date) === todayTs);
-        const next = sorted.find(e => normalize(e.date) > todayTs);
-        const chosen = todays || next || null; // do not auto-select; keep null by default
-        setEvents(sorted);
-        // If an eventId is passed via querystring, select it
-        try {
-          const params = new URLSearchParams(window.location.search);
-          const idParam = params.get('eventId');
-          if (idParam) {
-            const id = Number(idParam);
-            const ev = sorted.find(e => Number(e.id) === id) || null;
-            if (ev) {
-              setSelectedEvent(ev);
-            }
-          } else {
-            setSelectedEvent(null);
+    (async () => {
+      try {
+        const res = await fetch("/api/todays-event");
+        if (res.ok) {
+          const data = await res.json();
+          console.log("Today's event data:", data);
+          if (data && data.banner) {
+            const bannerImage = new Image();
+            bannerImage.onload = () => console.log('Banner image loaded successfully');
+            bannerImage.onerror = () => console.error('Banner image failed to load:', data.banner);
+            bannerImage.src = data.banner;
           }
-        } catch (_) {
-          setSelectedEvent(null);
+          setTodaysEvent(data);
         }
-      })
-      .catch(error => {
-        console.error('Error fetching events:', error);
-      });
+      } catch (err) {
+        console.error("Error fetching today's event:", err);
+      }
+
+      try {
+        const res2 = await fetch("/api/events");
+        if (res2.ok) {
+          const evs = await res2.json();
+          console.log('All events data:', evs);
+          const getDateKey = (val) => {
+            if (!val) return '';
+            if (typeof val === 'string') return val.split('T')[0];
+            try { return new Date(val).toISOString().split('T')[0]; } catch { return ''; }
+          };
+          const normalize = (d) => { try { const dt = new Date(d); return new Date(dt.getFullYear(), dt.getMonth(), dt.getDate()).getTime(); } catch { return 0; } };
+          const sorted = [...evs].sort((a,b) => normalize(a.date) - normalize(b.date));
+          const todayKey = new Date().toLocaleDateString('en-CA');
+          const todays = sorted.find(e => getDateKey(e.date) === todayKey) || null;
+          setEvents(sorted);
+          setSelectedEvent(todays || sorted[0] || null);
+        }
+      } catch (err) {
+        console.error('Error fetching events:', err);
+      }
+    })();
   }, []);
 
   useEffect(() => {
@@ -118,8 +106,8 @@ export default function CheckinPage() {
         // Create reader div
         const readerDiv = document.createElement('div');
         readerDiv.id = 'reader';
-        readerDiv.style.width = '280px';
-        readerDiv.style.height = '280px';
+        readerDiv.style.width = '400px';
+        readerDiv.style.height = '400px';
         readerDiv.style.margin = '0 auto';
         readerDiv.style.border = '3px solid #8B1C1C';
         readerDiv.style.borderRadius = '15px';
@@ -134,7 +122,7 @@ export default function CheckinPage() {
           html5QrCodeRef.current
             .start(
               { facingMode: 'user' },
-              { fps: 10, qrbox: { width: 280, height: 280 }, aspectRatio: 1.0 },
+              { fps: 10, qrbox: { width: 400, height: 400 }, aspectRatio: 1.0 },
               qrCodeMessage => {
                 if (isProcessingScan.current) return;
                 isProcessingScan.current = true;
@@ -196,7 +184,11 @@ export default function CheckinPage() {
       const data = await response.json();
 
       if (data.success) {
-        setSuccessMsg(`✅ Successfully scanned! ${data.name} is now checked in.`);
+        if (data.alreadyCheckedIn) {
+          setSuccessMsg(`👋 Welcome back, ${data.name}! You have already scanned.`);
+        } else {
+          setSuccessMsg(`✅ Successfully scanned! ${data.name} is now checked in.`);
+        }
         
         // Restart scanner after 3 seconds
         setTimeout(() => {
@@ -224,8 +216,8 @@ export default function CheckinPage() {
                   
                   const readerDiv = document.createElement("div");
                   readerDiv.id = "reader";
-                  readerDiv.style.width = "280px";
-                  readerDiv.style.height = "280px";
+                  readerDiv.style.width = "400px";
+                  readerDiv.style.height = "400px";
                   readerDiv.style.margin = "0 auto";
                   readerDiv.style.border = "3px solid #8B1C1C";
                   readerDiv.style.borderRadius = "15px";
@@ -239,7 +231,7 @@ export default function CheckinPage() {
                   }
                   html5QrCodeRef.current.start(
                     { facingMode: "user" },
-                    { fps: 10, qrbox: { width: 280, height: 280 } },
+                    { fps: 10, qrbox: { width: 400, height: 400 } },
                     qrCodeMessage => {
                       if (isProcessingScan.current) { return; }
                       isProcessingScan.current = true;
@@ -300,66 +292,20 @@ export default function CheckinPage() {
 
   return (
     <div className="checkin-container">
-      <SiteHeader />
+      <SiteHeader navVariant="home-only" />
 
       {/* Navigation provided by SiteHeader */}
 
       {/* Main Content */}
       <main className="checkin-main">
         <div className="checkin-content">
-          <h1 className="checkin-title">Check-In</h1>
-          <div className="form-group" style={{ maxWidth: '420px', margin: '0 auto 8px' }}>
-            <label htmlFor="event" className="form-label">Select Event *</label>
-            <select
-              id="event"
-              name="event"
-              value={selectedEvent?.id || ''}
-              onChange={(e) => {
-                const id = Number(e.target.value);
-                const ev = events.find(evt => Number(evt.id) === id) || null;
-                setSelectedEvent(ev);
-              }}
-              className="form-select"
-            >
-              <option value="" disabled>Select an event</option>
-              {events.map(ev => {
-                const datePart = typeof ev.date === 'string' ? ev.date.split('T')[0] : new Date(ev.date).toISOString().split('T')[0];
-                const timePart = ev.time && ev.time.length >= 5 ? ev.time : '00:00:00';
-                const dt = new Date(`${datePart}T${timePart}`);
-                const dateStr = dt.toLocaleDateString('en-US', {
-                  weekday: 'long',
-                  month: 'short',
-                  day: 'numeric',
-                  year: 'numeric'
-                });
-                const timeStr = ev.time ? dt.toLocaleTimeString('en-US', {
-                  hour: 'numeric',
-                  minute: '2-digit',
-                  hour12: true
-                }) : '';
-                return (
-                  <option key={ev.id} value={ev.id}>
-                    {ev.name} ({dateStr}{timeStr ? ` at ${timeStr}` : ''})
-                  </option>
-                );
-              })}
-            </select>
-          </div>
+          {/* Use event title as main heading */}
+          {/* Auto-select today's event; hide selector */}
           {selectedEvent && (
-            <p className="checkin-for-text">Checkin for {selectedEvent.name}</p>
+            <h1 className="checkin-for-text checkin-for-title">Check-in for {selectedEvent.name}</h1>
           )}
           
-          {/* Event Banner Section - Show only the first event with banner */}
-          {selectedEvent && selectedEvent.banner && (
-            <div className="event-section">
-              <img 
-                src={`${selectedEvent.banner}`}
-                alt={`${selectedEvent.name} Banner`}
-                className="event-banner-img"
-                style={{ maxWidth: '100%', width: '450px', height: 'auto', maxHeight: '300px', borderRadius: '12px', objectFit: 'contain' }}
-              />
-            </div>
-          )}
+          {/* Banner removed on check-in page per request */}
 
 
 

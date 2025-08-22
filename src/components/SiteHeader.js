@@ -10,10 +10,21 @@ function SiteHeader({ navVariant }) {
 		if (navVariant === 'none') {
 			return null;
 		}
-		if (navVariant === 'admin-only') {
+		if (navVariant === 'admin-login-only') {
 			return (
 				<div className="admin-nav-buttons">
 					<button className="admin-button" onClick={go('/admin')}>Admin</button>
+				</div>
+			);
+		}
+		if (navVariant === 'admin-only') {
+			return (
+				<div className="admin-nav-buttons">
+					<button className="admin-button" onClick={go('/admin/registrations')}>Registration Details</button>
+					<button className="admin-button" onClick={go('/admin/raffle-spin')}>Raffle Spin</button>
+					<button className="admin-button" onClick={go('/admin/raffle-winners')}>Raffle Winners</button>
+					<button className="admin-button" onClick={go('/event-details')}>Event Details</button>
+					<button className="admin-button" onClick={go('/admin')}>Logout</button>
 				</div>
 			);
 		}
@@ -43,12 +54,10 @@ function SiteHeader({ navVariant }) {
 			{/* Top header with logo, title and award badge */}
 			<div className="header-content">
 				<img src="/web_logo.png" alt="IAF Logo" className="logo-image" />
-				<div className="header-title">Indo American Fair 2025</div>
-				{/* right award logo removed */}
 			</div>
 
 			{/* Navigation bar below header */}
-			{renderNav() && (
+			{navVariant !== 'none' && (
 				<div className="admin-bar" style={{ marginTop: 0 }}>
 					{renderNav()}
 				</div>

@@ -13,8 +13,7 @@ const RaffleSpinPage = () => {
   const [prizeNumber, setPrizeNumber] = useState(0);
   const [showConfetti, setShowConfetti] = useState(false);
   const [eventInfo, setEventInfo] = useState(null);
-  const [allEligibleRegistrations, setAllEligibleRegistrations] = useState([]);
-  const [currentEligibleIndex, setCurrentEligibleIndex] = useState(500);
+
   const [eligibleUsers, setEligibleUsers] = useState([]);
   const [events, setEvents] = useState([]);
   const [selectedEvent, setSelectedEvent] = useState(null);
@@ -33,36 +32,62 @@ const RaffleSpinPage = () => {
   };
 
   useEffect(() => {
-    // Fetch eligible users (checked in TODAY), winners, and events
-    Promise.all([
-      fetch('/api/raffle/eligible-users'),
-      fetch('/api/raffle-winners'),
-      fetch('/api/events')
-    ])
-    .then(responses => Promise.all(responses.map(res => res.json())))
-    .then(([eligibleUsers, winners, events]) => {
-      console.log('Eligible users (checked in today):', eligibleUsers);
-      console.log('Winners:', winners);
-      console.log('All events:', events);
-      
-      // Prepare events list (no auto-selection; admin must choose)
-      const normalize = (d) => { const dt = new Date(d); return new Date(dt.getFullYear(), dt.getMonth(), dt.getDate()).getTime(); };
-      const sorted = [...events].sort((a,b) => normalize(a.date) - normalize(b.date));
-      setEvents(sorted);
-      setSelectedEvent(null);
-      
-      // Filter out already won users
-      const availableUsers = eligibleUsers.filter(user => 
-        !winners.some(winner => winner.registration_id === user.id)
-      );
-      
-      console.log('Available users for wheel:', availableUsers);
-      setEligibleUsers(availableUsers);
-      setRegistrations([]); // Wait until event is selected
-    })
-    .catch(error => {
-      console.error('Error fetching data:', error);
-    });
+    (async () => {
+      try {
+        // Fetch eligible users (checked in TODAY), winners, events, and today's event
+        const [eligibleRes, winnersRes, eventsRes, todayRes] = await Promise.all([
+          fetch('/api/raffle/eligible-users', { cache: 'no-store' }),
+          fetch('/api/raffle-winners', { cache: 'no-store' }),
+          fetch('/api/events', { cache: 'no-store' }),
+          fetch('/api/todays-event', { cache: 'no-store' })
+        ]);
+        const [eligibleUsersData, winnersData, eventsData, todayEvent] = await Promise.all([
+          eligibleRes.json(), winnersRes.json(), eventsRes.json(), todayRes.json()
+        ]);
+
+        console.log('Eligible users (checked in today):', eligibleUsersData);
+        console.log('Winners:', winnersData);
+        console.log('All events:', eventsData);
+        console.log("Today's event:", todayEvent);
+
+        // Sort events and compute local date helpers
+        const normalize = (d) => { const dt = new Date(d); return new Date(dt.getFullYear(), dt.getMonth(), dt.getDate()).getTime(); };
+        const sorted = [...eventsData].sort((a,b) => normalize(a.date) - normalize(b.date));
+        setEvents(sorted);
+
+        // Auto-select today's event (no dropdown). If endpoint returns null, compute fallback using [date, end_date]
+        let selected = (todayEvent && todayEvent.id) ? todayEvent : null;
+        if (!selected) {
+          const parseLocalYMD = (val) => {
+            if (!val) return null;
+            try {
+              const str = typeof val === 'string' ? val.split('T')[0] : new Date(val).toISOString().split('T')[0];
+              const [y, m, d] = str.split('-').map(Number);
+              return new Date(y, m - 1, d);
+            } catch { return null; }
+          };
+          const now = new Date();
+          const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+          const withDates = sorted.map(e => ({
+            ...e,
+            _start: parseLocalYMD(e.date),
+            _end: parseLocalYMD(e.end_date) || parseLocalYMD(e.date)
+          }));
+          const inRange = withDates.find(e => e._start && e._end && e._start.getTime() <= today.getTime() && today.getTime() <= e._end.getTime());
+          selected = inRange || null;
+        }
+        setSelectedEvent(selected);
+
+        // Filter out already won users
+        const availableUsers = eligibleUsersData.filter(user => 
+          !winnersData.some(winner => winner.registration_id === user.id)
+        );
+        console.log('Available users for wheel:', availableUsers);
+        setEligibleUsers(availableUsers);
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
+    })();
   }, []);
 
   // Recompute registrations when event changes
@@ -72,7 +97,18 @@ const RaffleSpinPage = () => {
       return;
     }
     const filtered = eligibleUsers.filter(u => Number(u.event_id) === Number(selectedEvent.id));
-    setRegistrations(filtered);
+    
+    // Show ALL users who checked in today - no sampling restrictions
+    let wheelData = filtered;
+    if (filtered.length > 0) {
+      wheelData = filtered.map((user, index) => ({
+        ...user,
+        _segmentSize: 1,
+        _startIndex: index
+      }));
+    }
+    
+    setRegistrations(wheelData);
   }, [selectedEvent, eligibleUsers]);
 
   // Removed unused fetchEventInfo with undefined setter to satisfy linter
@@ -112,29 +148,52 @@ const RaffleSpinPage = () => {
   const spinWheel = () => {
     if (registrations.length === 0) return;
     
+    // Select directly from the wheel - no count restrictions
     const randomIndex = Math.floor(Math.random() * registrations.length);
     setPrizeNumber(randomIndex);
     setMustSpin(true);
+    // Store the winner
+    setWinner(registrations[randomIndex]);
   };
 
   const handleStopSpinning = () => {
     setMustSpin(false);
-    const selected = registrations[prizeNumber];
-    if (selected) {
-      setWinner(selected);
+    
+    // If we already have a winner stored (for both large and small datasets)
+    if (winner) {
       triggerConfetti();
-
-      // Persist winner to backend, then remove from wheel
+      
+      // Persist winner to backend
       fetch('/api/raffle-winners', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ registrationId: selected.id })
+        body: JSON.stringify({ registrationId: winner.id })
       })
       .then(() => {
-        // Remove winner from the wheel list so they can't win again
-        setRegistrations(prev => prev.filter(u => u.id !== selected.id));
+        // Remove winner from eligible users
+        setEligibleUsers(prev => prev.filter(u => u.id !== winner.id));
+        setWinner(null);
       })
       .catch(err => console.error('Failed to save winner:', err));
+    } else {
+      // Fallback for small datasets without stored winner
+      const selected = registrations[prizeNumber];
+      if (selected) {
+        setWinner(selected);
+        triggerConfetti();
+
+        // Persist winner to backend, then remove from wheel
+        fetch('/api/raffle-winners', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ registrationId: selected.id })
+        })
+        .then(() => {
+          // Remove winner from the wheel list so they can't win again
+          setRegistrations(prev => prev.filter(u => u.id !== selected.id));
+        })
+        .catch(err => console.error('Failed to save winner:', err));
+      }
     }
   };
 
@@ -201,76 +260,13 @@ const RaffleSpinPage = () => {
         />
       )}
       <div className="raffle-aspect">
-        <SiteHeader />
-        
-        {/* Navigation Bar */}
-        <div className="admin-bar">
-          <div className="admin-nav-buttons">
-            <button
-              onClick={goToRegistrationDetails}
-              className="admin-button"
-            >
-              Registration Details
-            </button>
-            <button
-              onClick={() => navigate('/admin/raffle-spin')}
-              className="admin-button"
-            >
-              Raffle Spin
-            </button>
-            <button
-              onClick={goToWinnersPage}
-              className="admin-button"
-            >
-              Raffle Winners
-            </button>
-            <button
-              onClick={goToEventDetails}
-              className="admin-button"
-            >
-              Event Details
-            </button>
-            <button
-              onClick={logout}
-              className="admin-button"
-            >
-              Logout
-            </button>
-          </div>
-        </div>
+        <SiteHeader navVariant="admin-only" />
 
         <div className="raffle-main">
           {/* Title */}
           <h1 className="raffle-title">Spin the Wheel to Reveal the Winner!</h1>
 
-          {/* Event selector */}
-          <div style={{ maxWidth: '480px', margin: '0 auto 12px', textAlign: 'center' }}>
-            <label htmlFor="eventSelect" style={{ display: 'block', marginBottom: 6, fontWeight: 600 }}>Select Event</label>
-            <select
-              id="eventSelect"
-              value={selectedEvent?.id || ''}
-              onChange={(e) => {
-                const id = Number(e.target.value);
-                const ev = events.find(evt => Number(evt.id) === id) || null;
-                setSelectedEvent(ev);
-              }}
-              style={{ width: '100%', padding: '8px 10px', borderRadius: 6 }}
-            >
-              <option value="" disabled>Select an event</option>
-              {events.map(ev => {
-                const datePart = typeof ev.date === 'string' ? ev.date.split('T')[0] : new Date(ev.date).toISOString().split('T')[0];
-                const timePart = ev.time && ev.time.length >= 5 ? ev.time : '00:00:00';
-                const dt = new Date(`${datePart}T${timePart}`);
-                const dateStr = dt.toLocaleDateString('en-US', { weekday: 'long', month: 'short', day: 'numeric', year: 'numeric' });
-                const timeStr = ev.time ? dt.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true }) : '';
-                return (
-                  <option key={ev.id} value={ev.id}>
-                    {ev.name} ({dateStr}{timeStr ? ` at ${timeStr}` : ''})
-                  </option>
-                );
-              })}
-            </select>
-          </div>
+          {/* Event selector removed: auto-select today's event */}
 
           {/* Event Info and Date - show only after selection */}
           {selectedEvent && (
@@ -281,12 +277,12 @@ const RaffleSpinPage = () => {
               <div className="event-date">
                 {(() => {
                   const datePart = typeof selectedEvent.date === 'string' ? selectedEvent.date.split('T')[0] : new Date(selectedEvent.date).toISOString().split('T')[0];
-                  const timePart = selectedEvent.time && selectedEvent.time.length >= 5 ? selectedEvent.time : '00:00:00';
-                  const dt = new Date(`${datePart}T${timePart}`);
-                  const dateStr = dt.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' });
-                  const timeStr = selectedEvent.time ? dt.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true }) : '';
-                  return `${dateStr}${timeStr ? ` at ${timeStr}` : ''}`;
-                })()}
+                  const dt = new Date(`${datePart}T00:00:00`);
+                  return dt.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' });
+                })()}                
+              </div>
+              <div className="registration-count">
+                Total Checked-in: {registrations.length} participants
               </div>
             </div>
           )}
@@ -305,18 +301,18 @@ const RaffleSpinPage = () => {
                     return `${firstName} ${lastNameInitial}.`;
                   })() : `ID: ${reg.id}`,
                   style: { 
-                    backgroundColor: generateColors(500)[index],
+                    backgroundColor: generateColors(registrations.length)[index],
                     textColor: '#000'
                   }
                 }))}
                 onStopSpinning={handleStopSpinning}
-                textDistance={70}
+                textDistance={registrations.length > 1000 ? 85 : registrations.length > 500 ? 80 : 75}
                 perpendicularText={false}
-                fontSize={6}
+                fontSize={registrations.length > 2000 ? 4 : registrations.length > 1000 ? 5 : registrations.length > 500 ? 6 : 8}
                 radiusLineWidth={1}
                 radiusLineColor="#fff"
-                outerBorderWidth={4}
-                innerBorderWidth={4}
+                outerBorderWidth={6}
+                innerBorderWidth={6}
                 innerBorderColor="#fff"
                 outerBorderColor="#fff"
                 textColors={['#000']}
@@ -325,41 +321,41 @@ const RaffleSpinPage = () => {
           </div>
 
           {!selectedEvent && (
-            <div className="no-registrations"><p>Please select an event to load eligible participants.</p></div>
+            <div className="no-registrations"><p>No event found for today. Ensure today is within the event start and end dates.</p></div>
           )}
 
           {/* Compact winner card below the wheel */}
           {winner && (
             <div className="winner-announcement" style={{
-              margin: '16px auto 8px',
-              width: '320px',
+              margin: '10px auto 5px',
+              width: '280px',
               maxWidth: '90%',
               display: 'flex',
               flexDirection: 'column',
               alignItems: 'center',
-              borderRadius: '12px',
-              padding: '14px 16px',
+              borderRadius: '10px',
+              padding: '10px 12px',
               textAlign: 'center',
               background: 'linear-gradient(135deg, #8B0000, #2F4F4F)',
               border: '3px solid #FFD700',
               boxShadow: '0 6px 18px rgba(0,0,0,0.35)'
             }}>
               <h3 style={{
-                fontSize: '1.6rem',
-                margin: '0 0 8px 0',
+                fontSize: '1.3rem',
+                margin: '0 0 6px 0',
                 color: '#FFD700',
                 fontWeight: 'bold'
               }}>🎉 WINNER! 🎉</h3>
               <p style={{
-                fontSize: '1.4rem',
+                fontSize: '1.1rem',
                 fontWeight: '700',
-                margin: '4px 0',
+                margin: '3px 0',
                 color: '#FFFFFF'
               }}>{winner.name}</p>
               <p style={{
-                fontSize: '1.1rem',
+                fontSize: '0.9rem',
                 color: '#FFD700',
-                margin: '2px 0',
+                margin: '1px 0',
                 fontWeight: '700'
               }}>ID: {winner.id}</p>
             </div>

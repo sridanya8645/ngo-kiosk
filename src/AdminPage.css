@@ -487,15 +487,8 @@
 }
 
 /* Header - Standard across all pages */
-.header-content {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  width: 100%;
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 0 20px;
-}
+/* Remove overrides so global header styles control layout */
+.header-content { all: revert !important; }
 
 .logo-section {
   display: flex;

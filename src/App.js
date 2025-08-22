@@ -4,6 +4,7 @@ import './App.css';
 import HomePage from './HomePage';
 import CheckinPage from './CheckinPage';
 import RegisterPage from './RegisterPage';
+import MobileRegister from './MobileRegister';
 import AdminPage from './AdminPage';
 import EventDetailsPage from './EventDetailsPage';
 import RaffleSpinPage from './RaffleSpinPage';
@@ -35,7 +36,7 @@ function App() {
     };
 
     // Try to enter full screen after a short delay (only once)
-    setTimeout(requestFullScreen, 2000);
+    setTimeout(requestFullScreen, 1000);
 
     // removed fullscreen icon injection
 
@@ -59,7 +60,7 @@ function App() {
           max-width: 300px;
           text-align: center;
         `;
-        message.innerHTML = '💡 For full screen experience, open in a private/incognito window';
+        message.innerHTML = '💡 For best experience, open in a private/incognito window and allow full screen';
         document.body.appendChild(message);
         
         // Remove message after 5 seconds
@@ -83,6 +84,7 @@ function App() {
           <Route path="/" element={<HomePage />} />
           <Route path="/checkin" element={<CheckinPage />} />
           <Route path="/register" element={<RegisterPage />} />
+          <Route path="/mobile-register" element={<MobileRegister />} />
           <Route path="/admin" element={<AdminPage />} />
           <Route path="/event-details" element={<EventDetailsPage />} />
           <Route path="/admin/raffle-spin" element={<RaffleSpinPage />} />

@@ -12,20 +12,22 @@ const HomePage = () => {
   
   // Test API call
   React.useEffect(() => {
-    console.log('HomePage useEffect running');
-    fetch('/api/events')
-      .then(response => response.json())
-      .then(data => {
+    (async () => {
+      try {
+        console.log('HomePage useEffect running');
+        const response = await fetch('/api/events');
+        if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+        const data = await response.json();
         console.log('API call successful:', data);
-      })
-      .catch(error => {
+      } catch (error) {
         console.error('API call failed:', error);
-      });
+      }
+    })();
   }, []);
 
   return (
     <div className="home-container">
-      <SiteHeader />
+      <SiteHeader navVariant="admin-login-only" />
 
       {/* Main Content */}
       <main className="home-main">
@@ -39,12 +41,18 @@ const HomePage = () => {
           />
         </div>
 
-        <div className="action-container">
+        <div className="action-container" style={{ display: 'flex', gap: 12, justifyContent: 'center' }}>
+          <button 
+            className="checkin-button"
+            onClick={() => navigate('/register')}
+          >
+            Register
+          </button>
           <button 
             className="checkin-button"
             onClick={() => navigate('/checkin')}
           >
-            Check - In
+            Check-In
           </button>
         </div>
       </main>

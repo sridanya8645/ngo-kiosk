@@ -30,12 +30,21 @@ export default function RaffleWinnersPage() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    setLoading(true);
-    setError('');
-    fetch("/api/raffle-winners")
-      .then(res => { if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`); return res.json(); })
-      .then(data => { setWinners(Array.isArray(data) ? data : []); setLoading(false); })
-      .catch((error) => { console.error('RaffleWinnersPage: Error fetching raffle winners:', error); setError("Failed to load winners."); setLoading(false); });
+    (async () => {
+      try {
+        setLoading(true);
+        setError('');
+        const res = await fetch("/api/raffle-winners");
+        if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
+        const data = await res.json();
+        setWinners(Array.isArray(data) ? data : []);
+      } catch (error) {
+        console.error('RaffleWinnersPage: Error fetching raffle winners:', error);
+        setError("Failed to load winners.");
+      } finally {
+        setLoading(false);
+      }
+    })();
   }, []);
 
   const handleFilterChange = (e) => setFilters({ ...filters, [e.target.name]: e.target.value });
@@ -61,18 +70,7 @@ export default function RaffleWinnersPage() {
   return (
     <div className="raffle-winners-bg">
       <div className="raffle-winners-aspect">
-        <SiteHeader />
-
-        {/* Admin Bar */}
-        <div className="admin-bar">
-          <div className="admin-nav-buttons">
-            <button onClick={() => navigate('/admin/registrations')} className="admin-button">Registration Details</button>
-            <button onClick={() => navigate('/admin/raffle-spin')} className="admin-button">Raffle Spin</button>
-            <button onClick={() => navigate('/admin/raffle-winners')} className="admin-button">Raffle Winners</button>
-            <button onClick={() => navigate('/event-details')} className="admin-button">Event Details</button>
-            <button onClick={() => navigate('/admin')} className="admin-button">Logout</button>
-          </div>
-        </div>
+        <SiteHeader navVariant="admin-only" />
 
         {/* Main Content */}
         <main className="admin-registrations-main">

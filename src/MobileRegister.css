@@ -1,0 +1,541 @@
+/* Main Container */
+.mobile-register-container {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  overflow: hidden;
+  background: linear-gradient(90deg, #CAA3EB 0%, #A566AA 100%) !important;
+}
+
+/* Custom Scrollbar Styles */
+.mobile-register-container::-webkit-scrollbar,
+.mobile-register-main::-webkit-scrollbar {
+  width: 8px;
+}
+
+.mobile-register-container::-webkit-scrollbar-track,
+.mobile-register-main::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+  margin: 5px;
+}
+
+.mobile-register-container::-webkit-scrollbar-thumb,
+.mobile-register-main::-webkit-scrollbar-thumb {
+  background: linear-gradient(135deg, #8B1C1C 0%, #c86d3a 100%);
+  border-radius: 10px;
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  transition: all 0.3s ease;
+}
+
+.mobile-register-container::-webkit-scrollbar-thumb:hover,
+.mobile-register-main::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(135deg, #6B0F0F 0%, #a85a2a 100%);
+  transform: scale(1.05);
+}
+
+.mobile-register-container::-webkit-scrollbar-corner,
+.mobile-register-main::-webkit-scrollbar-corner {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+}
+
+/* Firefox Scrollbar */
+.mobile-register-container,
+.mobile-register-main {
+  scrollbar-width: thin;
+  scrollbar-color: #8B1C1C rgba(255, 255, 255, 0.1);
+}
+
+/* Main Content */
+.mobile-register-main {
+  flex: 1;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 20px;
+  overflow-y: auto;
+  min-height: 0;
+  max-height: calc(100vh - 200px); /* Give more space for footer */
+}
+
+.mobile-register-form-container {
+  max-width: 500px;
+  width: 100%;
+  text-align: center;
+}
+
+.mobile-register-title {
+  font-size: 1.6rem; /* Reduced font size */
+  font-weight: bold;
+  color: #8B1C1C;
+  margin-bottom: 8px; /* Reduced margin */
+  text-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.mobile-register-form {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  width: 100%;
+  max-width: 400px;
+  margin-top: 10px; /* form sits below raffle text */
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.form-label {
+  font-size: 1.7rem; /* larger label */
+  font-weight: 600;
+  color: #8B1C1C;
+  text-align: left;
+}
+
+.form-input {
+  padding: 30px; /* bigger input height */
+  border: 2px solid #ddd;
+  border-radius: 6px;
+  font-size: 1.5rem; /* larger text */
+  transition: border-color 0.3s ease;
+  background: rgba(255, 255, 255, 0.9);
+  backdrop-filter: blur(10px);
+}
+
+.form-input:focus {
+  outline: none;
+  border-color: #8B1C1C;
+  box-shadow: 0 0 0 3px rgba(139, 28, 28, 0.1);
+}
+
+.form-select {
+  padding: 18px 15px;
+  border: 2px solid #ddd;
+  border-radius: 8px;
+  font-size: 1.1rem;
+  background: rgba(255, 255, 255, 0.9);
+  backdrop-filter: blur(10px);
+  cursor: pointer;
+  transition: border-color 0.3s ease;
+  min-height: 50px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.form-select:focus {
+  outline: none;
+  border-color: #8B1C1C;
+  box-shadow: 0 0 0 3px rgba(139, 28, 28, 0.1);
+}
+
+.form-actions {
+  display: flex;
+  gap: 12px;
+  margin-top: 20px;
+}
+
+.cancel-button,
+.submit-button {
+  flex: 1;
+  padding: 10px 20px;
+  font-size: 1.1rem;
+  font-weight: bold;
+  border: 1px solid #fff;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.cancel-button {
+  background: #6c757d;
+  color: white;
+}
+
+.cancel-button:hover {
+  background: #5a6268;
+  transform: translateY(-2px);
+}
+
+.submit-button { 
+  background: #000; 
+  color: #fff; 
+}
+
+.submit-button:hover {
+  background: #6B0F0F;
+  transform: translateY(-2px);
+}
+
+.submit-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.error-message {
+  color: #dc3545;
+  font-size: 0.9rem;
+  font-weight: bold;
+  margin-top: 5px;
+  text-align: left;
+}
+
+.form-input.error {
+  border-color: #dc3545;
+}
+
+/* Success Message Container */
+.mobile-registration-success {
+  position: fixed !important;
+  top: 50% !important;
+  left: 50% !important;
+  transform: translate(-50%, -50%) !important;
+  background: rgba(255, 255, 255, 0.95) !important;
+  border: 2px solid #28a745 !important;
+  border-radius: 15px !important;
+  padding: 25px !important;
+  text-align: center !important;
+  z-index: 99999 !important;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3) !important;
+  max-width: 90% !important;
+  width: 350px !important;
+  display: block !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  pointer-events: auto !important;
+}
+
+.success-icon {
+  color: #28a745;
+  font-size: 3rem;
+  margin-bottom: 15px;
+}
+
+.success-title {
+  color: #28a745;
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin-bottom: 15px;
+}
+
+.success-message {
+  color: #333;
+  font-size: 1rem;
+  line-height: 1.4;
+  margin-bottom: 15px;
+}
+
+/* Mobile-specific optimizations */
+@media screen and (max-width: 480px) {
+  .mobile-register-main {
+    padding: 10px;
+  }
+  
+  .mobile-register-form-container {
+    padding: 15px 10px;
+  }
+  
+  .mobile-register-title {
+    font-size: 1.8rem;
+    margin-bottom: 8px;
+  }
+  
+  .form-label {
+    font-size: 1.1rem;
+  }
+  
+  .form-input,
+  .form-select {
+    padding: 16px 12px;
+    font-size: 1rem;
+    min-height: 48px;
+  }
+  
+  .form-actions {
+    gap: 12px;
+    margin-top: 20px;
+  }
+  
+  .cancel-button,
+  .submit-button {
+    padding: 16px 20px;
+    font-size: 1.1rem;
+    min-height: 50px;
+  }
+  
+  .mobile-registration-success {
+    width: 320px !important;
+    padding: 20px !important;
+  }
+  
+  .success-title {
+    font-size: 1.3rem;
+  }
+  
+  .success-message {
+    font-size: 0.9rem;
+  }
+}
+
+/* Tablet optimizations */
+@media screen and (min-width: 481px) and (max-width: 768px) {
+  .mobile-register-form-container {
+    max-width: 500px;
+    margin: 0 auto;
+  }
+  
+  .mobile-register-title {
+    font-size: 2.2rem;
+  }
+  
+  .form-input,
+  .form-select {
+    padding: 20px 18px;
+    font-size: 1.15rem;
+    min-height: 55px;
+  }
+  
+  .cancel-button,
+  .submit-button {
+    padding: 20px 30px;
+    font-size: 1.25rem;
+    min-height: 60px;
+  }
+}
+
+/* Landscape mobile optimizations */
+@media screen and (max-height: 500px) and (orientation: landscape) {
+  .mobile-register-main {
+    padding: 10px;
+    max-height: calc(100vh - 150px);
+  }
+  
+  .mobile-register-form-container {
+    padding: 10px;
+  }
+  
+  .mobile-register-title {
+    font-size: 1.6rem;
+    margin-bottom: 5px;
+  }
+  
+  .form-group {
+    gap: 5px;
+  }
+  
+  .form-input,
+  .form-select {
+    padding: 12px 15px;
+    min-height: 40px;
+  }
+  
+  .form-actions {
+    margin-top: 15px;
+    gap: 10px;
+  }
+  
+  .cancel-button,
+  .submit-button {
+    padding: 12px 20px;
+    min-height: 45px;
+  }
+}
+
+/* Touch-friendly improvements */
+@media (hover: none) and (pointer: coarse) {
+  .form-input,
+  .form-select {
+    font-size: 16px; /* Prevents zoom on iOS */
+  }
+  
+  .cancel-button,
+  .submit-button {
+    min-height: 44px; /* Apple's recommended minimum touch target */
+  }
+  
+  .form-input:focus,
+  .form-select:focus {
+    font-size: 16px;
+  }
+}
+
+/* High DPI displays */
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+  .mobile-register-title {
+    text-shadow: 0 1px 4px rgba(0,0,0,0.1);
+  }
+  
+  .form-input,
+  .form-select {
+    border-width: 1px;
+  }
+}
+
+/* Accessibility improvements */
+@media (prefers-reduced-motion: reduce) {
+  .form-input,
+  .form-select,
+  .cancel-button,
+  .submit-button {
+    transition: none;
+  }
+}
+
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+  .mobile-register-container {
+    background: linear-gradient(90deg, #2a1b3d 0%, #1a0f2e 100%) !important;
+  }
+  
+  .form-input,
+  .form-select {
+    background: rgba(255, 255, 255, 0.95);
+    color: #000;
+  }
+  
+  .mobile-register-title {
+    color: #fff;
+  }
+  
+  .form-label {
+    color: #fff;
+  }
+}
+
+/* Footer - Standard across all pages */
+.footer-content {
+  display: flex !important;
+  flex-direction: row !important;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 0;
+  gap: 20px;
+  font-size: 1.9rem;
+  color: #000 !important;
+  font-weight: bold;
+  width: 100%;
+  max-width: 100%;
+  padding: 0 20px;
+  position: relative;
+  z-index: 10;
+}
+
+.footer-section {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #000 !important;
+  font-weight: 600;
+  font-size: 0.9rem;
+  flex: 1;
+}
+
+.footer-section:has(.powered-text) {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.footer-icon {
+  font-size: 1.1rem;
+  color: #000 !important;
+  flex-shrink: 0;
+}
+
+.footer-text {
+  font-size: 0.9rem;
+  line-height: 1.2;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  color: #000 !important;
+}
+
+.powered-text {
+  font-size: 0.8rem;
+  color: #000 !important;
+  font-weight: 600;
+  margin-right: 8px;
+}
+
+.pits-logo {
+  height: 25px;
+  width: auto;
+  object-fit: contain;
+}
+
+/* Header - Standard across all pages */
+.header-content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+.logo-section {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  z-index: 1001;
+}
+
+.logo-image {
+  height: 50px;
+  width: 50px;
+  object-fit: contain;
+  border-radius: 50%;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.org-info {
+  font-size: 1rem;
+  color: white;
+  text-align: center;
+  flex: 1;
+  margin: 0 20px;
+  font-weight: 500;
+}
+
+.admin-bar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.admin-nav-buttons {
+  display: flex;
+  gap: 10px;
+}
+
+.admin-button {
+  background: rgba(255, 255, 255, 0.2);
+  color: white;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.admin-button:hover {
+  background: rgba(255, 255, 255, 0.3);
+  transform: translateY(-1px);
+}
+
+/* Force correct background - override any conflicting styles */
+.mobile-register-container {
+  background: linear-gradient(90deg, #CAA3EB 0%, #A566AA 100%) !important;
+  background-image: linear-gradient(90deg, #CAA3EB 0%, #A566AA 100%) !important;
+}

@@ -4,6 +4,7 @@
   flex-direction: column;
   height: 100vh;
   overflow: auto; /* allow page to scroll so footer is always reachable */
+  overflow-x: hidden; /* prevent horizontal scroll */
   background: linear-gradient(90deg, #CAA3EB 0%, #A566AA 100%);
 }
 
@@ -50,16 +51,8 @@
 /* Header Section */
 .checkin-header { display:none; }
 
-.header-content {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  max-width: 100%;
-  width: 100%;
-  margin: 0 auto;
-  position: relative;
-  padding: 0 20px;
-}
+/* Remove overrides so global header styles control layout */
+.header-content { all: revert !important; }
 
 .logo-section {
   display: flex;
@@ -163,6 +156,7 @@
   flex: 1;
   padding: 8px 16px 45px; /* move content up and account for higher footer */
   overflow-y: auto;
+  overflow-x: hidden; /* prevent horizontal scroll */
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
@@ -184,7 +178,7 @@
 .checkin-title {
   font-size: 1.6rem;
   font-weight: bold;
-  color: #8B1C1C;
+  color: #000;
   margin: 0; /* spacing controlled by parent gap */
   text-shadow: 0 2px 8px rgba(0,0,0,0.1);
 }
@@ -323,8 +317,8 @@
 }
 
 .scanner-container {
-  width: 280px;
-  height: 280px;
+  width: 400px;
+  height: 400px;
   margin: 0 auto; /* Center horizontally, vertical spacing via gap */
   border: none;
   border-radius: 0;
@@ -337,8 +331,8 @@
 }
 
 #reader {
-  width: 280px !important;
-  height: 280px !important;
+  width: 400px !important;
+  height: 400px !important;
   margin: 0 auto !important;
   border: 3px solid #8B1C1C !important;
   border-radius: 15px !important;
@@ -423,6 +417,9 @@
   justify-content: center;
   margin: 0; /* spacing controlled by parent gap */
 }
+
+/* Make the helper text under Register black */
+.checkin-actions + div p { color: #000 !important; }
 
 .register-button {
   background: #000;
@@ -1338,6 +1335,11 @@
   text-align: center;
   margin: 0; /* spacing controlled by parent gap */
   font-weight: 600;
+}
+
+.checkin-for-title {
+  color: #8B1C1C;
+  font-size: 1.8rem; /* larger like original title */
 }
 @import './styles/footer.css';
 

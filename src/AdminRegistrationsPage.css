@@ -32,14 +32,8 @@
 
 .admin-registrations-header { display:none; }
 
-.header-content {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  max-width: 1200px;
-  margin: 0 auto;
-  position: relative;
-}
+/* Remove overrides so global header styles control layout */
+.header-content { all: revert !important; }
 
 .logo-section {
   display: flex;

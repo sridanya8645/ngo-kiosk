@@ -50,16 +50,8 @@
 /* Header Section */
 .register-header { display:none; }
 
-.header-content {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  max-width: 100%;
-  width: 100%;
-  margin: 0 auto;
-  position: relative;
-  padding: 0 20px;
-}
+/* Remove overrides so global header styles control layout */
+.header-content { all: revert !important; }
 
 .logo-section {
   display: flex;

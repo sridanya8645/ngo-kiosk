@@ -9,7 +9,7 @@
   top: 0;
   left: 0;
   z-index: 9999;
-  background: linear-gradient(135deg, #f9b233 0%, #c86d3a 100%);
+  background: transparent; /* remove global orange gradient */
 }
 
 /* Hide browser UI when in full screen */
@@ -70,7 +70,7 @@ html, body {
   width: 100vw;
   height: 100vh;
   overflow: hidden;
-  background: linear-gradient(135deg, #f9b233 0%, #c86d3a 100%);
+  background: transparent; /* unify with page backgrounds */
 }
 
 /* Allow input interaction - remove blocking */
@@ -99,7 +99,7 @@ input, textarea, select {
   flex-direction: column;
   overflow: hidden;
   position: relative;
-  background: linear-gradient(135deg, #2C5F99 0%, #0F2033 100%);
+  background: transparent; /* no global gradients */
 }
 
 .header {

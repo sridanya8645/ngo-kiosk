@@ -53,16 +53,8 @@
 /* Header Section */
 .home-header { display: none; }
 
-.header-content {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  max-width: 100%;
-  width: 100%;
-  margin: 0 auto;
-  position: relative;
-  padding: 0 20px;
-}
+/* Remove overrides so global header styles control layout */
+.header-content { all: revert !important; }
 
 .logo-section {
   display: flex;
@@ -208,7 +200,7 @@
 }
 
 /* Footer */
-.home-footer { background: transparent; padding: 10px 0; }
+.home-footer { background: transparent !important; padding: 10px 0 !important; }
 
 .footer-content { display:flex !important; justify-content:center; align-items:center; gap:8px; }
 
