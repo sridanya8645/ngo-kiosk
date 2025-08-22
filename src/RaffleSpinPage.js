@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'; // redeploy trigger: minor comment change
+import React, { useState, useEffect } from 'react'; // redeploy trigger: app restart deployment
 import { useNavigate } from 'react-router-dom';
 import { Wheel } from 'react-custom-roulette';
 import Confetti from 'react-confetti';
