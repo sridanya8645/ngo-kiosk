@@ -189,34 +189,45 @@ app.post('/api/login', async (req, res) => {
     );
     
     console.log('Database query result:', rows.length, 'rows found');
-        if (rows.length > 0) {
-      // Generate new TOTP secret for enrollment - PROPER IMPLEMENTATION
-      console.log('Generating new TOTP enrollment for user:', rows[0].id);
-      
-      const crypto = require('crypto');
-      // Generate a proper base32 secret for TOTP - authenticator app compatible
-      const base32Chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ234567';
-      let secret = '';
-      for (let i = 0; i < 32; i++) {
-        secret += base32Chars[Math.floor(Math.random() * base32Chars.length)];
+    if (rows.length > 0) {
+      // Check if user already has TOTP set up
+      if (rows[0].totp_secret) {
+        // User already has MFA set up, prompt for TOTP code
+        console.log('User has existing TOTP, prompting for code:', rows[0].id);
+        res.json({
+          success: true,
+          mfa: 'totp',
+          userId: rows[0].id
+        });
+      } else {
+        // First time setup - generate new TOTP secret for enrollment
+        console.log('First time TOTP enrollment for user:', rows[0].id);
+        
+        const crypto = require('crypto');
+        // Generate a proper base32 secret for TOTP - authenticator app compatible
+        const base32Chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ234567';
+        let secret = '';
+        for (let i = 0; i < 32; i++) {
+          secret += base32Chars[Math.floor(Math.random() * base32Chars.length)];
+        }
+        const label = 'Indoamericanexpo@gmail.com';
+        const issuer = 'NGO Kiosk';
+        
+        // Store the secret temporarily for enrollment
+        if (!global.totpEnrollment) global.totpEnrollment = new Map();
+        global.totpEnrollment.set(rows[0].id, {
+          secret: secret,
+          timestamp: Date.now()
+        });
+        
+        res.json({
+          success: true,
+          mfa: 'totp-enroll',
+          userId: rows[0].id,
+          manualSecret: secret,
+          label: `${issuer}:${label}`
+        });
       }
-                     const label = 'Indoamericanexpo@gmail.com';
-      const issuer = 'NGO Kiosk';
-      
-      // Store the secret temporarily for enrollment
-      if (!global.totpEnrollment) global.totpEnrollment = new Map();
-      global.totpEnrollment.set(rows[0].id, {
-        secret: secret,
-        timestamp: Date.now()
-      });
-      
-      res.json({
-        success: true,
-        mfa: 'totp-enroll',
-        userId: rows[0].id,
-        manualSecret: secret,
-        label: `${issuer}:${label}`
-      });
     } else {
       res.status(401).json({ success: false, message: "Invalid username or password" });
     }
