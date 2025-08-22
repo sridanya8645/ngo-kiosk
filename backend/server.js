@@ -1,6 +1,7 @@
 // Load environment variables
 require('dotenv').config();
 
+// Updated email configuration for Indo American Fair - deployment trigger
 const express = require('express');
 const cors = require('cors');
 const { pool, initializeDatabase } = require('./db');
@@ -433,7 +434,7 @@ app.post('/api/register', async (req, res) => {
       const mailOptions = {
         from: GMAIL_USER,
         to: email,
-        subject: `Registration Confirmed for ${event.name} at Non-Governmental Organization`,
+        subject: `Registration Confirmed for ${event.name}`,
         html: `
           <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
             <div style="text-align: center; margin-bottom: 20px;">
@@ -443,13 +444,13 @@ app.post('/api/register', async (req, res) => {
             
             <p style="font-size: 16px; color: #333;">Hello ${name},</p>
             
-            <p style="font-size: 16px; color: #333;">You have successfully registered for the event <strong>${event.name}</strong> at Non-Governmental Organization.</p>
+            <p style="font-size: 16px; color: #333;">You have successfully registered for the event <strong>${event.name}</strong>.</p>
             
             <div style="background: #f8f9fa; padding: 20px; border-radius: 10px; margin: 20px 0;">
               <h3 style="color: #333; margin-top: 0;">Event Details:</h3>
               <p style="margin: 8px 0;"><span style="color: #666;">📅</span> <strong>Date:</strong> ${event.date}</p>
               <p style="margin: 8px 0;"><span style="color: #666;">🕕</span> <strong>Time:</strong> ${event.time}</p>
-              <p style="margin: 8px 0;"><span style="color: #666;">📍</span> <strong>Venue:</strong> Non-Governmental Organization, 12 Perrine Road, Monmouth Junction, NJ 08852</p>
+              <p style="margin: 8px 0;"><span style="color: #666;">📍</span> <strong>Venue:</strong> ${event.location}</p>
               <p style="margin: 8px 0;"><span style="color: #666;">🆔</span> <strong>Registration ID:</strong> ${registrationId}</p>
             </div>
             
@@ -464,10 +465,10 @@ app.post('/api/register', async (req, res) => {
               </div>
             </div>
             
-            <p style="font-size: 16px; color: #333;">Warm regards,<br><strong>Non-Governmental Organization Team</strong></p>
+            <p style="font-size: 16px; color: #333;">Warm regards,<br><strong>Indo American Fair Team</strong></p>
             
             <div style="border-top: 1px solid #ddd; margin-top: 30px; padding-top: 20px;">
-              <p style="margin: 5px 0;"><span style="color: #666;">📧</span> <a href="mailto:NGO@gmail.com" style="color: #8B1C1C;">NGO@gmail.com</a></p>
+              <p style="margin: 5px 0;"><span style="color: #666;">📧</span> <a href="mailto:Indoamericanexpo@gmail.com" style="color: #8B1C1C;">Indoamericanexpo@gmail.com</a></p>
               <p style="margin: 5px 0;"><span style="color: #666;">📞</span> <a href="tel:609-937-2800" style="color: #8B1C1C;">609-937-2800</a></p>
             </div>
           </div>
@@ -584,7 +585,7 @@ app.post('/api/mobile-register', async (req, res) => {
       const mailOptions = {
         from: GMAIL_USER,
         to: email,
-        subject: `Registration Confirmed for ${event.name} at Non-Governmental Organization`,
+        subject: `Registration Confirmed for ${event.name}`,
         attachments: [
           {
             filename: `qr-code-${registrationId}.png`,
@@ -601,13 +602,13 @@ app.post('/api/mobile-register', async (req, res) => {
             
             <p style="font-size: 16px; color: #333;">Hello ${name},</p>
             
-            <p style="font-size: 16px; color: #333;">You have successfully registered for the event <strong>${event.name}</strong> at Non-Governmental Organization.</p>
+            <p style="font-size: 16px; color: #333;">You have successfully registered for the event <strong>${event.name}</strong>.</p>
             
             <div style="background: #f8f9fa; padding: 20px; border-radius: 10px; margin: 20px 0;">
               <h3 style="color: #333; margin-top: 0;">Event Details:</h3>
               <p style="margin: 8px 0;"><span style="color: #666;">📅</span> <strong>Date:</strong> ${event.date}</p>
               <p style="margin: 8px 0;"><span style="color: #666;">🕕</span> <strong>Time:</strong> ${event.time}</p>
-              <p style="margin: 8px 0;"><span style="color: #666;">📍</span> <strong>Venue:</strong> Non-Governmental Organization, 12 Perrine Road, Monmouth Junction, NJ 08852</p>
+              <p style="margin: 8px 0;"><span style="color: #666;">📍</span> <strong>Venue:</strong> ${event.location}</p>
               <p style="margin: 8px 0;"><span style="color: #666;">🆔</span> <strong>Registration ID:</strong> ${registrationId}</p>
             </div>
             
@@ -623,10 +624,10 @@ app.post('/api/mobile-register', async (req, res) => {
               <p style="font-size: 14px; color: #666; margin-top: 10px;">QR code attached to this email</p>
             </div>
             
-            <p style="font-size: 16px; color: #333;">Warm regards,<br><strong>Non-Governmental Organization Team</strong></p>
+            <p style="font-size: 16px; color: #333;">Warm regards,<br><strong>Indo American Fair Team</strong></p>
             
             <div style="border-top: 1px solid #ddd; margin-top: 30px; padding-top: 20px;">
-              <p style="margin: 5px 0;"><span style="color: #666;">📧</span> <a href="mailto:NGO@gmail.com" style="color: #8B1C1C;">NGO@gmail.com</a></p>
+              <p style="margin: 5px 0;"><span style="color: #666;">📧</span> <a href="mailto:Indoamericanexpo@gmail.com" style="color: #8B1C1C;">Indoamericanexpo@gmail.com</a></p>
               <p style="margin: 5px 0;"><span style="color: #666;">📞</span> <a href="tel:609-937-2800" style="color: #8B1C1C;">609-937-2800</a></p>
             </div>
           </div>
