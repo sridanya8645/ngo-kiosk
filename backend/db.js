@@ -34,7 +34,12 @@ async function initializeDatabase() {
         id INT AUTO_INCREMENT PRIMARY KEY,
         username VARCHAR(255) UNIQUE NOT NULL,
         password VARCHAR(255) NOT NULL,
-        totp_secret VARCHAR(255)
+        totp_secret VARCHAR(255),
+        admin_id VARCHAR(50) UNIQUE,
+        created_by INT,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        is_active BOOLEAN DEFAULT TRUE,
+        FOREIGN KEY (created_by) REFERENCES users(id) ON DELETE SET NULL
       )
     `);
 
@@ -86,8 +91,8 @@ async function initializeDatabase() {
 
     // Insert default admin user if not exists
     await connection.execute(`
-      INSERT IGNORE INTO users (username, password) 
-      VALUES ('admin', 'admin123')
+      INSERT IGNORE INTO users (username, password, admin_id) 
+      VALUES ('admin', 'admin123', 'ADMIN001')
     `);
 
     // Ensure totp_secret column exists (in case table was created before this column was added)

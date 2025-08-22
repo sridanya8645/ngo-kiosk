@@ -1329,10 +1329,127 @@ app.post('/api/test-email-simple', async (req, res) => {
   }
 });
 
+// Admin Management Endpoints
+
+// Get all admin users
+app.get('/api/admin/users', async (req, res) => {
+  try {
+    const [rows] = await pool.execute(`
+      SELECT id, username, admin_id, created_at, is_active, 
+             (SELECT username FROM users WHERE id = u.created_by) as created_by_name
+      FROM users u 
+      ORDER BY created_at DESC
+    `);
+    
+    res.json({ success: true, users: rows });
+  } catch (error) {
+    console.error('Get admin users error:', error);
+    res.status(500).json({ success: false, message: 'Database error' });
+  }
+});
+
+// Create new admin user
+app.post('/api/admin/users', async (req, res) => {
+  try {
+    const { username, password, admin_id } = req.body;
+    
+    // Validate input
+    if (!username || !password || !admin_id) {
+      return res.status(400).json({ success: false, message: 'Username, password, and admin ID are required' });
+    }
+    
+    // Check if username or admin_id already exists
+    const [existing] = await pool.execute(
+      'SELECT id FROM users WHERE username = ? OR admin_id = ?',
+      [username, admin_id]
+    );
+    
+    if (existing.length > 0) {
+      return res.status(400).json({ success: false, message: 'Username or Admin ID already exists' });
+    }
+    
+    // Create new admin user (for now, created_by will be NULL for the first admin)
+    const [result] = await pool.execute(
+      'INSERT INTO users (username, password, admin_id) VALUES (?, ?, ?)',
+      [username, password, admin_id]
+    );
+    
+    res.json({ 
+      success: true, 
+      message: 'Admin user created successfully',
+      userId: result.insertId
+    });
+  } catch (error) {
+    console.error('Create admin user error:', error);
+    res.status(500).json({ success: false, message: 'Database error' });
+  }
+});
+
+// Update admin user
+app.put('/api/admin/users/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { username, password, admin_id, is_active } = req.body;
+    
+    let sql = 'UPDATE users SET ';
+    let params = [];
+    
+    if (username) {
+      sql += 'username = ?, ';
+      params.push(username);
+    }
+    
+    if (password) {
+      sql += 'password = ?, ';
+      params.push(password);
+    }
+    
+    if (admin_id) {
+      sql += 'admin_id = ?, ';
+      params.push(admin_id);
+    }
+    
+    if (typeof is_active === 'boolean') {
+      sql += 'is_active = ?, ';
+      params.push(is_active);
+    }
+    
+    sql = sql.slice(0, -2); // Remove last comma and space
+    sql += ' WHERE id = ?';
+    params.push(id);
+    
+    await pool.execute(sql, params);
+    
+    res.json({ success: true, message: 'Admin user updated successfully' });
+  } catch (error) {
+    console.error('Update admin user error:', error);
+    res.status(500).json({ success: false, message: 'Database error' });
+  }
+});
+
+// Delete admin user
+app.delete('/api/admin/users/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+    
+    // Don't allow deleting the main admin (id = 1)
+    if (id == 1) {
+      return res.status(400).json({ success: false, message: 'Cannot delete the main admin user' });
+    }
+    
+    await pool.execute('DELETE FROM users WHERE id = ?', [id]);
+    
+    res.json({ success: true, message: 'Admin user deleted successfully' });
+  } catch (error) {
+    console.error('Delete admin user error:', error);
+    res.status(500).json({ success: false, message: 'Database error' });
+  }
+});
+
 // Simple test endpoint
 app.get('/test', (req, res) => {
   res.json({
-    message: 'Server is working!',
+    message: 'Server is working with multi-admin support!',
     timestamp: new Date().toISOString()
   });
 });
