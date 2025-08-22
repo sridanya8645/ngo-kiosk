@@ -194,8 +194,12 @@ app.post('/api/login', async (req, res) => {
       console.log('Generating new TOTP enrollment for user:', rows[0].id);
       
       const crypto = require('crypto');
-      // Generate a proper base32 secret for TOTP - authenticator app compatible (minimum 16 chars)
-      const secret = crypto.randomBytes(20).toString('base64').replace(/[^A-Z2-7]/g, '').substring(0, 40).toUpperCase();
+      // Generate a proper base32 secret for TOTP - authenticator app compatible
+      const base32Chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ234567';
+      let secret = '';
+      for (let i = 0; i < 32; i++) {
+        secret += base32Chars[Math.floor(Math.random() * base32Chars.length)];
+      }
                      const label = 'Indoamericanexpo@gmail.com';
       const issuer = 'NGO Kiosk';
       
