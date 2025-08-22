@@ -90,6 +90,16 @@ async function initializeDatabase() {
       VALUES ('admin', 'admin123')
     `);
 
+    // Ensure totp_secret column exists (in case table was created before this column was added)
+    try {
+      await connection.execute(`
+        ALTER TABLE users ADD COLUMN totp_secret VARCHAR(255)
+      `);
+    } catch (error) {
+      // Column already exists, ignore error
+      console.log('totp_secret column already exists');
+    }
+
     // Removed sample events insertion - events should only be added through admin interface
     // This prevents deleted events from reappearing after server restart
 
