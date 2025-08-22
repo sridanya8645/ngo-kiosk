@@ -60,7 +60,7 @@ const AdminPage = () => {
         setUserId(data.userId);
         try { localStorage.setItem('adminUserId', String(data.userId)); } catch(_) {}
         setEnrollSecret(data.manualSecret || '');
-        setEnrollLabel(data.label || 'NGO Kiosk:sridanyaravi07@gmail.com');
+                 setEnrollLabel(data.label || 'NGO Kiosk:Indoamericanexpo@gmail.com');
         setStage('totp-enroll');
       } else if (data.mfa === 'email') {
         setUserId(data.userId);

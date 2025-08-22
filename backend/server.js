@@ -196,7 +196,7 @@ app.post('/api/login', async (req, res) => {
       const crypto = require('crypto');
       // Generate a proper base32 secret for TOTP
       const secret = crypto.randomBytes(20).toString('base64').replace(/[^A-Z2-7]/g, '').substring(0, 32);
-      const label = 'sridanyaravi07@gmail.com';
+                     const label = 'Indoamericanexpo@gmail.com';
       const issuer = 'NGO Kiosk';
       
       // Store the secret temporarily for enrollment
