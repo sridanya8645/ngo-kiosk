@@ -5,6 +5,7 @@ import SiteHeader from './components/SiteHeader';
 import SiteFooter from './components/SiteFooter';
 
 const columns = [
+  { key: "id", label: "Registration ID" },
   { key: "name", label: "Full Name" },
   { key: "email", label: "Email" },
   { key: "phone", label: "Phone Number" },
@@ -18,6 +19,7 @@ const columns = [
 function AdminRegistrationsPage() {
   const [registrations, setRegistrations] = useState([]);
   const [filters, setFilters] = useState({
+    id: "",
     name: "",
     email: "",
     phone: "",
@@ -79,6 +81,7 @@ function AdminRegistrationsPage() {
     const headers = columns.map(col => col.label).join(',');
     const csvContent = filtered.map(row => {
       return [
+        row.id || '',
         row.name || '',
         row.email || '',
         row.phone || '',
@@ -133,6 +136,7 @@ function AdminRegistrationsPage() {
           <div className="registrations-table-container">
             {/* Table Header */}
             <div className="table-header-row">
+              <div className="header-cell">Registration ID</div>
               <div className="header-cell">Full Name</div>
               <div className="header-cell">Email</div>
               <div className="header-cell">Phone Number</div>
@@ -145,6 +149,15 @@ function AdminRegistrationsPage() {
 
             {/* Filter Row */}
             <div className="filter-row">
+              <div className="filter-cell">
+                <input
+                  name="id"
+                  value={filters.id}
+                  onChange={handleFilterChange}
+                  placeholder="Filter Registration ID"
+                  className="filter-input"
+                />
+              </div>
               <div className="filter-cell">
                 <input
                   name="name"
@@ -235,6 +248,7 @@ function AdminRegistrationsPage() {
               ) : (
                 filtered.map((registration, index) => (
                   <div key={index} className="registration-row">
+                    <div className="data-cell">{registration.id || '-'}</div>
                     <div className="data-cell">{registration.name || '-'}</div>
                     <div className="data-cell">{registration.email || '-'}</div>
                     <div className="data-cell">{registration.phone || '-'}</div>

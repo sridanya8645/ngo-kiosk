@@ -1354,14 +1354,22 @@ app.post('/api/admin/users', async (req, res) => {
     const { username, password, admin_id } = req.body;
     
     // Validate input
-    if (!username || !password || !admin_id) {
-      return res.status(400).json({ success: false, message: 'Username, password, and admin ID are required' });
+    if (!username || !password) {
+      return res.status(400).json({ success: false, message: 'Username and password are required' });
+    }
+    
+    // Generate admin ID if not provided
+    let finalAdminId = admin_id;
+    if (!finalAdminId) {
+      const timestamp = Date.now().toString().slice(-6);
+      const random = Math.random().toString(36).substring(2, 5).toUpperCase();
+      finalAdminId = `ADMIN${timestamp}${random}`;
     }
     
     // Check if username or admin_id already exists
     const [existing] = await pool.execute(
       'SELECT id FROM users WHERE username = ? OR admin_id = ?',
-      [username, admin_id]
+      [username, finalAdminId]
     );
     
     if (existing.length > 0) {
@@ -1371,13 +1379,14 @@ app.post('/api/admin/users', async (req, res) => {
     // Create new admin user (for now, created_by will be NULL for the first admin)
     const [result] = await pool.execute(
       'INSERT INTO users (username, password, admin_id) VALUES (?, ?, ?)',
-      [username, password, admin_id]
+      [username, password, finalAdminId]
     );
     
     res.json({ 
       success: true, 
       message: 'Admin user created successfully',
-      userId: result.insertId
+      userId: result.insertId,
+      adminId: finalAdminId
     });
   } catch (error) {
     console.error('Create admin user error:', error);
@@ -1389,7 +1398,22 @@ app.post('/api/admin/users', async (req, res) => {
 app.put('/api/admin/users/:id', async (req, res) => {
   try {
     const { id } = req.params;
-    const { username, password, admin_id, is_active } = req.body;
+    const { username, password, is_active } = req.body;
+    
+    // Validate input
+    if (!username) {
+      return res.status(400).json({ success: false, message: 'Username is required' });
+    }
+    
+    // Check if username already exists for other users
+    const [existing] = await pool.execute(
+      'SELECT id FROM users WHERE username = ? AND id != ?',
+      [username, id]
+    );
+    
+    if (existing.length > 0) {
+      return res.status(400).json({ success: false, message: 'Username already exists' });
+    }
     
     let sql = 'UPDATE users SET ';
     let params = [];
@@ -1402,11 +1426,6 @@ app.put('/api/admin/users/:id', async (req, res) => {
     if (password) {
       sql += 'password = ?, ';
       params.push(password);
-    }
-    
-    if (admin_id) {
-      sql += 'admin_id = ?, ';
-      params.push(admin_id);
     }
     
     if (typeof is_active === 'boolean') {

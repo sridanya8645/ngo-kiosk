@@ -10,6 +10,7 @@ import EventDetailsPage from './EventDetailsPage';
 import RaffleSpinPage from './RaffleSpinPage';
 import RaffleWinnersPage from './RaffleWinnersPage';
 import AdminRegistrationsPage from './AdminRegistrationsPage';
+import AdminUsersPage from './AdminUsersPage';
 
 function App() {
   useEffect(() => {
@@ -90,6 +91,7 @@ function App() {
           <Route path="/admin/raffle-spin" element={<RaffleSpinPage />} />
           <Route path="/admin/raffle-winners" element={<RaffleWinnersPage />} />
           <Route path="/admin/registrations" element={<AdminRegistrationsPage />} />
+          <Route path="/admin-users" element={<AdminUsersPage />} />
         </Routes>
       </div>
     </Router>
