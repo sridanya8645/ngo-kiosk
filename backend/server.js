@@ -189,12 +189,12 @@ app.post('/api/login', async (req, res) => {
     
     console.log('Database query result:', rows.length, 'rows found');
         if (rows.length > 0) {
-      // Generate new TOTP secret for enrollment - fixed encoding issue - force deploy v2
+      // Generate new TOTP secret for enrollment - PROPER IMPLEMENTATION
       console.log('Generating new TOTP enrollment for user:', rows[0].id);
       
       const crypto = require('crypto');
-      // Use hex encoding and convert to base32-compatible string
-      const secret = crypto.randomBytes(20).toString('hex').toUpperCase().substring(0, 32);
+      // Generate a proper base32 secret for TOTP
+      const secret = crypto.randomBytes(20).toString('base64').replace(/[^A-Z2-7]/g, '').substring(0, 32);
       const label = 'sridanyaravi07@gmail.com';
       const issuer = 'NGO Kiosk';
       
@@ -295,7 +295,7 @@ app.post('/api/mfa/totp/login', async (req, res) => {
       const timeBuffer = Buffer.alloc(8);
       timeBuffer.writeBigUInt64BE(BigInt(time + i), 0);
       
-      const hmac = crypto.createHmac('sha1', Buffer.from(secret, 'hex'));
+      const hmac = crypto.createHmac('sha1', Buffer.from(secret, 'base64'));
       hmac.update(timeBuffer);
       const hash = hmac.digest();
       
@@ -341,7 +341,7 @@ app.post('/api/mfa/totp/verify', async (req, res) => {
       const timeBuffer = Buffer.alloc(8);
       timeBuffer.writeBigUInt64BE(BigInt(time + i), 0);
       
-      const hmac = crypto.createHmac('sha1', Buffer.from(secret, 'hex'));
+      const hmac = crypto.createHmac('sha1', Buffer.from(secret, 'base64'));
       hmac.update(timeBuffer);
       const hash = hmac.digest();
       
