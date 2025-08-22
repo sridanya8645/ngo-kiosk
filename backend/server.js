@@ -185,12 +185,41 @@ app.post('/api/login', async (req, res) => {
       [username, password]
     );
     if (rows.length > 0) {
-      // Return MFA response that frontend expects
-      res.json({ 
-        success: true, 
-        mfa: 'email', 
-        userId: rows[0].id 
-      });
+      // Check if user has TOTP secret set up
+      const [totpRows] = await pool.execute(
+        "SELECT totp_secret FROM users WHERE id = ?",
+        [rows[0].id]
+      );
+      
+      if (totpRows.length > 0 && totpRows[0].totp_secret) {
+        // User has TOTP set up - require TOTP verification
+        res.json({ 
+          success: true, 
+          mfa: 'totp', 
+          userId: rows[0].id 
+        });
+             } else {
+         // User needs to set up TOTP - show enrollment
+         const crypto = require('crypto');
+         const secret = crypto.randomBytes(20).toString('base32');
+         const label = 'Admin';
+         const issuer = 'NGO Kiosk';
+         
+         // Store the secret temporarily for enrollment
+         if (!global.totpEnrollment) global.totpEnrollment = new Map();
+         global.totpEnrollment.set(rows[0].id, {
+           secret: secret,
+           timestamp: Date.now()
+         });
+         
+         res.json({ 
+           success: true, 
+           mfa: 'totp-enroll', 
+           userId: rows[0].id,
+           manualSecret: secret,
+           label: `${issuer}:${label}`
+         });
+       }
     } else {
       res.status(401).json({ success: false, message: "Invalid username or password" });
     }
@@ -205,11 +234,42 @@ app.post('/api/verify-mfa', async (req, res) => {
   try {
     const { userId, code } = req.body;
     
-    // For now, accept any 6-digit code as valid (you can implement proper MFA later)
-    if (code && code.length === 6 && /^\d+$/.test(code)) {
+    if (!global.mfaCodes || !global.mfaCodes.has(userId)) {
+      return res.status(400).json({ success: false, message: "No verification code found. Please try logging in again." });
+    }
+    
+    const mfaData = global.mfaCodes.get(userId);
+    const now = Date.now();
+    const codeAge = now - mfaData.timestamp;
+    const maxAge = 10 * 60 * 1000; // 10 minutes
+    
+    // Check if code is expired
+    if (codeAge > maxAge) {
+      global.mfaCodes.delete(userId);
+      return res.status(400).json({ success: false, message: "Verification code has expired. Please try logging in again." });
+    }
+    
+    // Check if too many attempts
+    if (mfaData.attempts >= 3) {
+      global.mfaCodes.delete(userId);
+      return res.status(400).json({ success: false, message: "Too many failed attempts. Please try logging in again." });
+    }
+    
+    // Increment attempts
+    mfaData.attempts++;
+    
+    // Verify the code
+    if (code === mfaData.code) {
+      // Success! Remove the code and allow login
+      global.mfaCodes.delete(userId);
       res.json({ success: true });
     } else {
-      res.status(400).json({ success: false, message: "Invalid or expired code" });
+      // Wrong code
+      if (mfaData.attempts >= 3) {
+        global.mfaCodes.delete(userId);
+        return res.status(400).json({ success: false, message: "Too many failed attempts. Please try logging in again." });
+      }
+      res.status(400).json({ success: false, message: "Invalid verification code. Please try again." });
     }
   } catch (error) {
     console.error('MFA verification error:', error);
@@ -217,13 +277,46 @@ app.post('/api/verify-mfa', async (req, res) => {
   }
 });
 
-// TOTP MFA endpoints (stubs for now)
+// TOTP MFA endpoints
 app.post('/api/mfa/totp/login', async (req, res) => {
   try {
     const { userId, token } = req.body;
     
-    // For now, accept any 6-digit code as valid
-    if (token && token.length === 6 && /^\d+$/.test(token)) {
+    // Get user's TOTP secret
+    const [rows] = await pool.execute(
+      "SELECT totp_secret FROM users WHERE id = ?",
+      [userId]
+    );
+    
+    if (rows.length === 0 || !rows[0].totp_secret) {
+      return res.status(400).json({ success: false, message: "TOTP not set up" });
+    }
+    
+    // Validate TOTP token
+    const crypto = require('crypto');
+    const secret = rows[0].totp_secret;
+    const time = Math.floor(Date.now() / 30000); // 30-second window
+    
+    // Generate expected tokens for current and adjacent time windows
+    const expectedTokens = [];
+    for (let i = -1; i <= 1; i++) {
+      const timeBuffer = Buffer.alloc(8);
+      timeBuffer.writeBigUInt64BE(BigInt(time + i), 0);
+      
+      const hmac = crypto.createHmac('sha1', Buffer.from(secret, 'base32'));
+      hmac.update(timeBuffer);
+      const hash = hmac.digest();
+      
+      const offset = hash[hash.length - 1] & 0xf;
+      const code = ((hash[offset] & 0x7f) << 24) |
+                   ((hash[offset + 1] & 0xff) << 16) |
+                   ((hash[offset + 2] & 0xff) << 8) |
+                   (hash[offset + 3] & 0xff);
+      
+      expectedTokens.push((code % 1000000).toString().padStart(6, '0'));
+    }
+    
+    if (expectedTokens.includes(token)) {
       res.json({ success: true });
     } else {
       res.status(400).json({ success: false, message: "Invalid code" });
@@ -238,8 +331,47 @@ app.post('/api/mfa/totp/verify', async (req, res) => {
   try {
     const { userId, token } = req.body;
     
-    // For now, accept any 6-digit code as valid
-    if (token && token.length === 6 && /^\d+$/.test(token)) {
+    // Get enrollment secret
+    if (!global.totpEnrollment || !global.totpEnrollment.has(userId)) {
+      return res.status(400).json({ success: false, message: "Enrollment expired" });
+    }
+    
+    const enrollment = global.totpEnrollment.get(userId);
+    const secret = enrollment.secret;
+    
+    // Validate TOTP token
+    const crypto = require('crypto');
+    const time = Math.floor(Date.now() / 30000); // 30-second window
+    
+    // Generate expected tokens for current and adjacent time windows
+    const expectedTokens = [];
+    for (let i = -1; i <= 1; i++) {
+      const timeBuffer = Buffer.alloc(8);
+      timeBuffer.writeBigUInt64BE(BigInt(time + i), 0);
+      
+      const hmac = crypto.createHmac('sha1', Buffer.from(secret, 'base32'));
+      hmac.update(timeBuffer);
+      const hash = hmac.digest();
+      
+      const offset = hash[hash.length - 1] & 0xf;
+      const code = ((hash[offset] & 0x7f) << 24) |
+                   ((hash[offset + 1] & 0xff) << 16) |
+                   ((hash[offset + 2] & 0xff) << 8) |
+                   (hash[offset + 3] & 0xff);
+      
+      expectedTokens.push((code % 1000000).toString().padStart(6, '0'));
+    }
+    
+    if (expectedTokens.includes(token)) {
+      // Store the secret in database
+      await pool.execute(
+        "UPDATE users SET totp_secret = ? WHERE id = ?",
+        [secret, userId]
+      );
+      
+      // Clean up enrollment
+      global.totpEnrollment.delete(userId);
+      
       res.json({ success: true });
     } else {
       res.status(400).json({ success: false, message: "Invalid code" });
