@@ -52,7 +52,10 @@ const AdminPage = () => {
         throw new Error(data.message || 'Login failed');
       }
       const data = await res.json();
-      if (data.mfa === 'totp') {
+      if (data.redirect) {
+        // Simple login success - redirect directly
+        navigate(data.redirect);
+      } else if (data.mfa === 'totp') {
         setUserId(data.userId);
         try { localStorage.setItem('adminUserId', String(data.userId)); } catch(_) {}
         setStage('totp-mfa');

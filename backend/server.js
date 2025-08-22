@@ -185,31 +185,10 @@ app.post('/api/login', async (req, res) => {
       [username, password]
     );
         if (rows.length > 0) {
-      // Force TOTP enrollment for admin (remove any existing TOTP secret)
-      await pool.execute(
-        "UPDATE users SET totp_secret = NULL WHERE id = ?",
-        [rows[0].id]
-      );
-      
-      // Generate new TOTP secret for enrollment
-      const crypto = require('crypto');
-      const secret = crypto.randomBytes(20).toString('base32');
-      const label = 'Admin';
-      const issuer = 'NGO Kiosk';
-      
-      // Store the secret temporarily for enrollment
-      if (!global.totpEnrollment) global.totpEnrollment = new Map();
-      global.totpEnrollment.set(rows[0].id, {
-        secret: secret,
-        timestamp: Date.now()
-      });
-      
+      // Temporarily bypass MFA for troubleshooting
       res.json({ 
         success: true, 
-        mfa: 'totp-enroll', 
-        userId: rows[0].id,
-        manualSecret: secret,
-        label: `${issuer}:${label}`
+        redirect: '/event-details'
       });
     } else {
       res.status(401).json({ success: false, message: "Invalid username or password" });
