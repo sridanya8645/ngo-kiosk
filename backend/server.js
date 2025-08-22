@@ -189,7 +189,7 @@ app.post('/api/login', async (req, res) => {
     
     console.log('Database query result:', rows.length, 'rows found');
         if (rows.length > 0) {
-      // Generate new TOTP secret for enrollment without database queries
+      // Generate new TOTP secret for enrollment without database queries - redeploy trigger
       console.log('Generating new TOTP enrollment for user:', rows[0].id);
       
       const crypto = require('crypto');
