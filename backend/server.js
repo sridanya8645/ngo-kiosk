@@ -296,7 +296,7 @@ app.post('/api/mfa/totp/login', async (req, res) => {
       const timeBuffer = Buffer.alloc(8);
       timeBuffer.writeBigUInt64BE(BigInt(time + i), 0);
       
-      const hmac = crypto.createHmac('sha1', Buffer.from(secret, 'base64'));
+      const hmac = crypto.createHmac('sha1', Buffer.from(secret, 'hex'));
       hmac.update(timeBuffer);
       const hash = hmac.digest();
       
@@ -342,7 +342,7 @@ app.post('/api/mfa/totp/verify', async (req, res) => {
       const timeBuffer = Buffer.alloc(8);
       timeBuffer.writeBigUInt64BE(BigInt(time + i), 0);
       
-      const hmac = crypto.createHmac('sha1', Buffer.from(secret, 'base64'));
+      const hmac = crypto.createHmac('sha1', Buffer.from(secret, 'hex'));
       hmac.update(timeBuffer);
       const hash = hmac.digest();
       
