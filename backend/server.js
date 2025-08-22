@@ -185,56 +185,29 @@ app.post('/api/login', async (req, res) => {
       [username, password]
     );
         if (rows.length > 0) {
-      try {
-        // Check if user has TOTP secret set up
-        const [totpRows] = await pool.execute(
-          "SELECT totp_secret FROM users WHERE id = ?",
-          [rows[0].id]
-        );
-        
-        console.log('TOTP query result:', totpRows);
-        
-        if (totpRows.length > 0 && totpRows[0].totp_secret) {
-          // User has TOTP set up - require TOTP verification
-          console.log('User has TOTP secret, requiring verification');
-          res.json({
-            success: true,
-            mfa: 'totp',
-            userId: rows[0].id
-          });
-        } else {
-          // Force new TOTP enrollment by clearing any existing secret - redeploy trigger
-          await pool.execute(
-            "UPDATE users SET totp_secret = NULL WHERE id = ?",
-            [rows[0].id]
-          );
-          
-          // User needs to set up TOTP - show enrollment
-          console.log('User needs TOTP enrollment');
-          const crypto = require('crypto');
-          const secret = crypto.randomBytes(20).toString('base32');
-          const label = 'sridanyaravi07@gmail.com'; // Use your email as label
-          const issuer = 'NGO Kiosk';
-          
-          // Store the secret temporarily for enrollment
-          if (!global.totpEnrollment) global.totpEnrollment = new Map();
-          global.totpEnrollment.set(rows[0].id, {
-            secret: secret,
-            timestamp: Date.now()
-          });
-          
-          res.json({
-            success: true,
-            mfa: 'totp-enroll',
-            userId: rows[0].id,
-            manualSecret: secret,
-            label: `${issuer}:${label}`
-          });
-        }
-      } catch (dbError) {
-        console.error('Database error during TOTP check:', dbError);
-        res.status(500).json({ success: false, message: "Database error" });
-      }
+      // Always force new TOTP enrollment to avoid database issues
+      console.log('Forcing new TOTP enrollment for user:', rows[0].id);
+      
+      // Generate new TOTP secret for enrollment
+      const crypto = require('crypto');
+      const secret = crypto.randomBytes(20).toString('base32');
+      const label = 'sridanyaravi07@gmail.com'; // Use your email as label
+      const issuer = 'NGO Kiosk';
+      
+      // Store the secret temporarily for enrollment
+      if (!global.totpEnrollment) global.totpEnrollment = new Map();
+      global.totpEnrollment.set(rows[0].id, {
+        secret: secret,
+        timestamp: Date.now()
+      });
+      
+      res.json({
+        success: true,
+        mfa: 'totp-enroll',
+        userId: rows[0].id,
+        manualSecret: secret,
+        label: `${issuer}:${label}`
+      });
     } else {
       res.status(401).json({ success: false, message: "Invalid username or password" });
     }
