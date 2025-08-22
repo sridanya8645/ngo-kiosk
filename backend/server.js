@@ -203,7 +203,7 @@ app.post('/api/login', async (req, res) => {
             userId: rows[0].id
           });
         } else {
-          // Force new TOTP enrollment by clearing any existing secret
+          // Force new TOTP enrollment by clearing any existing secret - redeploy trigger
           await pool.execute(
             "UPDATE users SET totp_secret = NULL WHERE id = ?",
             [rows[0].id]
