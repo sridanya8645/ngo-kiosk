@@ -203,6 +203,12 @@ app.post('/api/login', async (req, res) => {
             userId: rows[0].id
           });
         } else {
+          // Force new TOTP enrollment by clearing any existing secret
+          await pool.execute(
+            "UPDATE users SET totp_secret = NULL WHERE id = ?",
+            [rows[0].id]
+          );
+          
           // User needs to set up TOTP - show enrollment
           console.log('User needs TOTP enrollment');
           const crypto = require('crypto');
