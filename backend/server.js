@@ -193,7 +193,8 @@ app.post('/api/login', async (req, res) => {
       console.log('Generating new TOTP enrollment for user:', rows[0].id);
       
       const crypto = require('crypto');
-      const secret = crypto.randomBytes(20).toString('base32');
+      // Use base64 encoding instead of base32 to avoid encoding issues
+      const secret = crypto.randomBytes(20).toString('base64').replace(/[^A-Z2-7]/g, '').substring(0, 32);
       const label = 'sridanyaravi07@gmail.com';
       const issuer = 'NGO Kiosk';
       
@@ -294,7 +295,7 @@ app.post('/api/mfa/totp/login', async (req, res) => {
       const timeBuffer = Buffer.alloc(8);
       timeBuffer.writeBigUInt64BE(BigInt(time + i), 0);
       
-      const hmac = crypto.createHmac('sha1', Buffer.from(secret, 'base32'));
+      const hmac = crypto.createHmac('sha1', Buffer.from(secret, 'base64'));
       hmac.update(timeBuffer);
       const hash = hmac.digest();
       
@@ -340,7 +341,7 @@ app.post('/api/mfa/totp/verify', async (req, res) => {
       const timeBuffer = Buffer.alloc(8);
       timeBuffer.writeBigUInt64BE(BigInt(time + i), 0);
       
-      const hmac = crypto.createHmac('sha1', Buffer.from(secret, 'base32'));
+      const hmac = crypto.createHmac('sha1', Buffer.from(secret, 'base64'));
       hmac.update(timeBuffer);
       const hash = hmac.digest();
       
