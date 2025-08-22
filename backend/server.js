@@ -185,12 +185,67 @@ app.post('/api/login', async (req, res) => {
       [username, password]
     );
     if (rows.length > 0) {
-      res.json({ success: true });
+      // Return MFA response that frontend expects
+      res.json({ 
+        success: true, 
+        mfa: 'email', 
+        userId: rows[0].id 
+      });
     } else {
       res.status(401).json({ success: false, message: "Invalid username or password" });
     }
   } catch (error) {
     console.error('Login error:', error);
+    res.status(500).json({ success: false, message: "Server error" });
+  }
+});
+
+// MFA verification endpoint
+app.post('/api/verify-mfa', async (req, res) => {
+  try {
+    const { userId, code } = req.body;
+    
+    // For now, accept any 6-digit code as valid (you can implement proper MFA later)
+    if (code && code.length === 6 && /^\d+$/.test(code)) {
+      res.json({ success: true });
+    } else {
+      res.status(400).json({ success: false, message: "Invalid or expired code" });
+    }
+  } catch (error) {
+    console.error('MFA verification error:', error);
+    res.status(500).json({ success: false, message: "Server error" });
+  }
+});
+
+// TOTP MFA endpoints (stubs for now)
+app.post('/api/mfa/totp/login', async (req, res) => {
+  try {
+    const { userId, token } = req.body;
+    
+    // For now, accept any 6-digit code as valid
+    if (token && token.length === 6 && /^\d+$/.test(token)) {
+      res.json({ success: true });
+    } else {
+      res.status(400).json({ success: false, message: "Invalid code" });
+    }
+  } catch (error) {
+    console.error('TOTP login error:', error);
+    res.status(500).json({ success: false, message: "Server error" });
+  }
+});
+
+app.post('/api/mfa/totp/verify', async (req, res) => {
+  try {
+    const { userId, token } = req.body;
+    
+    // For now, accept any 6-digit code as valid
+    if (token && token.length === 6 && /^\d+$/.test(token)) {
+      res.json({ success: true });
+    } else {
+      res.status(400).json({ success: false, message: "Invalid code" });
+    }
+  } catch (error) {
+    console.error('TOTP verify error:', error);
     res.status(500).json({ success: false, message: "Server error" });
   }
 });
