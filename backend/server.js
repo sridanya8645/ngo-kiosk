@@ -1,7 +1,7 @@
 // Load environment variables
 require('dotenv').config();
 
-// Updated email configuration for Indo American Fair - deployment trigger
+// Updated email configuration for Indo American Fair - deployment trigger v2
 const express = require('express');
 const cors = require('cors');
 const { pool, initializeDatabase } = require('./db');
