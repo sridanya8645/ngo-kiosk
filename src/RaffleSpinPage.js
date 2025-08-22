@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'; // redeploy trigger: after disk cleanup
+import React, { useState, useEffect } from 'react'; // redeploy trigger: fix git index corruption
 import { useNavigate } from 'react-router-dom';
 import { Wheel } from 'react-custom-roulette';
 import Confetti from 'react-confetti';
