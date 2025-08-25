@@ -92,13 +92,8 @@ async function initializeDatabase() {
       )
     `);
 
-    // Insert default admin user if not exists (with bcrypt hashed password)
-    const bcrypt = require('bcryptjs');
-    const hashedPassword = await bcrypt.hash('admin123', 12);
-    await connection.execute(`
-      INSERT IGNORE INTO users (username, password, admin_id) 
-      VALUES ('admin', ?, 'ADMIN001')
-    `, [hashedPassword]);
+    // No default admin user creation - all users will be created through the UI
+    console.log('ℹ️ No default admin user created - use the admin interface to create users');
 
     // Ensure totp_secret column exists (in case table was created before this column was added)
     try {
