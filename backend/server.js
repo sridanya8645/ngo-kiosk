@@ -168,15 +168,17 @@ const storage = multer.diskStorage({
 });
 const upload = multer({ storage });
 
-// Initialize database on startup
-initializeDatabase()
-  .then(() => {
-    console.log('✅ Database initialized successfully');
-  })
-  .catch((error) => {
-    console.error('❌ Database initialization failed:', error);
-    // Don't exit - let the server start and we'll handle errors in endpoints
-  });
+// Initialize database on startup with delay and error handling
+setTimeout(() => {
+  initializeDatabase()
+    .then(() => {
+      console.log('✅ Database initialized successfully');
+    })
+    .catch((error) => {
+      console.error('❌ Database initialization failed:', error);
+      console.log('⚠️ Server will continue running without database initialization');
+    });
+}, 2000); // Wait 2 seconds before initializing database
 
 // Login endpoint
 app.post('/api/login', async (req, res) => {
@@ -1538,13 +1540,40 @@ app.get('*', (req, res) => {
 });
 
 const PORT = process.env.PORT || 8080;
-app.listen(PORT, '0.0.0.0', () => {
-  console.log(`Server running on port ${PORT}`);
-  console.log(`Environment: ${process.env.NODE_ENV}`);
-  console.log(`Process ID: ${process.pid}`);
+
+// Add error handling for server startup
+const server = app.listen(PORT, '0.0.0.0', () => {
+  console.log(`✅ Server running on port ${PORT}`);
+  console.log(`✅ Environment: ${process.env.NODE_ENV || 'development'}`);
+  console.log(`✅ Process ID: ${process.pid}`);
   
   // Keep the server alive
   setInterval(() => {
-    console.log('Server heartbeat - keeping alive');
+    console.log('💓 Server heartbeat - keeping alive');
   }, 30000); // Every 30 seconds
+});
+
+// Handle server errors
+server.on('error', (error) => {
+  console.error('❌ Server error:', error);
+  if (error.code === 'EADDRINUSE') {
+    console.error('❌ Port is already in use');
+  }
+});
+
+// Handle process termination
+process.on('SIGTERM', () => {
+  console.log('🛑 SIGTERM received, shutting down gracefully');
+  server.close(() => {
+    console.log('✅ Server closed');
+    process.exit(0);
+  });
+});
+
+process.on('SIGINT', () => {
+  console.log('🛑 SIGINT received, shutting down gracefully');
+  server.close(() => {
+    console.log('✅ Server closed');
+    process.exit(0);
+  });
 });
