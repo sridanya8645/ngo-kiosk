@@ -73,37 +73,7 @@
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-/* Admin Navigation Buttons */
-.admin-navigation-buttons {
-  display: flex;
-  gap: 15px;
-  margin-bottom: 20px;
-  justify-content: center;
-  flex-wrap: wrap;
-}
-
-.nav-button {
-  background: #8B1C1C;
-  color: white;
-  border: none;
-  padding: 10px 20px;
-  border-radius: 8px;
-  font-size: 14px;
-  font-weight: bold;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.2);
-}
-
-.nav-button:hover {
-  background: #6B1414;
-  transform: translateY(-2px);
-  box-shadow: 0 4px 8px rgba(0,0,0,0.3);
-}
-
-.nav-button:active {
-  transform: translateY(0);
-}
+/* Admin Navigation Buttons - Removed from EventDetailsPage, now in SiteHeader */
 
 /* Event Labels */
 .new-event-label {
@@ -361,8 +331,8 @@
   border: 1px solid rgba(255, 255, 255, 0.2);
   width: 100%;
   overflow: hidden;
-  /* Column proportions tuned for content fit (8 columns) */
-  --events-cols: 2fr 1fr 1fr 1fr 1fr 1.4fr 1.2fr 1fr;
+  /* Column proportions tuned for content fit (9 columns) */
+  --events-cols: 0.8fr 1.5fr 1.2fr 1.2fr 1fr 0.8fr 1.2fr 1.2fr 1fr;
 }
 .events-table-container * { box-sizing: border-box; }
 
@@ -385,6 +355,7 @@
 .events-table-container .table-header-row .header-cell:nth-child(6) { grid-column: 6; }
 .events-table-container .table-header-row .header-cell:nth-child(7) { grid-column: 7; }
 .events-table-container .table-header-row .header-cell:nth-child(8) { grid-column: 8; }
+.events-table-container .table-header-row .header-cell:nth-child(9) { grid-column: 9; }
 
 .events-table-container .header-cell {
   text-align: left;
@@ -418,6 +389,7 @@
 .events-table-container .filter-row .filter-cell:nth-child(6) { grid-column: 6; }
 .events-table-container .filter-row .filter-cell:nth-child(7) { grid-column: 7; }
 .events-table-container .filter-row .filter-cell:nth-child(8) { grid-column: 8; }
+.events-table-container .filter-row .filter-cell:nth-child(9) { grid-column: 9; }
 
 .events-table-container .filter-cell {
   display: flex;
@@ -469,6 +441,7 @@
 .events-table-container .event-row .data-cell:nth-child(6) { grid-column: 6; }
 .events-table-container .event-row .data-cell:nth-child(7) { grid-column: 7; }
 .events-table-container .event-row .data-cell:nth-child(8) { grid-column: 8; }
+.events-table-container .event-row .data-cell:nth-child(9) { grid-column: 9; }
 
 .events-table-container .data-cell {
   display: flex;

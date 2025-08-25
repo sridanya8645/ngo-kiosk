@@ -70,7 +70,7 @@ export default function RaffleWinnersPage() {
   return (
     <div className="raffle-winners-bg">
       <div className="raffle-winners-aspect">
-        <SiteHeader navVariant="admin-only" />
+        <SiteHeader navVariant="raffle-winners" />
 
         {/* Main Content */}
         <main className="admin-registrations-main">

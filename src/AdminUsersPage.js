@@ -147,7 +147,7 @@ const AdminUsersPage = () => {
   if (loading) {
     return (
       <div className="admin-users-container">
-        <SiteHeader navVariant="admin" />
+        <SiteHeader navVariant="admin-users" />
         <main className="admin-users-main">
           <div className="loading">Loading admin users...</div>
         </main>
@@ -158,7 +158,7 @@ const AdminUsersPage = () => {
 
   return (
     <div className="admin-users-container">
-      <SiteHeader navVariant="admin" />
+      <SiteHeader navVariant="admin-users" />
       
       <main className="admin-users-main">
         <div className="admin-users-content">

@@ -260,7 +260,7 @@ const RaffleSpinPage = () => {
         />
       )}
       <div className="raffle-aspect">
-        <SiteHeader navVariant="admin-only" />
+        <SiteHeader navVariant="raffle-spin" />
 
         <div className="raffle-main">
           {/* Title */}

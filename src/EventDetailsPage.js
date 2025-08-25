@@ -235,28 +235,12 @@ function EventDetailsPage() {
 
   return (
     <div className="event-details-container">
-      <SiteHeader navVariant="admin-only" />
+      <SiteHeader navVariant="event-details" />
 
       {/* Main Content */}
       <main className="event-details-main">
         <div className="event-details-content">
           <h1 className="event-details-title">Event Details</h1>
-          
-          {/* Navigation Buttons */}
-          <div className="admin-navigation-buttons">
-            <button onClick={() => navigate('/admin-users')} className="nav-button">
-              Manage Users
-            </button>
-            <button onClick={() => navigate('/admin-registrations')} className="nav-button">
-              Registration Details
-            </button>
-            <button onClick={() => navigate('/raffle-spin')} className="nav-button">
-              Raffle Spin
-            </button>
-            <button onClick={() => navigate('/raffle-winners')} className="nav-button">
-              Raffle Winners
-            </button>
-          </div>
           
           {/* Events Table */}
           <div className="events-table-container">
@@ -553,8 +537,12 @@ function EventDetailsPage() {
                   <div className="data-cell">{formatDateTime(event.end_datetime)}</div>
                   <div className="data-cell">{event.location}</div>
                   <div className="data-cell">{event.raffle_tickets}</div>
-                  <div className="data-cell">{formatDateTime(event.created_at)}</div>
-                  <div className="data-cell">{formatDateTime(event.modified_at)}</div>
+                  <div className="data-cell">
+                    {event.created_by_name ? `${event.created_by_name} - ${formatDateTime(event.created_at)}` : formatDateTime(event.created_at)}
+                  </div>
+                  <div className="data-cell">
+                    {event.modified_by_name ? `${event.modified_by_name} - ${formatDateTime(event.modified_at)}` : formatDateTime(event.modified_at)}
+                  </div>
                   <div className="data-cell">
                     <div className="action-buttons">
                       <button 

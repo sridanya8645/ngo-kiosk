@@ -110,7 +110,7 @@ function AdminRegistrationsPage() {
   return (
     <div className="admin-registrations-bg">
       <div className="admin-registrations-aspect">
-        <SiteHeader navVariant="admin-only" />
+        <SiteHeader navVariant="registration-details" />
 
       {/* Admin nav handled by SiteHeader */}
 
