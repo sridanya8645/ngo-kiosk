@@ -55,8 +55,8 @@ const MobileRegister = () => {
 
         const withDates = (events || []).map(e => ({
           ...e,
-          _start: parseLocalYMD(e.date),
-          _end: parseLocalYMD(e.end_date) || parseLocalYMD(e.date),
+          _start: parseLocalYMD(e.start_datetime),
+          _end: parseLocalYMD(e.end_datetime) || parseLocalYMD(e.start_datetime),
         }));
 
         const sorted = withDates.sort((a,b) => (a._start?.getTime?.()||0) - (b._start?.getTime?.()||0));
@@ -65,7 +65,7 @@ const MobileRegister = () => {
         if (!todays) {
           const todayStr = new Date().toLocaleDateString('en-CA');
           const key = (v) => (typeof v === 'string' ? v.split('T')[0] : new Date(v).toISOString().split('T')[0]);
-          todays = sorted.find(e => key(e.date) === todayStr || key(e.end_date || e.date) === todayStr) || null;
+          todays = sorted.find(e => key(e.start_datetime) === todayStr || key(e.end_datetime || e.start_datetime) === todayStr) || null;
         }
 
         setEvents(sorted);

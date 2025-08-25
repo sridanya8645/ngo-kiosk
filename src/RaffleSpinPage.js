@@ -70,8 +70,8 @@ const RaffleSpinPage = () => {
           const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
           const withDates = sorted.map(e => ({
             ...e,
-            _start: parseLocalYMD(e.date),
-            _end: parseLocalYMD(e.end_date) || parseLocalYMD(e.date)
+            _start: parseLocalYMD(e.start_datetime),
+            _end: parseLocalYMD(e.end_datetime) || parseLocalYMD(e.start_datetime)
           }));
           const inRange = withDates.find(e => e._start && e._end && e._start.getTime() <= today.getTime() && today.getTime() <= e._end.getTime());
           selected = inRange || null;
@@ -276,7 +276,7 @@ const RaffleSpinPage = () => {
               </div>
               <div className="event-date">
                 {(() => {
-                  const datePart = typeof selectedEvent.date === 'string' ? selectedEvent.date.split('T')[0] : new Date(selectedEvent.date).toISOString().split('T')[0];
+                  const datePart = typeof selectedEvent.start_datetime === 'string' ? selectedEvent.start_datetime.split('T')[0] : new Date(selectedEvent.start_datetime).toISOString().split('T')[0];
                   const dt = new Date(`${datePart}T00:00:00`);
                   return dt.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' });
                 })()}                

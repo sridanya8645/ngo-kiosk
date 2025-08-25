@@ -56,9 +56,9 @@ export default function CheckinPage() {
             try { return new Date(val).toISOString().split('T')[0]; } catch { return ''; }
           };
           const normalize = (d) => { try { const dt = new Date(d); return new Date(dt.getFullYear(), dt.getMonth(), dt.getDate()).getTime(); } catch { return 0; } };
-          const sorted = [...evs].sort((a,b) => normalize(a.date) - normalize(b.date));
+          const sorted = [...evs].sort((a,b) => normalize(a.start_datetime) - normalize(b.start_datetime));
           const todayKey = new Date().toLocaleDateString('en-CA');
-          const todays = sorted.find(e => getDateKey(e.date) === todayKey) || null;
+          const todays = sorted.find(e => getDateKey(e.start_datetime) === todayKey) || null;
           setEvents(sorted);
           setSelectedEvent(todays || sorted[0] || null);
         }

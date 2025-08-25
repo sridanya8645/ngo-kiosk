@@ -73,6 +73,66 @@
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
 
+/* Admin Navigation Buttons */
+.admin-navigation-buttons {
+  display: flex;
+  gap: 15px;
+  margin-bottom: 20px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.nav-button {
+  background: #8B1C1C;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}
+
+.nav-button:hover {
+  background: #6B1414;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+}
+
+.nav-button:active {
+  transform: translateY(0);
+}
+
+/* Event Labels */
+.new-event-label {
+  background: #28a745;
+  color: white;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: bold;
+  text-align: center;
+}
+
+.newsletter-label {
+  background: #007bff;
+  color: white;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: bold;
+  text-align: center;
+}
+
+.auto-label {
+  color: #6c757d;
+  font-size: 12px;
+  font-style: italic;
+  text-align: center;
+}
+
 .admin-nav-buttons {
   display: flex;
   gap: 12px;
