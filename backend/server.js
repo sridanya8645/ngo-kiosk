@@ -183,25 +183,36 @@ app.post('/api/login', async (req, res) => {
     const { username, password } = req.body;
     console.log('Login attempt for username:', username);
     
+    // First get user by username only (without password for security)
     const [rows] = await pool.execute(
-      "SELECT * FROM users WHERE username = ? AND password = ?",
-      [username, password]
+      "SELECT * FROM users WHERE username = ?",
+      [username]
     );
     
     console.log('Database query result:', rows.length, 'rows found');
     if (rows.length > 0) {
+      const user = rows[0];
+      
+      // Verify password using bcrypt
+      const bcrypt = require('bcryptjs');
+      const isValidPassword = await bcrypt.compare(password, user.password);
+      
+      if (!isValidPassword) {
+        return res.status(401).json({ success: false, message: "Invalid username or password" });
+      }
+      
       // Check if user already has TOTP set up
-      if (rows[0].totp_secret) {
+      if (user.totp_secret) {
         // User already has MFA set up, prompt for TOTP code
-        console.log('User has existing TOTP, prompting for code:', rows[0].id);
+        console.log('User has existing TOTP, prompting for code:', user.id);
         res.json({
           success: true,
           mfa: 'totp',
-          userId: rows[0].id
+          userId: user.id
         });
       } else {
         // First time setup - generate new TOTP secret for enrollment
-        console.log('First time TOTP enrollment for user:', rows[0].id);
+        console.log('First time TOTP enrollment for user:', user.id);
         
         const crypto = require('crypto');
         // Generate a proper base32 secret for TOTP - authenticator app compatible
@@ -215,7 +226,7 @@ app.post('/api/login', async (req, res) => {
         
         // Store the secret temporarily for enrollment
         if (!global.totpEnrollment) global.totpEnrollment = new Map();
-        global.totpEnrollment.set(rows[0].id, {
+        global.totpEnrollment.set(user.id, {
           secret: secret,
           timestamp: Date.now()
         });
@@ -223,7 +234,7 @@ app.post('/api/login', async (req, res) => {
         res.json({
           success: true,
           mfa: 'totp-enroll',
-          userId: rows[0].id,
+          userId: user.id,
           manualSecret: secret,
           label: `${issuer}:${label}`
         });
@@ -1376,10 +1387,14 @@ app.post('/api/admin/users', async (req, res) => {
       return res.status(400).json({ success: false, message: 'Username or Admin ID already exists' });
     }
     
+    // Hash password using bcrypt
+    const bcrypt = require('bcryptjs');
+    const hashedPassword = await bcrypt.hash(password, 12);
+    
     // Create new admin user (for now, created_by will be NULL for the first admin)
     const [result] = await pool.execute(
       'INSERT INTO users (username, password, admin_id) VALUES (?, ?, ?)',
-      [username, password, finalAdminId]
+      [username, hashedPassword, finalAdminId]
     );
     
     res.json({ 
@@ -1424,8 +1439,11 @@ app.put('/api/admin/users/:id', async (req, res) => {
     }
     
     if (password) {
+      // Hash password using bcrypt
+      const bcrypt = require('bcryptjs');
+      const hashedPassword = await bcrypt.hash(password, 12);
       sql += 'password = ?, ';
-      params.push(password);
+      params.push(hashedPassword);
     }
     
     if (typeof is_active === 'boolean') {
