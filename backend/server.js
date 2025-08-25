@@ -10,6 +10,7 @@ const QRCode = require('qrcode');
 const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
+const bcrypt = require('bcryptjs');
 
 const app = express();
 
@@ -194,7 +195,6 @@ app.post('/api/login', async (req, res) => {
       const user = rows[0];
       
       // Verify password using bcrypt
-      const bcrypt = require('bcryptjs');
       const isValidPassword = await bcrypt.compare(password, user.password);
       
       if (!isValidPassword) {
@@ -1388,7 +1388,6 @@ app.post('/api/admin/users', async (req, res) => {
     }
     
     // Hash password using bcrypt
-    const bcrypt = require('bcryptjs');
     const hashedPassword = await bcrypt.hash(password, 12);
     
     // Create new admin user (for now, created_by will be NULL for the first admin)
@@ -1440,7 +1439,6 @@ app.put('/api/admin/users/:id', async (req, res) => {
     
     if (password) {
       // Hash password using bcrypt
-      const bcrypt = require('bcryptjs');
       const hashedPassword = await bcrypt.hash(password, 12);
       sql += 'password = ?, ';
       params.push(hashedPassword);
