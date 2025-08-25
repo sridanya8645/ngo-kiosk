@@ -448,7 +448,7 @@ app.post('/api/register', async (req, res) => {
     // Insert registration with checked_in = 1 and checkin_date = NOW() for regular register
     const [result] = await pool.execute(
       "INSERT INTO registrations (name, phone, email, event_id, event_name, event_date, interested_to_volunteer, checked_in, checkin_date, registered_at) VALUES (?, ?, ?, ?, ?, ?, ?, 1, NOW(), NOW())",
-      [name, phone, email, eventId, event.name, event.date, interested_to_volunteer]
+      [name, phone, email, eventId, event.name, event.start_datetime, interested_to_volunteer]
     );
     
     const registrationId = result.insertId;
@@ -500,8 +500,7 @@ app.post('/api/register', async (req, res) => {
             
             <div style="background: #f8f9fa; padding: 20px; border-radius: 10px; margin: 20px 0;">
               <h3 style="color: #333; margin-top: 0;">Event Details:</h3>
-              <p style="margin: 8px 0;"><span style="color: #666;">📅</span> <strong>Date:</strong> ${event.date}</p>
-              <p style="margin: 8px 0;"><span style="color: #666;">🕕</span> <strong>Time:</strong> ${event.time}</p>
+              <p style="margin: 8px 0;"><span style="color: #666;">📅</span> <strong>Date & Time:</strong> ${new Date(event.start_datetime).toLocaleString()}</p>
               <p style="margin: 8px 0;"><span style="color: #666;">📍</span> <strong>Venue:</strong> ${event.location}</p>
               <p style="margin: 8px 0;"><span style="color: #666;">🆔</span> <strong>Registration ID:</strong> ${registrationId}</p>
             </div>
@@ -512,7 +511,7 @@ app.post('/api/register', async (req, res) => {
               <div style="background: #f8f9fa; padding: 20px; border-radius: 10px; margin: 15px 0; border: 2px solid #ddd;">
                 <p style="font-size: 16px; color: #333; margin: 0 0 15px 0; font-weight: bold;">📱 <strong>Registration ID:</strong> ${registrationId}</p>
                 <p style="font-size: 14px; color: #666; margin: 5px 0; font-family: monospace;">Event: ${event.name}</p>
-                <p style="font-size: 14px; color: #666; margin: 5px 0; font-family: monospace;">Date: ${event.date} | Time: ${event.time}</p>
+                <p style="font-size: 14px; color: #666; margin: 5px 0; font-family: monospace;">Date & Time: ${new Date(event.start_datetime).toLocaleString()}</p>
                 <p style="font-size: 12px; color: #999; margin: 10px 0 0 0;">You are automatically checked in</p>
               </div>
             </div>
@@ -578,7 +577,7 @@ app.post('/api/mobile-register', async (req, res) => {
     // Insert registration with checked_in = 0 for mobile register (needs QR check-in)
     const [result] = await pool.execute(
       "INSERT INTO registrations (name, phone, email, event_id, event_name, event_date, interested_to_volunteer, checked_in, registered_at) VALUES (?, ?, ?, ?, ?, ?, ?, 0, NOW())",
-      [name, phone, email, eventId, event.name, event.date, interested_to_volunteer]
+      [name, phone, email, eventId, event.name, event.start_datetime, interested_to_volunteer]
     );
     
     const registrationId = result.insertId;
@@ -658,8 +657,7 @@ app.post('/api/mobile-register', async (req, res) => {
             
             <div style="background: #f8f9fa; padding: 20px; border-radius: 10px; margin: 20px 0;">
               <h3 style="color: #333; margin-top: 0;">Event Details:</h3>
-              <p style="margin: 8px 0;"><span style="color: #666;">📅</span> <strong>Date:</strong> ${event.date}</p>
-              <p style="margin: 8px 0;"><span style="color: #666;">🕕</span> <strong>Time:</strong> ${event.time}</p>
+              <p style="margin: 8px 0;"><span style="color: #666;">📅</span> <strong>Date & Time:</strong> ${new Date(event.start_datetime).toLocaleString()}</p>
               <p style="margin: 8px 0;"><span style="color: #666;">📍</span> <strong>Venue:</strong> ${event.location}</p>
               <p style="margin: 8px 0;"><span style="color: #666;">🆔</span> <strong>Registration ID:</strong> ${registrationId}</p>
             </div>
@@ -670,7 +668,7 @@ app.post('/api/mobile-register', async (req, res) => {
               <div style="background: #f8f9fa; padding: 20px; border-radius: 10px; margin: 15px 0; border: 2px solid #ddd;">
                 <p style="font-size: 16px; color: #333; margin: 0 0 15px 0; font-weight: bold;">📱 <strong>Registration ID:</strong> ${registrationId}</p>
                 <p style="font-size: 14px; color: #666; margin: 5px 0; font-family: monospace;">Event: ${event.name}</p>
-                <p style="font-size: 14px; color: #666; margin: 5px 0; font-family: monospace;">Date: ${event.date} | Time: ${event.time}</p>
+                <p style="font-size: 14px; color: #666; margin: 5px 0; font-family: monospace;">Date & Time: ${new Date(event.start_datetime).toLocaleString()}</p>
                 <p style="font-size: 12px; color: #999; margin: 10px 0 0 0;">Show this ID at check-in</p>
               </div>
               <p style="font-size: 14px; color: #666; margin-top: 10px;">QR code attached to this email</p>
@@ -759,15 +757,22 @@ app.get('/api/test-db', async (req, res) => {
 app.get('/api/events', async (req, res) => {
   try {
     console.log('🔍 Fetching events from database...');
-    const [rows] = await pool.execute("SELECT * FROM events ORDER BY date DESC");
+    const [rows] = await pool.execute(`
+      SELECT 
+        id as event_id,
+        name,
+        start_datetime,
+        end_datetime,
+        location,
+        raffle_tickets,
+        created_at,
+        modified_at,
+        (SELECT username FROM users WHERE id = events.created_by) as created_by_name,
+        (SELECT username FROM users WHERE id = events.modified_by) as modified_by_name
+      FROM events 
+      ORDER BY start_datetime DESC
+    `);
     console.log(`✅ Found ${rows.length} events`);
-    
-    // Debug: Log banner paths
-    rows.forEach((event, index) => {
-      if (event.banner) {
-        console.log(`Event ${index + 1}: ${event.name} - Banner: ${event.banner}`);
-      }
-    });
     
     res.json(rows);
   } catch (error) {
@@ -799,7 +804,7 @@ function convertTo24Hour(timeStr) {
 // Add event
 app.post('/api/events', upload.single('banner'), async (req, res) => {
   try {
-    const { name, date, time, location } = req.body;
+    const { name, start_datetime, end_datetime, location, raffle_tickets, created_by } = req.body;
     
     // Generate unique banner filename with event name
     let banner = null;
@@ -818,15 +823,26 @@ app.post('/api/events', upload.single('banner'), async (req, res) => {
       console.log(`Banner uploaded: ${banner}`);
     }
     
-    // Convert time to 24-hour format
-    const convertedTime = convertTo24Hour(time);
-    
     const [result] = await pool.execute(
-      'INSERT INTO events (name, date, time, location, banner) VALUES (?, ?, ?, ?, ?)',
-      [name, date, convertedTime, location, banner]
+      'INSERT INTO events (name, start_datetime, end_datetime, location, banner, raffle_tickets, created_by) VALUES (?, ?, ?, ?, ?, ?, ?)',
+      [name, start_datetime, end_datetime, location, banner, raffle_tickets || 0, created_by]
     );
     
-    const [rows] = await pool.execute('SELECT * FROM events WHERE id = ?', [result.insertId]);
+    const [rows] = await pool.execute(`
+      SELECT 
+        id as event_id,
+        name,
+        start_datetime,
+        end_datetime,
+        location,
+        raffle_tickets,
+        created_at,
+        modified_at,
+        (SELECT username FROM users WHERE id = events.created_by) as created_by_name,
+        (SELECT username FROM users WHERE id = events.modified_by) as modified_by_name
+      FROM events WHERE id = ?
+    `, [result.insertId]);
+    
     res.json({ success: true, event: rows[0] });
   } catch (error) {
     console.error('Add event error:', error);
@@ -837,17 +853,13 @@ app.post('/api/events', upload.single('banner'), async (req, res) => {
 // Edit event
 app.put('/api/events/:id', upload.single('banner'), async (req, res) => {
   try {
-    const { name, date, time, location } = req.body;
+    const { name, start_datetime, end_datetime, location, raffle_tickets, modified_by } = req.body;
     const { id } = req.params;
     
-    console.log('Edit event request:', { id, name, date, time, location });
+    console.log('Edit event request:', { id, name, start_datetime, end_datetime, location, raffle_tickets });
     
-    // Convert time to 24-hour format
-    const convertedTime = convertTo24Hour(time);
-    console.log('Converted time:', convertedTime);
-    
-    let sql = 'UPDATE events SET name = ?, date = ?, time = ?, location = ?';
-    let params = [name, date, convertedTime, location];
+    let sql = 'UPDATE events SET name = ?, start_datetime = ?, end_datetime = ?, location = ?, raffle_tickets = ?, modified_by = ?';
+    let params = [name, start_datetime, end_datetime, location, raffle_tickets || 0, modified_by];
     
     if (req.file) {
       // Generate unique banner filename with event name
@@ -943,7 +955,7 @@ app.get('/api/todays-event', async (req, res) => {
     const today = new Date().toISOString().split('T')[0];
     console.log('🔍 Fetching today\'s event for date:', today);
     const [rows] = await pool.execute(
-      "SELECT * FROM events WHERE date = ? ORDER BY date DESC LIMIT 1",
+      "SELECT * FROM events WHERE DATE(start_datetime) = ? ORDER BY start_datetime DESC LIMIT 1",
       [today]
     );
     
