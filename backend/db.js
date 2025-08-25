@@ -50,7 +50,10 @@ async function initializeDatabase() {
         name VARCHAR(255) NOT NULL,
         date DATE NOT NULL,
         time TIME NOT NULL,
+        end_date DATE,
+        end_time TIME,
         location VARCHAR(255) NOT NULL,
+        raffle_tickets INT DEFAULT 0,
         banner VARCHAR(500)
       )
     `);
@@ -103,6 +106,31 @@ async function initializeDatabase() {
     } catch (error) {
       // Column already exists, ignore error
       console.log('totp_secret column already exists');
+    }
+
+    // Ensure events table has all required columns
+    try {
+      await connection.execute(`
+        ALTER TABLE events ADD COLUMN end_date DATE
+      `);
+    } catch (error) {
+      console.log('end_date column already exists');
+    }
+
+    try {
+      await connection.execute(`
+        ALTER TABLE events ADD COLUMN end_time TIME
+      `);
+    } catch (error) {
+      console.log('end_time column already exists');
+    }
+
+    try {
+      await connection.execute(`
+        ALTER TABLE events ADD COLUMN raffle_tickets INT DEFAULT 0
+      `);
+    } catch (error) {
+      console.log('raffle_tickets column already exists');
     }
 
     // Removed sample events insertion - events should only be added through admin interface
