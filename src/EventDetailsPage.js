@@ -110,7 +110,7 @@ function EventDetailsPage() {
 
   // Handle input changes
   const handleInputChange = (e, isEditing = false) => {
-    const { name, value, type, files } = e.target;
+    const { name, value, type, files, checked } = e.target;
     
     if (type === 'file') {
       const file = files[0];
@@ -123,6 +123,20 @@ function EventDetailsPage() {
         setNewEvent(prev => ({
           ...prev,
           [name]: file
+        }));
+      }
+    } else if (type === 'radio') {
+      // Handle radio button for volunteer_enabled
+      const boolValue = value === 'true';
+      if (isEditing) {
+        setEditingEvent(prev => ({
+          ...prev,
+          [name]: boolValue
+        }));
+      } else {
+        setNewEvent(prev => ({
+          ...prev,
+          [name]: boolValue
         }));
       }
     } else {
@@ -286,20 +300,20 @@ function EventDetailsPage() {
           <div className="events-table-container">
             {/* Table Header */}
             <div className="table-header-row">
-              <div className="header-cell">Event ID</div>
-              <div className="header-cell">Event Name</div>
-              <div className="header-cell">Start Date & Time</div>
-              <div className="header-cell">End Date & Time</div>
-              <div className="header-cell">Location</div>
-              <div className="header-cell">Raffle Tickets</div>
-                             <div className="header-cell">Banner</div>
-               <div className="header-cell">Header Image</div>
-               <div className="header-cell">Footer Content</div>
-              <div className="header-cell">Volunteer</div>
-              <div className="header-cell">Welcome Text</div>
-              <div className="header-cell">Created</div>
-              <div className="header-cell">Modified</div>
-              <div className="header-cell">Actions</div>
+              <div className="header-cell" data-label="Event ID">Event ID</div>
+              <div className="header-cell" data-label="Event Name">Event Name</div>
+              <div className="header-cell" data-label="Start Date & Time">Start Date & Time</div>
+              <div className="header-cell" data-label="End Date & Time">End Date & Time</div>
+              <div className="header-cell" data-label="Location">Location</div>
+              <div className="header-cell" data-label="Raffle Tickets">Raffle Tickets</div>
+              <div className="header-cell" data-label="Banner">Banner</div>
+              <div className="header-cell" data-label="Header Image">Header Image</div>
+              <div className="header-cell" data-label="Footer Content">Footer Content</div>
+              <div className="header-cell" data-label="Volunteer">Volunteer</div>
+              <div className="header-cell" data-label="Welcome Text">Welcome Text</div>
+              <div className="header-cell" data-label="Created">Created</div>
+              <div className="header-cell" data-label="Modified">Modified</div>
+              <div className="header-cell" data-label="Actions">Actions</div>
             </div>
 
             {/* Filter Row */}
@@ -567,48 +581,48 @@ function EventDetailsPage() {
               {/* Regular Events */}
               {filteredEvents.map((event) => (
                 <div key={event.event_id} className="event-row">
-                  <div className="data-cell">{event.event_id}</div>
-                  <div className="data-cell">{event.name}</div>
-                  <div className="data-cell">{formatDateTime(event.start_datetime)}</div>
-                  <div className="data-cell">{formatDateTime(event.end_datetime)}</div>
-                  <div className="data-cell">{event.location}</div>
-                  <div className="data-cell">{event.raffle_tickets}</div>
-                  <div className="data-cell">
+                  <div className="data-cell" data-label="Event ID">{event.event_id}</div>
+                  <div className="data-cell" data-label="Event Name">{event.name}</div>
+                  <div className="data-cell" data-label="Start Date & Time">{formatDateTime(event.start_datetime)}</div>
+                  <div className="data-cell" data-label="End Date & Time">{formatDateTime(event.end_datetime)}</div>
+                  <div className="data-cell" data-label="Location">{event.location}</div>
+                  <div className="data-cell" data-label="Raffle Tickets">{event.raffle_tickets}</div>
+                  <div className="data-cell" data-label="Banner">
                     {event.banner ? (
                       <img src={event.banner} alt="Banner" className="banner-thumbnail" />
                     ) : (
                       <span className="no-banner">No Banner</span>
                     )}
                   </div>
-                                     <div className="data-cell">
-                     {event.header_image ? (
-                       <img src={event.header_image} alt="Header" className="header-thumbnail" />
-                     ) : (
-                       <span className="no-header">No Header Image</span>
-                     )}
-                   </div>
-                  <div className="data-cell">
+                  <div className="data-cell" data-label="Header Image">
+                    {event.header_image ? (
+                      <img src={event.header_image} alt="Header" className="header-thumbnail" />
+                    ) : (
+                      <span className="no-header">No Header Image</span>
+                    )}
+                  </div>
+                  <div className="data-cell" data-label="Footer Content">
                     <div className="content-preview">
                       {event.footer_content ? event.footer_content.substring(0, 50) + '...' : 'No content'}
                     </div>
                   </div>
-                  <div className="data-cell">
+                  <div className="data-cell" data-label="Volunteer">
                     <span className={`volunteer-status ${event.volunteer_enabled ? 'enabled' : 'disabled'}`}>
                       {event.volunteer_enabled ? 'Yes' : 'No'}
                     </span>
                   </div>
-                  <div className="data-cell">
+                  <div className="data-cell" data-label="Welcome Text">
                     <div className="content-preview">
                       {event.welcome_text ? event.welcome_text.substring(0, 50) + '...' : 'No text'}
                     </div>
                   </div>
-                  <div className="data-cell">
+                  <div className="data-cell" data-label="Created">
                     {event.created_by_name ? `${event.created_by_name} - ${formatDateTime(event.created_at)}` : formatDateTime(event.created_at)}
                   </div>
-                  <div className="data-cell">
+                  <div className="data-cell" data-label="Modified">
                     {event.modified_by_name ? `${event.modified_by_name} - ${formatDateTime(event.modified_at)}` : formatDateTime(event.modified_at)}
                   </div>
-                  <div className="data-cell">
+                  <div className="data-cell" data-label="Actions">
                     <div className="action-buttons">
                       <button 
                         onClick={() => setEditingEvent(event)}
