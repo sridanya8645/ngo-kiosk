@@ -906,12 +906,27 @@ app.post('/api/events', upload.fields([
       console.log(`Header image uploaded: ${header_image}`);
     }
 
+    // Convert datetime strings to MySQL format
+    const formatDateTime = (dateTimeStr) => {
+      if (!dateTimeStr) return null;
+      try {
+        const date = new Date(dateTimeStr);
+        return date.toISOString().slice(0, 19).replace('T', ' '); // Convert to MySQL datetime format
+      } catch (error) {
+        console.error('Error formatting datetime:', dateTimeStr, error);
+        return dateTimeStr;
+      }
+    };
+    
+    const formattedStartDateTime = formatDateTime(start_datetime);
+    const formattedEndDateTime = formatDateTime(end_datetime);
+    
     // Convert volunteer_enabled to proper boolean
     const volunteerEnabled = volunteer_enabled === 'true' || volunteer_enabled === true ? 1 : 0;
     
                  const [result] = await pool.execute(
           'INSERT INTO events (name, start_datetime, end_datetime, location, banner, header_image, raffle_tickets, footer_location, footer_phone, footer_email, volunteer_enabled, welcome_text, created_by) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
-          [name, start_datetime, end_datetime, location, banner, header_image, raffle_tickets || 0, footer_location || null, footer_phone || null, footer_email || null, volunteerEnabled, welcome_text || null, created_by]
+          [name, formattedStartDateTime, formattedEndDateTime, location, banner, header_image, raffle_tickets || '', footer_location || null, footer_phone || null, footer_email || null, volunteerEnabled, welcome_text || null, created_by]
         );
     
            const [rows] = await pool.execute(`
@@ -954,11 +969,26 @@ app.put('/api/events/:id', upload.fields([
     
     console.log('Edit event request:', { id, name, start_datetime, end_datetime, location, raffle_tickets });
     
+    // Convert datetime strings to MySQL format
+    const formatDateTime = (dateTimeStr) => {
+      if (!dateTimeStr) return null;
+      try {
+        const date = new Date(dateTimeStr);
+        return date.toISOString().slice(0, 19).replace('T', ' '); // Convert to MySQL datetime format
+      } catch (error) {
+        console.error('Error formatting datetime:', dateTimeStr, error);
+        return dateTimeStr;
+      }
+    };
+    
+    const formattedStartDateTime = formatDateTime(start_datetime);
+    const formattedEndDateTime = formatDateTime(end_datetime);
+    
     // Convert volunteer_enabled to proper boolean
     const volunteerEnabled = volunteer_enabled === 'true' || volunteer_enabled === true ? 1 : 0;
     
                  let sql = 'UPDATE events SET name = ?, start_datetime = ?, end_datetime = ?, location = ?, raffle_tickets = ?, footer_location = ?, footer_phone = ?, footer_email = ?, volunteer_enabled = ?, welcome_text = ?, modified_by = ?';
-        let params = [name, start_datetime, end_datetime, location, raffle_tickets || 0, footer_location || null, footer_phone || null, footer_email || null, volunteerEnabled, welcome_text || null, modified_by];
+        let params = [name, formattedStartDateTime, formattedEndDateTime, location, raffle_tickets || '', footer_location || null, footer_phone || null, footer_email || null, volunteerEnabled, welcome_text || null, modified_by];
     
     // Handle banner upload
     if (req.files && req.files.banner) {
