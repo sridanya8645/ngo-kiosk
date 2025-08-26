@@ -924,9 +924,12 @@ app.post('/api/events', upload.fields([
     // Convert volunteer_enabled to proper boolean
     const volunteerEnabled = volunteer_enabled === 'true' || volunteer_enabled === true ? 1 : 0;
     
+    // Validate created_by - ensure it's a valid number or null
+    const validCreatedBy = (created_by && created_by !== 'undefined' && !isNaN(created_by)) ? parseInt(created_by) : null;
+    
                  const [result] = await pool.execute(
           'INSERT INTO events (name, start_datetime, end_datetime, location, banner, header_image, raffle_tickets, footer_location, footer_phone, footer_email, volunteer_enabled, welcome_text, created_by) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
-          [name, formattedStartDateTime, formattedEndDateTime, location, banner, header_image, raffle_tickets || '', footer_location || null, footer_phone || null, footer_email || null, volunteerEnabled, welcome_text || null, created_by]
+          [name, formattedStartDateTime, formattedEndDateTime, location, banner, header_image, raffle_tickets || '', footer_location || null, footer_phone || null, footer_email || null, volunteerEnabled, welcome_text || null, validCreatedBy]
         );
     
            const [rows] = await pool.execute(`
@@ -987,8 +990,11 @@ app.put('/api/events/:id', upload.fields([
     // Convert volunteer_enabled to proper boolean
     const volunteerEnabled = volunteer_enabled === 'true' || volunteer_enabled === true ? 1 : 0;
     
+    // Validate modified_by - ensure it's a valid number or null
+    const validModifiedBy = (modified_by && modified_by !== 'undefined' && !isNaN(modified_by)) ? parseInt(modified_by) : null;
+    
                  let sql = 'UPDATE events SET name = ?, start_datetime = ?, end_datetime = ?, location = ?, raffle_tickets = ?, footer_location = ?, footer_phone = ?, footer_email = ?, volunteer_enabled = ?, welcome_text = ?, modified_by = ?';
-        let params = [name, formattedStartDateTime, formattedEndDateTime, location, raffle_tickets || '', footer_location || null, footer_phone || null, footer_email || null, volunteerEnabled, welcome_text || null, modified_by];
+        let params = [name, formattedStartDateTime, formattedEndDateTime, location, raffle_tickets || '', footer_location || null, footer_phone || null, footer_email || null, volunteerEnabled, welcome_text || null, validModifiedBy];
     
     // Handle banner upload
     if (req.files && req.files.banner) {

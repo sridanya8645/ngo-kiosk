@@ -6,6 +6,7 @@
   background: linear-gradient(90deg, #CAA3EB 0%, #A566AA 100%);
   font-family: 'Arial', sans-serif;
   overflow: hidden;
+  padding: 0 20px; /* Add horizontal padding for equal spacing */
 }
 
 /* Header Section */
@@ -329,13 +330,17 @@
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
   backdrop-filter: blur(10px);
   border: 1px solid rgba(255, 255, 255, 0.2);
-  width: 98%; /* Increased width for bigger table */
-  max-width: 2400px; /* Increased maximum width */
-  min-width: 1600px; /* Increased minimum width for bigger table */
+  width: 95%; /* Slightly reduced width for better centering */
+  max-width: 2200px; /* Slightly reduced maximum width */
+  min-width: 1600px; /* Keep minimum width for bigger table */
   overflow-x: auto;
   overflow-y: hidden;
   /* Column proportions tuned for content fit (16 columns) */
   --events-cols: 0.8fr 2.5fr 1.8fr 1.8fr 1.5fr 1fr 1.2fr 1.2fr 1.5fr 1fr 1fr 1fr 1.5fr 1.5fr 1.5fr 1.5fr;
+  /* Ensure perfect centering */
+  position: relative;
+  left: 50%;
+  transform: translateX(-50%);
 }
 
 /* Responsive adjustments for smaller screens */
