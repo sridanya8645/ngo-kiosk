@@ -1,8 +1,25 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../styles/header.css';
 
 function SiteHeader({ navVariant }) {
+	const [currentEvent, setCurrentEvent] = useState(null);
+
+	useEffect(() => {
+		const fetchCurrentEvent = async () => {
+			try {
+				const response = await fetch('/api/todays-event');
+				if (response.ok) {
+					const event = await response.json();
+					setCurrentEvent(event);
+				}
+			} catch (error) {
+				console.error('Error fetching current event:', error);
+			}
+		};
+
+		fetchCurrentEvent();
+	}, []);
 	const navigate = useNavigate();
 
 	const renderNav = () => {
@@ -97,7 +114,11 @@ function SiteHeader({ navVariant }) {
 		<div className="site-header">
 			{/* Top header with logo, title and award badge */}
 			<div className="header-content">
-				<img src="/web_logo.png" alt="IAF Logo" className="logo-image" />
+				{currentEvent?.header_image ? (
+					<img src={currentEvent.header_image} alt="Event Header" className="logo-image" />
+				) : (
+					<img src="/web_logo.png" alt="IAF Logo" className="logo-image" />
+				)}
 			</div>
 
 			{/* Navigation bar below header */}

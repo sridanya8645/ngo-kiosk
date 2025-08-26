@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './HomePage.css';
 import SiteHeader from './components/SiteHeader';
@@ -6,23 +6,23 @@ import SiteFooter from './components/SiteFooter';
 
 const HomePage = () => {
   const navigate = useNavigate();
+  const [currentEvent, setCurrentEvent] = useState(null);
 
-  // Debug logging
-  console.log('HomePage component is rendering');
-  
-  // Test API call
-  React.useEffect(() => {
-    (async () => {
+  // Fetch current event data
+  useEffect(() => {
+    const fetchCurrentEvent = async () => {
       try {
-        console.log('HomePage useEffect running');
-        const response = await fetch('/api/events');
-        if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
-        const data = await response.json();
-        console.log('API call successful:', data);
+        const response = await fetch('/api/todays-event');
+        if (response.ok) {
+          const event = await response.json();
+          setCurrentEvent(event);
+        }
       } catch (error) {
-        console.error('API call failed:', error);
+        console.error('Error fetching current event:', error);
       }
-    })();
+    };
+
+    fetchCurrentEvent();
   }, []);
 
   return (
@@ -31,11 +31,13 @@ const HomePage = () => {
 
       {/* Main Content */}
       <main className="home-main">
-        <h1 className="welcome-title">Welcome to Indo American Fair 2025</h1>
+        <h1 className="welcome-title">
+          {currentEvent?.welcome_text || 'Welcome to Indo American Fair 2025'}
+        </h1>
         
         <div className="main-image-container">
           <img 
-            src="/Image (4).jpg" 
+            src={currentEvent?.banner || "/Image (4).jpg"} 
             alt="Event" 
             className="main-image" 
           />

@@ -16,6 +16,9 @@ function EventDetailsPage() {
     banner: "",
     header_image: "",
     footer_content: "",
+    footer_location: "",
+    footer_phone: "",
+    footer_email: "",
     volunteer_enabled: "",
     welcome_text: "",
     created_at: "",
@@ -32,6 +35,9 @@ function EventDetailsPage() {
     banner: null,
     header_image: null,
     footer_content: "",
+    footer_location: "",
+    footer_phone: "",
+    footer_email: "",
     volunteer_enabled: false,
     welcome_text: "",
   });
@@ -167,6 +173,9 @@ function EventDetailsPage() {
       formData.append('location', newEvent.location);
       formData.append('raffle_tickets', newEvent.raffle_tickets || 0);
       formData.append('footer_content', newEvent.footer_content || '');
+      formData.append('footer_location', newEvent.footer_location || '');
+      formData.append('footer_phone', newEvent.footer_phone || '');
+      formData.append('footer_email', newEvent.footer_email || '');
       formData.append('volunteer_enabled', newEvent.volunteer_enabled);
       formData.append('welcome_text', newEvent.welcome_text || '');
       formData.append('created_by', 1); // Default admin user
@@ -198,6 +207,9 @@ function EventDetailsPage() {
           banner: null,
           header_image: null,
           footer_content: "",
+          footer_location: "",
+          footer_phone: "",
+          footer_email: "",
           volunteer_enabled: false,
           welcome_text: "",
         });
@@ -223,6 +235,9 @@ function EventDetailsPage() {
       formData.append('location', editingEvent.location);
       formData.append('raffle_tickets', editingEvent.raffle_tickets || 0);
       formData.append('footer_content', editingEvent.footer_content || '');
+      formData.append('footer_location', editingEvent.footer_location || '');
+      formData.append('footer_phone', editingEvent.footer_phone || '');
+      formData.append('footer_email', editingEvent.footer_email || '');
       formData.append('volunteer_enabled', editingEvent.volunteer_enabled);
       formData.append('welcome_text', editingEvent.welcome_text || '');
       formData.append('modified_by', 1); // Default admin user
@@ -309,6 +324,9 @@ function EventDetailsPage() {
               <div className="header-cell" data-label="Banner">Banner</div>
               <div className="header-cell" data-label="Header Image">Header Image</div>
               <div className="header-cell" data-label="Footer Content">Footer Content</div>
+              <div className="header-cell" data-label="Footer Location">Footer Location</div>
+              <div className="header-cell" data-label="Footer Phone">Footer Phone</div>
+              <div className="header-cell" data-label="Footer Email">Footer Email</div>
               <div className="header-cell" data-label="Volunteer">Volunteer</div>
               <div className="header-cell" data-label="Welcome Text">Welcome Text</div>
               <div className="header-cell" data-label="Created">Created</div>
@@ -396,6 +414,33 @@ function EventDetailsPage() {
                   value={filters.footer_content || ''}
                   onChange={handleFilterChange}
                   placeholder="Filter Footer"
+                  className="filter-input"
+                />
+              </div>
+              <div className="filter-cell">
+                <input
+                  name="footer_location"
+                  value={filters.footer_location || ''}
+                  onChange={handleFilterChange}
+                  placeholder="Filter Footer Location"
+                  className="filter-input"
+                />
+              </div>
+              <div className="filter-cell">
+                <input
+                  name="footer_phone"
+                  value={filters.footer_phone || ''}
+                  onChange={handleFilterChange}
+                  placeholder="Filter Footer Phone"
+                  className="filter-input"
+                />
+              </div>
+              <div className="filter-cell">
+                <input
+                  name="footer_email"
+                  value={filters.footer_email || ''}
+                  onChange={handleFilterChange}
+                  placeholder="Filter Footer Email"
                   className="filter-input"
                 />
               </div>
@@ -530,6 +575,36 @@ function EventDetailsPage() {
                    />
                  </div>
                  <div className="data-cell">
+                   <input
+                     type="text"
+                     name="footer_location"
+                     value={newEvent.footer_location}
+                     onChange={(e) => handleInputChange(e)}
+                     className="table-input"
+                     placeholder="Footer Location"
+                   />
+                 </div>
+                 <div className="data-cell">
+                   <input
+                     type="text"
+                     name="footer_phone"
+                     value={newEvent.footer_phone}
+                     onChange={(e) => handleInputChange(e)}
+                     className="table-input"
+                     placeholder="Footer Phone"
+                   />
+                 </div>
+                 <div className="data-cell">
+                   <input
+                     type="email"
+                     name="footer_email"
+                     value={newEvent.footer_email}
+                     onChange={(e) => handleInputChange(e)}
+                     className="table-input"
+                     placeholder="Footer Email"
+                   />
+                 </div>
+                 <div className="data-cell">
                    <label>
                      <input
                        type="radio"
@@ -605,6 +680,15 @@ function EventDetailsPage() {
                     <div className="content-preview">
                       {event.footer_content ? event.footer_content.substring(0, 50) + '...' : 'No content'}
                     </div>
+                  </div>
+                  <div className="data-cell" data-label="Footer Location">
+                    {event.footer_location || 'Not set'}
+                  </div>
+                  <div className="data-cell" data-label="Footer Phone">
+                    {event.footer_phone || 'Not set'}
+                  </div>
+                  <div className="data-cell" data-label="Footer Email">
+                    {event.footer_email || 'Not set'}
                   </div>
                   <div className="data-cell" data-label="Volunteer">
                     <span className={`volunteer-status ${event.volunteer_enabled ? 'enabled' : 'disabled'}`}>
@@ -716,6 +800,36 @@ function EventDetailsPage() {
                        className="table-input"
                        placeholder="Footer Content"
                        rows="2"
+                     />
+                   </div>
+                   <div className="data-cell">
+                     <input
+                       type="text"
+                       name="footer_location"
+                       value={editingEvent.footer_location || ''}
+                       onChange={(e) => handleInputChange(e, true)}
+                       className="table-input"
+                       placeholder="Footer Location"
+                     />
+                   </div>
+                   <div className="data-cell">
+                     <input
+                       type="text"
+                       name="footer_phone"
+                       value={editingEvent.footer_phone || ''}
+                       onChange={(e) => handleInputChange(e, true)}
+                       className="table-input"
+                       placeholder="Footer Phone"
+                     />
+                   </div>
+                   <div className="data-cell">
+                     <input
+                       type="email"
+                       name="footer_email"
+                       value={editingEvent.footer_email || ''}
+                       onChange={(e) => handleInputChange(e, true)}
+                       className="table-input"
+                       placeholder="Footer Email"
                      />
                    </div>
                    <div className="data-cell">

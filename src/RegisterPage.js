@@ -10,7 +10,7 @@ const RegisterPage = () => {
     name: '',
     phone: '',
     email: '',
-    volunteer: 'No'
+    interested_to_volunteer: 'No'
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitSuccess, setSubmitSuccess] = useState(false);
@@ -334,7 +334,34 @@ const RegisterPage = () => {
                   {errors.email && <span className="error-message">{errors.email}</span>}
                 </div>
 
-                {/* Remove volunteer field as requested */}
+                {/* Volunteer field - only show if event has volunteer enabled */}
+                {selectedEvent?.volunteer_enabled && (
+                  <div className="form-group">
+                    <label className="form-label">Interested in volunteering?</label>
+                    <div className="radio-group">
+                      <label className="radio-label">
+                        <input
+                          type="radio"
+                          name="interested_to_volunteer"
+                          value="Yes"
+                          checked={formData.interested_to_volunteer === 'Yes'}
+                          onChange={handleInputChange}
+                        />
+                        <span>Yes</span>
+                      </label>
+                      <label className="radio-label">
+                        <input
+                          type="radio"
+                          name="interested_to_volunteer"
+                          value="No"
+                          checked={formData.interested_to_volunteer === 'No'}
+                          onChange={handleInputChange}
+                        />
+                        <span>No</span>
+                      </label>
+                    </div>
+                  </div>
+                )}
 
                 <div className="form-actions">
                   <button
