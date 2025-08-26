@@ -396,6 +396,27 @@
   z-index: 10;
 }
 
+/* Add left resize handle for first column */
+.events-table-container .header-cell:first-child::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 4px;
+  height: 100%;
+  background: transparent;
+  cursor: col-resize;
+  z-index: 10;
+}
+
+.events-table-container .header-cell:first-child:hover::before {
+  background: rgba(255, 255, 255, 0.3);
+}
+
+.events-table-container .header-cell:first-child.resizing::before {
+  background: rgba(255, 255, 255, 0.6);
+}
+
 .events-table-container .header-cell:hover::after {
   background: rgba(255, 255, 255, 0.3);
 }

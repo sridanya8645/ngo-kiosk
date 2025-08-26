@@ -496,7 +496,7 @@ app.post('/api/register', async (req, res) => {
             
             <p style="font-size: 16px; color: #333;">Hello ${name},</p>
             
-            <p style="font-size: 16px; color: #333;">You have successfully registered for the event <strong>${event.name}</strong>.</p>
+            <p style="font-size: 16px; color: #333;">You have successfully registered for <strong>${event.name}</strong>.</p>
             
             <div style="background: #f8f9fa; padding: 20px; border-radius: 10px; margin: 20px 0;">
               <h3 style="color: #333; margin-top: 0;">Event Details:</h3>
@@ -516,11 +516,11 @@ app.post('/api/register', async (req, res) => {
               </div>
             </div>
             
-            <p style="font-size: 16px; color: #333;">Warm regards,<br><strong>Indo American Fair Team</strong></p>
+            <p style="font-size: 16px; color: #333;">Warm regards,<br><strong>${event.welcome_text ? (event.welcome_text.includes('Welcome to ') ? event.welcome_text.replace('Welcome to ', '') : event.welcome_text) : event.name} Team</strong></p>g
             
             <div style="border-top: 1px solid #ddd; margin-top: 30px; padding-top: 20px;">
-              <p style="margin: 5px 0;"><span style="color: #666;">📧</span> <a href="mailto:Indoamericanexpo@gmail.com" style="color: #8B1C1C;">Indoamericanexpo@gmail.com</a></p>
-              <p style="margin: 5px 0;"><span style="color: #666;">📞</span> <a href="tel:609-937-2800" style="color: #8B1C1C;">609-937-2800</a></p>
+              <p style="margin: 5px 0;"><span style="color: #666;">📧</span> <a href="mailto:${event.footer_email || 'Indoamericanexpo@gmail.com'}" style="color: #8B1C1C;">${event.footer_email || 'Indoamericanexpo@gmail.com'}</a></p>
+              <p style="margin: 5px 0;"><span style="color: #666;">📞</span> <a href="tel:${event.footer_phone || '609-937-2800'}" style="color: #8B1C1C;">${event.footer_phone || '609-937-2800'}</a></p>
             </div>
           </div>
         `
@@ -653,7 +653,7 @@ app.post('/api/mobile-register', async (req, res) => {
             
             <p style="font-size: 16px; color: #333;">Hello ${name},</p>
             
-            <p style="font-size: 16px; color: #333;">You have successfully registered for the event <strong>${event.name}</strong>.</p>
+            <p style="font-size: 16px; color: #333;">You have successfully registered for <strong>${event.name}</strong>.</p>
             
             <div style="background: #f8f9fa; padding: 20px; border-radius: 10px; margin: 20px 0;">
               <h3 style="color: #333; margin-top: 0;">Event Details:</h3>
@@ -674,11 +674,11 @@ app.post('/api/mobile-register', async (req, res) => {
               <p style="font-size: 14px; color: #666; margin-top: 10px;">QR code attached to this email</p>
             </div>
             
-            <p style="font-size: 16px; color: #333;">Warm regards,<br><strong>Indo American Fair Team</strong></p>
+            <p style="font-size: 16px; color: #333;">Warm regards,<br><strong>${event.welcome_text ? (event.welcome_text.includes('Welcome to ') ? event.welcome_text.replace('Welcome to ', '') : event.welcome_text) : event.name} Team</strong></p>
             
             <div style="border-top: 1px solid #ddd; margin-top: 30px; padding-top: 20px;">
-              <p style="margin: 5px 0;"><span style="color: #666;">📧</span> <a href="mailto:Indoamericanexpo@gmail.com" style="color: #8B1C1C;">Indoamericanexpo@gmail.com</a></p>
-              <p style="margin: 5px 0;"><span style="color: #666;">📞</span> <a href="tel:609-937-2800" style="color: #8B1C1C;">609-937-2800</a></p>
+              <p style="margin: 5px 0;"><span style="color: #666;">📧</span> <a href="mailto:${event.footer_email || 'Indoamericanexpo@gmail.com'}" style="color: #8B1C1C;">${event.footer_email || 'Indoamericanexpo@gmail.com'}</a></p>
+              <p style="margin: 5px 0;"><span style="color: #666;">📞</span> <a href="tel:${event.footer_phone || '609-937-2800'}" style="color: #8B1C1C;">${event.footer_phone || '609-937-2800'}</a></p>
             </div>
           </div>
         `
@@ -1094,16 +1094,23 @@ app.post('/api/checkin', async (req, res) => {
     
     if (rows.length === 0) {
       // Check if registration exists but is already checked in
-      const [existingRows] = await pool.execute(
-        "SELECT * FROM registrations WHERE id = ?",
-        [registrationId]
-      );
+      let existingQuery, existingParams;
+      if (registrationId) {
+        existingQuery = "SELECT * FROM registrations WHERE id = ?";
+        existingParams = [registrationId];
+      } else if (phone) {
+        existingQuery = "SELECT * FROM registrations WHERE phone = ?";
+        existingParams = [phone];
+      }
+      
+      const [existingRows] = await pool.execute(existingQuery, existingParams);
       
       if (existingRows.length > 0 && existingRows[0].checked_in) {
         return res.status(400).json({ 
           success: false, 
-          message: "Registration already checked in",
-          error: "This QR code has already been scanned"
+          message: `Welcome back ${existingRows[0].name}, you have already checked in`,
+          error: "This QR code has already been scanned",
+          name: existingRows[0].name
         });
       } else {
         return res.status(404).json({ 

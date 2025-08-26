@@ -227,9 +227,18 @@ const MobileRegister = () => {
     }}>
       <div className="success-icon">✅</div>
       <h2 className="success-title">Registration Successful!</h2>
-      <p className="success-message">
-        Thanks for registering for {selectedEvent?.name || 'the event'}. You will receive an email with your QR code for check-in shortly.
-      </p>
+      <div style={{
+        background: '#d4edda',
+        border: '1px solid #c3e6cb',
+        borderRadius: '8px',
+        padding: '15px',
+        margin: '15px 0',
+        color: '#155724'
+      }}>
+        <p className="success-message" style={{ margin: 0, color: '#155724' }}>
+          Thanks for registering for {selectedEvent?.name || 'the event'}. You will receive an email with your QR code for check-in shortly.
+        </p>
+      </div>
       <p style={{ fontSize: '0.9rem', color: '#666', marginTop: '10px' }}>Redirecting to check-in page in 3 seconds...</p>
     </div>
   );

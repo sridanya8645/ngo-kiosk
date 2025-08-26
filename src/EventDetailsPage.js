@@ -175,7 +175,7 @@ function EventDetailsPage() {
       formData.append('start_datetime', newEvent.start_datetime);
       formData.append('end_datetime', newEvent.end_datetime);
       formData.append('location', newEvent.location);
-      formData.append('raffle_tickets', newEvent.raffle_tickets || 0);
+      formData.append('raffle_tickets', newEvent.raffle_tickets || '');
 
       formData.append('footer_location', newEvent.footer_location || '');
       formData.append('footer_phone', newEvent.footer_phone || '');
@@ -236,7 +236,7 @@ function EventDetailsPage() {
       formData.append('start_datetime', editingEvent.start_datetime);
       formData.append('end_datetime', editingEvent.end_datetime);
       formData.append('location', editingEvent.location);
-      formData.append('raffle_tickets', editingEvent.raffle_tickets || 0);
+      formData.append('raffle_tickets', editingEvent.raffle_tickets || '');
 
       formData.append('footer_location', editingEvent.footer_location || '');
       formData.append('footer_phone', editingEvent.footer_phone || '');
@@ -683,7 +683,7 @@ function EventDetailsPage() {
                  </div>
                                   <div className="data-cell col-5">
                     <input
-                      type="number"
+                      type="text"
                       name="raffle_tickets"
                       value={newEvent.raffle_tickets}
                       onChange={(e) => handleInputChange(e)}
@@ -899,11 +899,12 @@ function EventDetailsPage() {
                     </div>
                     <div className="data-cell col-5">
                       <input
-                        type="number"
+                        type="text"
                         name="raffle_tickets"
-                        value={editingEvent.raffle_tickets || 0}
+                        value={editingEvent.raffle_tickets || ''}
                         onChange={(e) => handleInputChange(e, true)}
                         className="table-input"
+                        placeholder="Raffle Tickets"
                       />
                     </div>
                     <div className="data-cell col-6">

@@ -6,7 +6,10 @@ const pool = mysql.createPool({
   user: process.env.DB_USER,
   password: process.env.DB_PASSWORD,
   database: process.env.DB_NAME,
-  ssl: { rejectUnauthorized: true, ca: require('fs').readFileSync(process.env.DB_SSL_CA_PATH) }
+  ssl: process.env.DB_SSL_CA_PATH ? { 
+    rejectUnauthorized: true, 
+    ca: require('fs').readFileSync(process.env.DB_SSL_CA_PATH) 
+  } : false
 });
 
 async function fixRaffleColumn() {
