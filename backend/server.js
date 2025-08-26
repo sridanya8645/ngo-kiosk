@@ -753,6 +753,62 @@ app.get('/api/test-db', async (req, res) => {
   }
 });
 
+// Fix raffle column endpoint
+app.get('/api/fix-raffle-column', async (req, res) => {
+  try {
+    console.log('🔧 Fixing raffle_tickets column...');
+
+    // First check the current column type
+    const [columns] = await pool.execute(`
+      SELECT COLUMN_NAME, DATA_TYPE, IS_NULLABLE, COLUMN_DEFAULT
+      FROM INFORMATION_SCHEMA.COLUMNS 
+      WHERE TABLE_SCHEMA = ? AND TABLE_NAME = 'events' AND COLUMN_NAME = 'raffle_tickets'
+    `, [process.env.DB_NAME]);
+
+    console.log('Current raffle_tickets column info:', columns[0]);
+
+    if (columns.length > 0 && columns[0].DATA_TYPE === 'int') {
+      // Change raffle_tickets from INT to VARCHAR(255)
+      await pool.execute(`
+        ALTER TABLE events
+        MODIFY COLUMN raffle_tickets VARCHAR(255) DEFAULT ''
+      `);
+
+      console.log('✅ Raffle column updated to VARCHAR(255)');
+
+      // Update existing records to have empty string instead of 0
+      await pool.execute(`
+        UPDATE events
+        SET raffle_tickets = ''
+        WHERE raffle_tickets = '0' OR raffle_tickets IS NULL
+      `);
+
+      console.log('✅ Existing raffle values updated');
+      
+      res.json({ 
+        success: true, 
+        message: "Raffle column fixed successfully",
+        oldType: columns[0].DATA_TYPE,
+        newType: 'varchar'
+      });
+    } else {
+      console.log('✅ Raffle column is already VARCHAR or doesn\'t exist');
+      res.json({ 
+        success: true, 
+        message: "Raffle column is already VARCHAR",
+        currentType: columns[0]?.DATA_TYPE || 'not found'
+      });
+    }
+
+  } catch (error) {
+    console.error('❌ Error fixing raffle column:', error);
+    res.status(500).json({ 
+      error: "Failed to fix raffle column", 
+      details: error.message
+    });
+  }
+});
+
 // Get all events
 app.get('/api/events', async (req, res) => {
   try {

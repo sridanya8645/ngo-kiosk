@@ -329,9 +329,9 @@
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
   backdrop-filter: blur(10px);
   border: 1px solid rgba(255, 255, 255, 0.2);
-  width: 95%; /* Use percentage width for better centering */
-  max-width: 2000px; /* Maximum width */
-  min-width: 1000px; /* Further reduced for better responsiveness */
+  width: 98%; /* Increased width for bigger table */
+  max-width: 2400px; /* Increased maximum width */
+  min-width: 1600px; /* Increased minimum width for bigger table */
   overflow-x: auto;
   overflow-y: hidden;
   /* Column proportions tuned for content fit (16 columns) */
@@ -406,12 +406,12 @@
 .events-table-container .header-cell {
   text-align: left;
   min-width: 0;
-  padding: 12px 8px; /* Reduced horizontal padding for better fit */
+  padding: 15px 12px; /* Increased padding for bigger table */
   border-right: 1px solid #6B0F0F;
   background: #8B1C1C;
   color: #fff;
   font-weight: 600;
-  font-size: 0.85rem; /* Smaller font size for better fit */
+  font-size: 1rem; /* Increased font size for better readability */
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -513,7 +513,7 @@
   display: flex;
   align-items: center;
   min-width: 0;
-  padding: 8px 8px; /* Reduced horizontal padding for better fit */
+  padding: 12px 12px; /* Increased padding for bigger table */
   border-right: 1px solid #dee2e6;
   background: #f8f9fa;
 }
