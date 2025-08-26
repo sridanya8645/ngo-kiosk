@@ -263,7 +263,7 @@ const MobileRegister = () => {
             fontSize: '1rem',
             fontWeight: '600'
           }}>
-            Register and get a chance to win $200 Raffle ticket!!
+            {selectedEvent?.raffle_tickets || 'Register and get a chance to win $200 Raffle ticket!!'}
           </div>
           
           {/* Form third - only show if not submitted */}
@@ -373,12 +373,7 @@ const MobileRegister = () => {
           {submitSuccess && (
             <>
               {console.log('🎉 Success message should be rendering!')}
-              <div className="success-message">
-                <h2>Registration Successful!</h2>
-                <p>Thank you for registering for {selectedEvent?.name || 'the event'}.</p>
-                <p>You will receive a confirmation email with your QR code shortly.</p>
-                <p>Please scan the QR code at the kiosk during check-in.</p>
-              </div>
+              <SuccessMessage />
             </>
           )}
         </div>

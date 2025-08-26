@@ -331,11 +331,46 @@
   border: 1px solid rgba(255, 255, 255, 0.2);
   width: 95%; /* Use percentage width for better centering */
   max-width: 2000px; /* Maximum width */
-  min-width: 1800px; /* Minimum width */
+  min-width: 1000px; /* Further reduced for better responsiveness */
   overflow-x: auto;
   overflow-y: hidden;
   /* Column proportions tuned for content fit (16 columns) */
   --events-cols: 0.8fr 2.5fr 1.8fr 1.8fr 1.5fr 1fr 1.2fr 1.2fr 1.5fr 1fr 1fr 1fr 1.5fr 1.5fr 1.5fr 1.5fr;
+}
+
+/* Responsive adjustments for smaller screens */
+@media (max-width: 1400px) {
+  .events-table-container {
+    min-width: 800px;
+    font-size: 0.9rem;
+  }
+  
+  .events-table-container .header-cell {
+    font-size: 0.75rem;
+    padding: 10px 6px;
+  }
+  
+  .events-table-container .data-cell {
+    padding: 6px 6px;
+    font-size: 0.85rem;
+  }
+}
+
+@media (max-width: 1200px) {
+  .events-table-container {
+    min-width: 600px;
+    font-size: 0.8rem;
+  }
+  
+  .events-table-container .header-cell {
+    font-size: 0.7rem;
+    padding: 8px 4px;
+  }
+  
+  .events-table-container .data-cell {
+    padding: 4px 4px;
+    font-size: 0.75rem;
+  }
 }
 .events-table-container * { box-sizing: border-box; }
 
@@ -371,12 +406,12 @@
 .events-table-container .header-cell {
   text-align: left;
   min-width: 0;
-  padding: 12px 20px; /* match data-cell horizontal padding */
+  padding: 12px 8px; /* Reduced horizontal padding for better fit */
   border-right: 1px solid #6B0F0F;
   background: #8B1C1C;
   color: #fff;
   font-weight: 600;
-  font-size: 1rem;
+  font-size: 0.85rem; /* Smaller font size for better fit */
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -478,7 +513,7 @@
   display: flex;
   align-items: center;
   min-width: 0;
-  padding: 8px 20px; /* match data-cell horizontal padding */
+  padding: 8px 8px; /* Reduced horizontal padding for better fit */
   border-right: 1px solid #dee2e6;
   background: #f8f9fa;
 }
