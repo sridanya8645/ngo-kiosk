@@ -765,6 +765,11 @@ app.get('/api/events', async (req, res) => {
         end_datetime,
         location,
         raffle_tickets,
+        banner,
+        header_image,
+        footer_content,
+        volunteer_enabled,
+        welcome_text,
         created_at,
         modified_at,
         (SELECT username FROM users WHERE id = events.created_by) as created_by_name,
@@ -802,20 +807,23 @@ function convertTo24Hour(timeStr) {
 }
 
 // Add event
-app.post('/api/events', upload.single('banner'), async (req, res) => {
+app.post('/api/events', upload.fields([
+  { name: 'banner', maxCount: 1 },
+  { name: 'header_image', maxCount: 1 }
+]), async (req, res) => {
   try {
-    const { name, start_datetime, end_datetime, location, raffle_tickets, created_by } = req.body;
+    const { name, start_datetime, end_datetime, location, raffle_tickets, footer_content, volunteer_enabled, welcome_text, created_by } = req.body;
     
     // Generate unique banner filename with event name
     let banner = null;
-    if (req.file) {
+    if (req.files && req.files.banner) {
       const eventNameSlug = name.replace(/[^a-zA-Z0-9]/g, '_').toLowerCase();
       const timestamp = Date.now();
-      const fileExtension = req.file.originalname.split('.').pop();
-      const newFilename = `${eventNameSlug}_${timestamp}.${fileExtension}`;
+      const fileExtension = req.files.banner[0].originalname.split('.').pop();
+      const newFilename = `banner_${eventNameSlug}_${timestamp}.${fileExtension}`;
       
       // Rename the uploaded file
-      const oldPath = req.file.path;
+      const oldPath = req.files.banner[0].path;
       const newPath = path.join(uploadDir, newFilename);
       fs.renameSync(oldPath, newPath);
       
@@ -823,9 +831,26 @@ app.post('/api/events', upload.single('banner'), async (req, res) => {
       console.log(`Banner uploaded: ${banner}`);
     }
     
+    // Generate unique header image filename with event name
+    let header_image = null;
+    if (req.files && req.files.header_image) {
+      const eventNameSlug = name.replace(/[^a-zA-Z0-9]/g, '_').toLowerCase();
+      const timestamp = Date.now();
+      const fileExtension = req.files.header_image[0].originalname.split('.').pop();
+      const newFilename = `header_${eventNameSlug}_${timestamp}.${fileExtension}`;
+      
+      // Rename the uploaded file
+      const oldPath = req.files.header_image[0].path;
+      const newPath = path.join(uploadDir, newFilename);
+      fs.renameSync(oldPath, newPath);
+      
+      header_image = `/uploads/${newFilename}`;
+      console.log(`Header image uploaded: ${header_image}`);
+    }
+
     const [result] = await pool.execute(
-      'INSERT INTO events (name, start_datetime, end_datetime, location, banner, raffle_tickets, created_by) VALUES (?, ?, ?, ?, ?, ?, ?)',
-      [name, start_datetime, end_datetime, location, banner, raffle_tickets || 0, created_by]
+      'INSERT INTO events (name, start_datetime, end_datetime, location, banner, header_image, raffle_tickets, footer_content, volunteer_enabled, welcome_text, created_by) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
+      [name, start_datetime, end_datetime, location, banner, header_image, raffle_tickets || 0, footer_content || null, volunteer_enabled === 'true' ? 1 : 0, welcome_text || null, created_by]
     );
     
     const [rows] = await pool.execute(`
@@ -836,6 +861,11 @@ app.post('/api/events', upload.single('banner'), async (req, res) => {
         end_datetime,
         location,
         raffle_tickets,
+        banner,
+        header_content,
+        footer_content,
+        volunteer_enabled,
+        welcome_text,
         created_at,
         modified_at,
         (SELECT username FROM users WHERE id = events.created_by) as created_by_name,
@@ -853,13 +883,13 @@ app.post('/api/events', upload.single('banner'), async (req, res) => {
 // Edit event
 app.put('/api/events/:id', upload.single('banner'), async (req, res) => {
   try {
-    const { name, start_datetime, end_datetime, location, raffle_tickets, modified_by } = req.body;
+    const { name, start_datetime, end_datetime, location, raffle_tickets, header_content, footer_content, volunteer_enabled, welcome_text, modified_by } = req.body;
     const { id } = req.params;
     
     console.log('Edit event request:', { id, name, start_datetime, end_datetime, location, raffle_tickets });
     
-    let sql = 'UPDATE events SET name = ?, start_datetime = ?, end_datetime = ?, location = ?, raffle_tickets = ?, modified_by = ?';
-    let params = [name, start_datetime, end_datetime, location, raffle_tickets || 0, modified_by];
+    let sql = 'UPDATE events SET name = ?, start_datetime = ?, end_datetime = ?, location = ?, raffle_tickets = ?, header_content = ?, footer_content = ?, volunteer_enabled = ?, welcome_text = ?, modified_by = ?';
+    let params = [name, start_datetime, end_datetime, location, raffle_tickets || 0, header_content || null, footer_content || null, volunteer_enabled === 'true' ? 1 : 0, welcome_text || null, modified_by];
     
     if (req.file) {
       // Generate unique banner filename with event name
