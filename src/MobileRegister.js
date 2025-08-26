@@ -228,7 +228,7 @@ const MobileRegister = () => {
       <div className="success-icon">✅</div>
       <h2 className="success-title">Registration Successful!</h2>
       <p className="success-message">
-        Thanks for registering for Indo American Fair 2025. You will receive an email with your QR code for check-in shortly.
+        Thanks for registering for {selectedEvent?.name || 'the event'}. You will receive an email with your QR code for check-in shortly.
       </p>
       <p style={{ fontSize: '0.9rem', color: '#666', marginTop: '10px' }}>Redirecting to check-in page in 3 seconds...</p>
     </div>

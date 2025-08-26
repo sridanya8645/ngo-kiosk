@@ -219,9 +219,9 @@ const RegisterPage = () => {
     }}>
       <div className="success-icon">✅</div>
       <h2 className="success-title">Registration Successful!</h2>
-      <p className="success-message">
-        Thanks for registering for Indo American Fair 2025. You have successfully registered and checked in!
-      </p>
+             <p className="success-message">
+         Thanks for registering for {selectedEvent?.name || 'the event'}. You have successfully registered and checked in!
+       </p>
       <p style={{ fontSize: '0.9rem', color: '#666', marginTop: '10px' }}>Redirecting to check-in page in 3 seconds...</p>
     </div>
   );

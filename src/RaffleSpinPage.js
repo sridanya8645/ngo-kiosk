@@ -56,7 +56,7 @@ const RaffleSpinPage = () => {
         setEvents(sorted);
 
         // Auto-select today's event (no dropdown). If endpoint returns null, compute fallback using [date, end_date]
-        let selected = (todayEvent && todayEvent.id) ? todayEvent : null;
+        let selected = (todayEvent && todayEvent.event_id) ? todayEvent : null;
         if (!selected) {
           const parseLocalYMD = (val) => {
             if (!val) return null;
@@ -96,7 +96,7 @@ const RaffleSpinPage = () => {
       setRegistrations([]);
       return;
     }
-    const filtered = eligibleUsers.filter(u => Number(u.event_id) === Number(selectedEvent.id));
+    const filtered = eligibleUsers.filter(u => Number(u.event_id) === Number(selectedEvent.event_id));
     
     // Show ALL users who checked in today - no sampling restrictions
     let wheelData = filtered;
