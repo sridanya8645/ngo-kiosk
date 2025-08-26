@@ -757,29 +757,28 @@ app.get('/api/test-db', async (req, res) => {
 app.get('/api/events', async (req, res) => {
   try {
     console.log('🔍 Fetching events from database...');
-         const [rows] = await pool.execute(`
-       SELECT 
-         id as event_id,
-         name,
-         start_datetime,
-         end_datetime,
-         location,
-         raffle_tickets,
-         banner,
-         header_image,
-         footer_content,
-         footer_location,
-         footer_phone,
-         footer_email,
-         volunteer_enabled,
-         welcome_text,
-         created_at,
-         modified_at,
-         (SELECT username FROM users WHERE id = events.created_by) as created_by_name,
-         (SELECT username FROM users WHERE id = events.modified_by) as modified_by_name
-       FROM events 
-       ORDER BY start_datetime DESC
-     `);
+                 const [rows] = await pool.execute(`
+          SELECT
+            id as event_id,
+            name,
+            start_datetime,
+            end_datetime,
+            location,
+            raffle_tickets,
+            banner,
+            header_image,
+            footer_location,
+            footer_phone,
+            footer_email,
+            volunteer_enabled,
+            welcome_text,
+            created_at,
+            modified_at,
+            (SELECT username FROM users WHERE id = events.created_by) as created_by_name,
+            (SELECT username FROM users WHERE id = events.modified_by) as modified_by_name
+          FROM events
+          ORDER BY start_datetime DESC
+        `);
     console.log(`✅ Found ${rows.length} events`);
     
     res.json(rows);
@@ -815,7 +814,7 @@ app.post('/api/events', upload.fields([
   { name: 'header_image', maxCount: 1 }
 ]), async (req, res) => {
   try {
-         const { name, start_datetime, end_datetime, location, raffle_tickets, footer_content, footer_location, footer_phone, footer_email, volunteer_enabled, welcome_text, created_by } = req.body;
+         const { name, start_datetime, end_datetime, location, raffle_tickets, footer_location, footer_phone, footer_email, volunteer_enabled, welcome_text, created_by } = req.body;
     
     // Generate unique banner filename with event name
     let banner = null;
@@ -854,10 +853,10 @@ app.post('/api/events', upload.fields([
     // Convert volunteer_enabled to proper boolean
     const volunteerEnabled = volunteer_enabled === 'true' || volunteer_enabled === true ? 1 : 0;
     
-         const [result] = await pool.execute(
-       'INSERT INTO events (name, start_datetime, end_datetime, location, banner, header_image, raffle_tickets, footer_content, footer_location, footer_phone, footer_email, volunteer_enabled, welcome_text, created_by) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
-       [name, start_datetime, end_datetime, location, banner, header_image, raffle_tickets || 0, footer_content || null, footer_location || null, footer_phone || null, footer_email || null, volunteerEnabled, welcome_text || null, created_by]
-     );
+                 const [result] = await pool.execute(
+          'INSERT INTO events (name, start_datetime, end_datetime, location, banner, header_image, raffle_tickets, footer_location, footer_phone, footer_email, volunteer_enabled, welcome_text, created_by) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
+          [name, start_datetime, end_datetime, location, banner, header_image, raffle_tickets || 0, footer_location || null, footer_phone || null, footer_email || null, volunteerEnabled, welcome_text || null, created_by]
+        );
     
            const [rows] = await pool.execute(`
          SELECT 
@@ -869,7 +868,6 @@ app.post('/api/events', upload.fields([
            raffle_tickets,
            banner,
            header_image,
-           footer_content,
            footer_location,
            footer_phone,
            footer_email,
@@ -895,7 +893,7 @@ app.put('/api/events/:id', upload.fields([
   { name: 'header_image', maxCount: 1 }
 ]), async (req, res) => {
   try {
-         const { name, start_datetime, end_datetime, location, raffle_tickets, footer_content, footer_location, footer_phone, footer_email, volunteer_enabled, welcome_text, modified_by } = req.body;
+         const { name, start_datetime, end_datetime, location, raffle_tickets, footer_location, footer_phone, footer_email, volunteer_enabled, welcome_text, modified_by } = req.body;
     const { id } = req.params;
     
     console.log('Edit event request:', { id, name, start_datetime, end_datetime, location, raffle_tickets });
@@ -903,8 +901,8 @@ app.put('/api/events/:id', upload.fields([
     // Convert volunteer_enabled to proper boolean
     const volunteerEnabled = volunteer_enabled === 'true' || volunteer_enabled === true ? 1 : 0;
     
-         let sql = 'UPDATE events SET name = ?, start_datetime = ?, end_datetime = ?, location = ?, raffle_tickets = ?, footer_content = ?, footer_location = ?, footer_phone = ?, footer_email = ?, volunteer_enabled = ?, welcome_text = ?, modified_by = ?';
-     let params = [name, start_datetime, end_datetime, location, raffle_tickets || 0, footer_content || null, footer_location || null, footer_phone || null, footer_email || null, volunteerEnabled, welcome_text || null, modified_by];
+                 let sql = 'UPDATE events SET name = ?, start_datetime = ?, end_datetime = ?, location = ?, raffle_tickets = ?, footer_location = ?, footer_phone = ?, footer_email = ?, volunteer_enabled = ?, welcome_text = ?, modified_by = ?';
+        let params = [name, start_datetime, end_datetime, location, raffle_tickets || 0, footer_location || null, footer_phone || null, footer_email || null, volunteerEnabled, welcome_text || null, modified_by];
     
     // Handle banner upload
     if (req.files && req.files.banner) {
@@ -1018,31 +1016,30 @@ app.delete('/api/events/:id', async (req, res) => {
      console.log('🔍 Fetching today\'s event for date:', today);
      
      // Get events that are active today (either start today or are ongoing)
-     const [rows] = await pool.execute(`
-       SELECT 
-         id as event_id,
-         name,
-         start_datetime,
-         end_datetime,
-         location,
-         raffle_tickets,
-         banner,
-         header_image,
-         footer_content,
-         footer_location,
-         footer_phone,
-         footer_email,
-         volunteer_enabled,
-         welcome_text,
-         created_at,
-         modified_at,
-         (SELECT username FROM users WHERE id = events.created_by) as created_by_name,
-         (SELECT username FROM users WHERE id = events.modified_by) as modified_by_name
-       FROM events 
-       WHERE DATE(start_datetime) <= ? AND DATE(end_datetime) >= ?
-       ORDER BY start_datetime DESC 
-       LIMIT 1
-     `, [today, today]);
+             const [rows] = await pool.execute(`
+          SELECT
+            id as event_id,
+            name,
+            start_datetime,
+            end_datetime,
+            location,
+            raffle_tickets,
+            banner,
+            header_image,
+            footer_location,
+            footer_phone,
+            footer_email,
+            volunteer_enabled,
+            welcome_text,
+            created_at,
+            modified_at,
+            (SELECT username FROM users WHERE id = events.created_by) as created_by_name,
+            (SELECT username FROM users WHERE id = events.modified_by) as modified_by_name
+          FROM events
+          WHERE DATE(start_datetime) <= ? AND DATE(end_datetime) >= ?
+          ORDER BY start_datetime DESC
+          LIMIT 1
+        `, [today, today]);
      
      if (rows[0]) {
        console.log('✅ Today\'s event found:', rows[0].name);

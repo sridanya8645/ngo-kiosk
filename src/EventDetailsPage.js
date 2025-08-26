@@ -15,7 +15,6 @@ function EventDetailsPage() {
     raffle_tickets: "",
     banner: "",
     header_image: "",
-    footer_content: "",
     footer_location: "",
     footer_phone: "",
     footer_email: "",
@@ -34,7 +33,6 @@ function EventDetailsPage() {
     raffle_tickets: "",
     banner: null,
     header_image: null,
-    footer_content: "",
     footer_location: "",
     footer_phone: "",
     footer_email: "",
@@ -44,6 +42,12 @@ function EventDetailsPage() {
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
   const navigate = useNavigate();
+
+  // Column resizing state
+  const [columnWidths, setColumnWidths] = useState({});
+  const [isResizing, setIsResizing] = useState(false);
+  const [resizeStartX, setResizeStartX] = useState(0);
+  const [resizeColumnIndex, setResizeColumnIndex] = useState(null);
 
 
 
@@ -172,7 +176,7 @@ function EventDetailsPage() {
       formData.append('end_datetime', newEvent.end_datetime);
       formData.append('location', newEvent.location);
       formData.append('raffle_tickets', newEvent.raffle_tickets || 0);
-      formData.append('footer_content', newEvent.footer_content || '');
+
       formData.append('footer_location', newEvent.footer_location || '');
       formData.append('footer_phone', newEvent.footer_phone || '');
       formData.append('footer_email', newEvent.footer_email || '');
@@ -206,7 +210,6 @@ function EventDetailsPage() {
           raffle_tickets: "",
           banner: null,
           header_image: null,
-          footer_content: "",
           footer_location: "",
           footer_phone: "",
           footer_email: "",
@@ -234,7 +237,7 @@ function EventDetailsPage() {
       formData.append('end_datetime', editingEvent.end_datetime);
       formData.append('location', editingEvent.location);
       formData.append('raffle_tickets', editingEvent.raffle_tickets || 0);
-      formData.append('footer_content', editingEvent.footer_content || '');
+
       formData.append('footer_location', editingEvent.footer_location || '');
       formData.append('footer_phone', editingEvent.footer_phone || '');
       formData.append('footer_email', editingEvent.footer_email || '');
@@ -300,6 +303,58 @@ function EventDetailsPage() {
     }
   };
 
+  // Column resizing functions
+  const handleResizeStart = (e, columnIndex) => {
+    e.preventDefault();
+    setIsResizing(true);
+    setResizeStartX(e.clientX);
+    setResizeColumnIndex(columnIndex);
+    
+    // Add resizing class to header cell
+    const headerCell = e.target.closest('.header-cell');
+    if (headerCell) {
+      headerCell.classList.add('resizing');
+    }
+  };
+
+  const handleResizeMove = (e) => {
+    if (!isResizing || resizeColumnIndex === null) return;
+
+    const deltaX = e.clientX - resizeStartX;
+    const currentWidth = columnWidths[resizeColumnIndex] || 0;
+    const newWidth = Math.max(100, currentWidth + deltaX); // Minimum width of 100px
+
+    setColumnWidths(prev => ({
+      ...prev,
+      [resizeColumnIndex]: newWidth
+    }));
+
+    setResizeStartX(e.clientX);
+  };
+
+  const handleResizeEnd = () => {
+    setIsResizing(false);
+    setResizeColumnIndex(null);
+    
+    // Remove resizing class from all header cells
+    document.querySelectorAll('.header-cell').forEach(cell => {
+      cell.classList.remove('resizing');
+    });
+  };
+
+  // Add event listeners for resizing
+  useEffect(() => {
+    if (isResizing) {
+      document.addEventListener('mousemove', handleResizeMove);
+      document.addEventListener('mouseup', handleResizeEnd);
+      
+      return () => {
+        document.removeEventListener('mousemove', handleResizeMove);
+        document.removeEventListener('mouseup', handleResizeEnd);
+      };
+    }
+  }, [isResizing, resizeStartX, resizeColumnIndex, columnWidths]);
+
 
 
   return (
@@ -313,26 +368,137 @@ function EventDetailsPage() {
           
           {/* Events Table */}
           <div className="events-table-container">
-            {/* Table Header */}
-            <div className="table-header-row">
-              <div className="header-cell" data-label="Event ID">Event ID</div>
-              <div className="header-cell" data-label="Event Name">Event Name</div>
-              <div className="header-cell" data-label="Start Date & Time">Start Date & Time</div>
-              <div className="header-cell" data-label="End Date & Time">End Date & Time</div>
-              <div className="header-cell" data-label="Location">Location</div>
-              <div className="header-cell" data-label="Raffle Tickets">Raffle Tickets</div>
-              <div className="header-cell" data-label="Banner">Banner</div>
-              <div className="header-cell" data-label="Header Image">Header Image</div>
-              <div className="header-cell" data-label="Footer Content">Footer Content</div>
-              <div className="header-cell" data-label="Footer Location">Footer Location</div>
-              <div className="header-cell" data-label="Footer Phone">Footer Phone</div>
-              <div className="header-cell" data-label="Footer Email">Footer Email</div>
-              <div className="header-cell" data-label="Volunteer">Volunteer</div>
-              <div className="header-cell" data-label="Welcome Text">Welcome Text</div>
-              <div className="header-cell" data-label="Created">Created</div>
-              <div className="header-cell" data-label="Modified">Modified</div>
-              <div className="header-cell" data-label="Actions">Actions</div>
-            </div>
+                         {/* Table Header */}
+             <div className="table-header-row">
+               <div 
+                 className="header-cell" 
+                 data-label="Event ID"
+                 style={{ width: columnWidths[0] ? `${columnWidths[0]}px` : 'auto' }}
+                 onMouseDown={(e) => handleResizeStart(e, 0)}
+               >
+                 Event ID
+               </div>
+               <div 
+                 className="header-cell" 
+                 data-label="Event Name"
+                 style={{ width: columnWidths[1] ? `${columnWidths[1]}px` : 'auto' }}
+                 onMouseDown={(e) => handleResizeStart(e, 1)}
+               >
+                 Event Name
+               </div>
+               <div 
+                 className="header-cell" 
+                 data-label="Start Date & Time"
+                 style={{ width: columnWidths[2] ? `${columnWidths[2]}px` : 'auto' }}
+                 onMouseDown={(e) => handleResizeStart(e, 2)}
+               >
+                 Start Date & Time
+               </div>
+               <div 
+                 className="header-cell" 
+                 data-label="End Date & Time"
+                 style={{ width: columnWidths[3] ? `${columnWidths[3]}px` : 'auto' }}
+                 onMouseDown={(e) => handleResizeStart(e, 3)}
+               >
+                 End Date & Time
+               </div>
+               <div 
+                 className="header-cell" 
+                 data-label="Location"
+                 style={{ width: columnWidths[4] ? `${columnWidths[4]}px` : 'auto' }}
+                 onMouseDown={(e) => handleResizeStart(e, 4)}
+               >
+                 Location
+               </div>
+               <div 
+                 className="header-cell" 
+                 data-label="Raffle Tickets"
+                 style={{ width: columnWidths[5] ? `${columnWidths[5]}px` : 'auto' }}
+                 onMouseDown={(e) => handleResizeStart(e, 5)}
+               >
+                 Raffle Tickets
+               </div>
+               <div 
+                 className="header-cell" 
+                 data-label="Banner"
+                 style={{ width: columnWidths[6] ? `${columnWidths[6]}px` : 'auto' }}
+                 onMouseDown={(e) => handleResizeStart(e, 6)}
+               >
+                 Banner
+               </div>
+               <div 
+                 className="header-cell" 
+                 data-label="Header Image"
+                 style={{ width: columnWidths[7] ? `${columnWidths[7]}px` : 'auto' }}
+                 onMouseDown={(e) => handleResizeStart(e, 7)}
+               >
+                 Header Image
+               </div>
+               <div 
+                 className="header-cell" 
+                 data-label="Footer Location"
+                 style={{ width: columnWidths[8] ? `${columnWidths[8]}px` : 'auto' }}
+                 onMouseDown={(e) => handleResizeStart(e, 8)}
+               >
+                 Footer Location
+               </div>
+               <div 
+                 className="header-cell" 
+                 data-label="Footer Phone"
+                 style={{ width: columnWidths[9] ? `${columnWidths[9]}px` : 'auto' }}
+                 onMouseDown={(e) => handleResizeStart(e, 9)}
+               >
+                 Footer Phone
+               </div>
+               <div 
+                 className="header-cell" 
+                 data-label="Footer Email"
+                 style={{ width: columnWidths[10] ? `${columnWidths[10]}px` : 'auto' }}
+                 onMouseDown={(e) => handleResizeStart(e, 10)}
+               >
+                 Footer Email
+               </div>
+               <div 
+                 className="header-cell" 
+                 data-label="Volunteer"
+                 style={{ width: columnWidths[11] ? `${columnWidths[11]}px` : 'auto' }}
+                 onMouseDown={(e) => handleResizeStart(e, 11)}
+               >
+                 Volunteer
+               </div>
+               <div 
+                 className="header-cell" 
+                 data-label="Welcome Text"
+                 style={{ width: columnWidths[12] ? `${columnWidths[12]}px` : 'auto' }}
+                 onMouseDown={(e) => handleResizeStart(e, 12)}
+               >
+                 Welcome Text
+               </div>
+               <div 
+                 className="header-cell" 
+                 data-label="Created"
+                 style={{ width: columnWidths[13] ? `${columnWidths[13]}px` : 'auto' }}
+                 onMouseDown={(e) => handleResizeStart(e, 13)}
+               >
+                 Created
+               </div>
+               <div 
+                 className="header-cell" 
+                 data-label="Modified"
+                 style={{ width: columnWidths[14] ? `${columnWidths[14]}px` : 'auto' }}
+                 onMouseDown={(e) => handleResizeStart(e, 14)}
+               >
+                 Modified
+               </div>
+               <div 
+                 className="header-cell" 
+                 data-label="Actions"
+                 style={{ width: columnWidths[15] ? `${columnWidths[15]}px` : 'auto' }}
+                 onMouseDown={(e) => handleResizeStart(e, 15)}
+               >
+                 Actions
+               </div>
+             </div>
 
             {/* Filter Row */}
             <div className="filter-row">
@@ -408,15 +574,7 @@ function EventDetailsPage() {
                    className="filter-input"
                  />
                </div>
-              <div className="filter-cell">
-                <input
-                  name="footer_content"
-                  value={filters.footer_content || ''}
-                  onChange={handleFilterChange}
-                  placeholder="Filter Footer"
-                  className="filter-input"
-                />
-              </div>
+
               <div className="filter-cell">
                 <input
                   name="footer_location"
@@ -564,16 +722,7 @@ function EventDetailsPage() {
                       accept="image/*"
                     />
                   </div>
-                 <div className="data-cell">
-                   <textarea
-                     name="footer_content"
-                     value={newEvent.footer_content}
-                     onChange={(e) => handleInputChange(e)}
-                     className="table-input"
-                     placeholder="Footer Content"
-                     rows="2"
-                   />
-                 </div>
+
                  <div className="data-cell">
                    <input
                      type="text"
@@ -676,11 +825,7 @@ function EventDetailsPage() {
                       <span className="no-header">No Header Image</span>
                     )}
                   </div>
-                  <div className="data-cell" data-label="Footer Content">
-                    <div className="content-preview">
-                      {event.footer_content ? event.footer_content.substring(0, 50) + '...' : 'No content'}
-                    </div>
-                  </div>
+
                   <div className="data-cell" data-label="Footer Location">
                     {event.footer_location || 'Not set'}
                   </div>
@@ -792,16 +937,7 @@ function EventDetailsPage() {
                         accept="image/*"
                       />
                     </div>
-                   <div className="data-cell">
-                     <textarea
-                       name="footer_content"
-                       value={editingEvent.footer_content || ''}
-                       onChange={(e) => handleInputChange(e, true)}
-                       className="table-input"
-                       placeholder="Footer Content"
-                       rows="2"
-                     />
-                   </div>
+
                    <div className="data-cell">
                      <input
                        type="text"
