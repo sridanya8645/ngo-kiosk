@@ -40,7 +40,7 @@ const RegisterPage = () => {
         const te = await fetch('/api/todays-event', { cache: 'no-store' });
         if (te.ok) {
           const ev = await te.json();
-          if (ev && ev.id) {
+          if (ev && ev.event_id) {
             setSelectedEvent(ev);
           }
         }
@@ -70,7 +70,7 @@ const RegisterPage = () => {
 
         setEvents(sorted);
         // If dedicated endpoint didn't return, pick from computed
-        setSelectedEvent(prev => prev && prev.id ? prev : todays);
+        setSelectedEvent(prev => prev && prev.event_id ? prev : todays);
       } catch (error) {
         console.error('Error fetching events in RegisterPage:', error);
       }
@@ -95,7 +95,7 @@ const RegisterPage = () => {
 
   const validateForm = () => {
     const newErrors = {};
-    if (!selectedEvent || !selectedEvent.id) {
+    if (!selectedEvent || !selectedEvent.event_id) {
       newErrors.event = 'Event not available for today';
     }
     
@@ -137,7 +137,7 @@ const RegisterPage = () => {
       console.log('🌐 Sending registration request...');
       
       // Use the auto-selected event for today
-      let eventId = selectedEvent?.id || null;
+      let eventId = selectedEvent?.event_id || null;
       if (!eventId) {
         console.error('No events found');
         setErrors({ submit: 'No events available for registration.' });
@@ -149,13 +149,13 @@ const RegisterPage = () => {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({
-          name: formData.name,
-          phone: formData.phone,
-          email: formData.email,
-          eventId: eventId,
-          interested_to_volunteer: formData.volunteer === 'Yes'
-        })
+                 body: JSON.stringify({
+           name: formData.name,
+           phone: formData.phone,
+           email: formData.email,
+           eventId: eventId,
+           interested_to_volunteer: formData.interested_to_volunteer === 'Yes'
+         })
       });
 
       console.log('📡 Registration response status:', response.status);
@@ -170,14 +170,14 @@ const RegisterPage = () => {
           setSubmitSuccess(true);
           setTimeout(async () => {
             setSubmitSuccess(false);
-            setFormData({ name: '', phone: '', email: '', volunteer: 'No' });
-            try {
-              const r = await fetch('/api/todays-event');
-              if (r.ok) {
-                const ev = await r.json();
-                if (ev && ev.id) setSelectedEvent(ev);
-              }
-            } catch (_) {}
+                         setFormData({ name: '', phone: '', email: '', interested_to_volunteer: 'No' });
+                         try {
+               const r = await fetch('/api/todays-event');
+               if (r.ok) {
+                 const ev = await r.json();
+                 if (ev && ev.event_id) setSelectedEvent(ev);
+               }
+             } catch (_) {}
           }, 3000);
         } else {
           console.error('❌ Registration failed:', responseData.message);

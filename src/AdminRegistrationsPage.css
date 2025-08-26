@@ -268,7 +268,7 @@
 /* Table Header Row */
 .table-header-row {
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr 150px;
+  grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
   background: #8B1C1C;
   color: white;
 }
@@ -289,7 +289,7 @@
 /* Filter Row */
 .filter-row {
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr 150px;
+  grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
   background: #f8f9fa;
   padding: 10px;
   gap: 10px;
@@ -325,7 +325,7 @@
 
 .registration-row {
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr 150px;
+  grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
   padding: 12px;
   border-bottom: 1px solid #ddd;
   transition: background-color 0.3s ease;

@@ -325,12 +325,13 @@
   background: rgba(255, 255, 255, 0.95);
   border-radius: 15px;
   padding: 0; /* no container padding; rows handle spacing */
-  margin: 20px 0;
+  margin: 20px auto; /* Center the table */
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
   backdrop-filter: blur(10px);
   border: 1px solid rgba(255, 255, 255, 0.2);
-  width: 100%;
-  min-width: 2000px; /* Ensure table is wide enough for all columns */
+  width: 95%; /* Use percentage width for better centering */
+  max-width: 2000px; /* Maximum width */
+  min-width: 1800px; /* Minimum width */
   overflow-x: auto;
   overflow-y: hidden;
   /* Column proportions tuned for content fit (16 columns) */
@@ -402,6 +403,24 @@
 .events-table-container .header-cell.resizing::after {
   background: rgba(255, 255, 255, 0.6);
 }
+
+/* Column width classes for dynamic resizing - applies to headers, filters, and data cells */
+.events-table-container .col-0 { width: var(--col-0-width, auto); min-width: var(--col-0-width, 100px); }
+.events-table-container .col-1 { width: var(--col-1-width, auto); min-width: var(--col-1-width, 100px); }
+.events-table-container .col-2 { width: var(--col-2-width, auto); min-width: var(--col-2-width, 100px); }
+.events-table-container .col-3 { width: var(--col-3-width, auto); min-width: var(--col-3-width, 100px); }
+.events-table-container .col-4 { width: var(--col-4-width, auto); min-width: var(--col-4-width, 100px); }
+.events-table-container .col-5 { width: var(--col-5-width, auto); min-width: var(--col-5-width, 100px); }
+.events-table-container .col-6 { width: var(--col-6-width, auto); min-width: var(--col-6-width, 100px); }
+.events-table-container .col-7 { width: var(--col-7-width, auto); min-width: var(--col-7-width, 100px); }
+.events-table-container .col-8 { width: var(--col-8-width, auto); min-width: var(--col-8-width, 100px); }
+.events-table-container .col-9 { width: var(--col-9-width, auto); min-width: var(--col-9-width, 100px); }
+.events-table-container .col-10 { width: var(--col-10-width, auto); min-width: var(--col-10-width, 100px); }
+.events-table-container .col-11 { width: var(--col-11-width, auto); min-width: var(--col-11-width, 100px); }
+.events-table-container .col-12 { width: var(--col-12-width, auto); min-width: var(--col-12-width, 100px); }
+.events-table-container .col-13 { width: var(--col-13-width, auto); min-width: var(--col-13-width, 100px); }
+.events-table-container .col-14 { width: var(--col-14-width, auto); min-width: var(--col-14-width, 100px); }
+.events-table-container .col-15 { width: var(--col-15-width, auto); min-width: var(--col-15-width, 100px); }
 .events-table-container .header-cell:last-child { border-right: none; }
 .events-table-container .header-cell:first-child { border-top-left-radius: 8px; }
 .events-table-container .header-cell:last-child { border-top-right-radius: 8px; }

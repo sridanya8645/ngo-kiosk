@@ -168,7 +168,7 @@ export default function CheckinPage() {
     setErrorMsg("");
     
     try {
-      const eventIdToSend = selectedEvent?.id || null;
+      const eventIdToSend = selectedEvent?.event_id || null;
       console.log('Sending eventId in check-in request:', eventIdToSend);
       const response = await fetch("/api/checkin", {
         method: 'POST',
