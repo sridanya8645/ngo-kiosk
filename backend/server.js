@@ -1,10 +1,16 @@
 // Load environment variables
 require('dotenv').config();
 
-// Updated email configuration for Indo American Fair - deployment trigger v2
+// Import middleware and configurations
+const { corsMiddleware, handlePreflight } = require('./middleware/cors');
+const { errorHandler, notFoundHandler, asyncHandler } = require('./middleware/errorHandler');
+const { sanitizeInput } = require('./middleware/validation');
+const rateLimits = require('./middleware/rateLimit');
+const { pool, testConnection, healthCheck } = require('./config/database');
+const { initializeDatabase } = require('./db');
+
+// Import other required modules
 const express = require('express');
-const cors = require('cors');
-const { pool, initializeDatabase } = require('./db');
 const nodemailer = require('nodemailer');
 const QRCode = require('qrcode');
 const multer = require('multer');
@@ -14,11 +20,31 @@ const bcrypt = require('bcryptjs');
 
 const app = express();
 
-// Debug middleware - log all requests
-app.use((req, res, next) => {
-  console.log(`${new Date().toISOString()} - ${req.method} ${req.path}`);
-  next();
-});
+// Trust proxy for Azure
+app.set('trust proxy', 1);
+
+// Apply middleware
+app.use(corsMiddleware);
+app.use(handlePreflight);
+app.use(sanitizeInput);
+app.use(express.json({ limit: '10mb' }));
+app.use(express.urlencoded({ extended: true, limit: '10mb' }));
+
+// Apply rate limiting
+app.use('/api/', rateLimits.general);
+app.use('/api/login', rateLimits.auth);
+app.use('/api/register', rateLimits.registration);
+app.use('/api/mobile-register', rateLimits.registration);
+app.use('/api/checkin', rateLimits.checkin);
+app.use('/api/admin', rateLimits.admin);
+
+// Request logging middleware (development only)
+if (process.env.NODE_ENV === 'development') {
+  app.use((req, res, next) => {
+    console.log(`${new Date().toISOString()} - ${req.method} ${req.path}`);
+    next();
+  });
+}
 
 // Simple test endpoint - FIRST THING
 app.get('/ping', (req, res) => {
@@ -31,12 +57,14 @@ app.get('/ping', (req, res) => {
 });
 
 // Health check for Azure
-app.get('/health', (req, res) => {
+app.get('/health', async (req, res) => {
   console.log('Health check hit!');
+  const dbHealth = await healthCheck();
   res.status(200).json({
     status: 'OK',
     message: 'NGO Kiosk is running!',
-    timestamp: new Date().toISOString()
+    timestamp: new Date().toISOString(),
+    database: dbHealth ? 'connected' : 'disconnected'
   });
 });
 
@@ -49,33 +77,7 @@ app.get('/', (req, res) => {
 // Azure App Service configuration
 app.set('trust proxy', 1);
 
-// CRITICAL: Handle host header issue at the very beginning
-app.use((req, res, next) => {
-  // Set headers that should bypass host header validation
-  res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Requested-With');
-  
-  // Handle preflight requests
-  if (req.method === 'OPTIONS') {
-    return res.status(200).end();
-  }
-  
-  // Log the request for debugging
-  console.log(`${req.method} ${req.path} - Host: ${req.headers.host}`);
-  
-  next();
-});
 
-// CORS configuration for Azure
-app.use(cors({
-  origin: '*',
-  credentials: true,
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization']
-}));
-
-app.use(express.json());
 
 // Email configuration helpers
 const RAW_GMAIL_USER = process.env.GMAIL_USER ?? '';
@@ -1716,58 +1718,81 @@ app.get('/debug-static', (req, res) => {
   }
 });
 
-// Handle React routing - serve index.html for all non-API routes (MUST BE LAST)
+// Handle React routing - serve index.html for all non-API routes
 app.get('*', (req, res) => {
-  // Don't serve React app for API routes
   if (req.path.startsWith('/api/')) {
-    return res.status(404).json({ error: 'API endpoint not found' });
+    return notFoundHandler(req, res);
   }
-  
-  // Don't serve React app for static files that exist
+
   const filePath = path.join(__dirname, 'public', req.path);
-  if (require('fs').existsSync(filePath)) {
+  if (fs.existsSync(filePath)) {
     return res.sendFile(filePath);
   }
-  
-  console.log('Serving React app for path:', req.path);
+
   res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
+// Error handling middleware (must be last)
+app.use(errorHandler);
+
 const PORT = process.env.PORT || 8080;
 
-// Add error handling for server startup
-const server = app.listen(PORT, '0.0.0.0', () => {
-  console.log(`✅ Server running on port ${PORT}`);
-  console.log(`✅ Environment: ${process.env.NODE_ENV || 'development'}`);
-  console.log(`✅ Process ID: ${process.pid}`);
-  
-  // Keep the server alive
-  setInterval(() => {
-    console.log('💓 Server heartbeat - keeping alive');
-  }, 30000); // Every 30 seconds
-});
+// Initialize database and start server
+async function startServer() {
+  try {
+    // Test database connection
+    const dbConnected = await testConnection();
+    if (!dbConnected) {
+      console.error('❌ Failed to connect to database');
+      process.exit(1);
+    }
 
-// Handle server errors
-server.on('error', (error) => {
-  console.error('❌ Server error:', error);
-  if (error.code === 'EADDRINUSE') {
-    console.error('❌ Port is already in use');
+    // Initialize database
+    await initializeDatabase();
+    console.log('✅ Database initialized successfully');
+
+    // Start server
+    const server = app.listen(PORT, '0.0.0.0', () => {
+      console.log(`✅ Server running on port ${PORT}`);
+      console.log(`✅ Environment: ${process.env.NODE_ENV || 'development'}`);
+      console.log(`✅ Process ID: ${process.pid}`);
+      
+      // Keep the server alive
+      setInterval(() => {
+        console.log('💓 Server heartbeat - keeping alive');
+      }, 30000); // Every 30 seconds
+    });
+
+    // Handle server errors
+    server.on('error', (error) => {
+      console.error('❌ Server error:', error);
+      if (error.code === 'EADDRINUSE') {
+        console.error('❌ Port is already in use');
+      }
+    });
+
+    // Graceful shutdown
+    process.on('SIGTERM', () => {
+      console.log('🛑 SIGTERM received, shutting down gracefully');
+      server.close(() => {
+        console.log('✅ Server closed');
+        process.exit(0);
+      });
+    });
+
+    process.on('SIGINT', () => {
+      console.log('🛑 SIGINT received, shutting down gracefully');
+      server.close(() => {
+        console.log('✅ Server closed');
+        process.exit(0);
+      });
+    });
+
+  } catch (error) {
+    console.error('❌ Server startup failed:', error);
+    process.exit(1);
   }
-});
+}
 
-// Handle process termination
-process.on('SIGTERM', () => {
-  console.log('🛑 SIGTERM received, shutting down gracefully');
-  server.close(() => {
-    console.log('✅ Server closed');
-    process.exit(0);
-  });
-});
+startServer();
 
-process.on('SIGINT', () => {
-  console.log('🛑 SIGINT received, shutting down gracefully');
-  server.close(() => {
-    console.log('✅ Server closed');
-    process.exit(0);
-  });
-});
