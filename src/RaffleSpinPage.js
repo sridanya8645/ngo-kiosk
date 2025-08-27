@@ -38,18 +38,21 @@ const RaffleSpinPage = () => {
         const todayRes = await fetch('/api/todays-events', { cache: 'no-store' });
         const todayEvents = await todayRes.json();
         
+        let currentSelectedEvent = selectedEvent;
+        
         if (todayEvents && todayEvents.length > 0) {
           setEvents(todayEvents);
           // Auto-select the first event if only one event
           if (todayEvents.length === 1) {
             setSelectedEvent(todayEvents[0]);
             setEventInfo(todayEvents[0]);
+            currentSelectedEvent = todayEvents[0];
           }
         }
 
         // Fetch eligible users (checked in TODAY), winners, and events
         const [eligibleRes, winnersRes, eventsRes] = await Promise.all([
-          fetch(`/api/raffle/eligible-users${selectedEvent ? `?eventId=${selectedEvent.event_id}` : ''}`, { cache: 'no-store' }),
+          fetch(`/api/raffle/eligible-users${currentSelectedEvent ? `?eventId=${currentSelectedEvent.event_id}` : ''}`, { cache: 'no-store' }),
           fetch('/api/raffle-winners', { cache: 'no-store' }),
           fetch('/api/events', { cache: 'no-store' }),
         ]);
@@ -140,10 +143,12 @@ const RaffleSpinPage = () => {
     fetchEventSpecificData();
   }, [selectedEvent]);
 
+  // useEffect to update wheel data when eligible users change
+  useEffect(() => {
     // Show ALL users who checked in today - no sampling restrictions
-    let wheelData = filtered;
-    if (filtered.length > 0) {
-      wheelData = filtered.map((user, index) => ({
+    let wheelData = eligibleUsers;
+    if (eligibleUsers.length > 0) {
+      wheelData = eligibleUsers.map((user, index) => ({
         ...user,
         _segmentSize: 1,
         _startIndex: index,
