@@ -56,6 +56,39 @@ function SiteHeader ({ navVariant }) {
         </div>
       );
     }
+    if (navVariant === 'raffle-spin') {
+      return (
+        <div className="admin-nav-buttons">
+          <button className="admin-button" onClick={go('/event-details')}>Event Details</button>
+          <button className="admin-button" onClick={go('/admin-users')}>Manage Users</button>
+          <button className="admin-button" onClick={go('/admin/raffle-winners')}>Raffle Winners</button>
+          <button className="admin-button" onClick={go('/admin/registrations')}>Registration Details</button>
+          <button className="admin-button" onClick={go('/admin')}>Logout</button>
+        </div>
+      );
+    }
+    if (navVariant === 'raffle-winners') {
+      return (
+        <div className="admin-nav-buttons">
+          <button className="admin-button" onClick={go('/event-details')}>Event Details</button>
+          <button className="admin-button" onClick={go('/admin-users')}>Manage Users</button>
+          <button className="admin-button" onClick={go('/admin/raffle-spin')}>Raffle Spin</button>
+          <button className="admin-button" onClick={go('/admin/registrations')}>Registration Details</button>
+          <button className="admin-button" onClick={go('/admin')}>Logout</button>
+        </div>
+      );
+    }
+    if (navVariant === 'registration-details') {
+      return (
+        <div className="admin-nav-buttons">
+          <button className="admin-button" onClick={go('/event-details')}>Event Details</button>
+          <button className="admin-button" onClick={go('/admin-users')}>Manage Users</button>
+          <button className="admin-button" onClick={go('/admin/raffle-spin')}>Raffle Spin</button>
+          <button className="admin-button" onClick={go('/admin/raffle-winners')}>Raffle Winners</button>
+          <button className="admin-button" onClick={go('/admin')}>Logout</button>
+        </div>
+      );
+    }
     if (navVariant === 'home-only') {
       return (
         <div className="admin-nav-buttons">

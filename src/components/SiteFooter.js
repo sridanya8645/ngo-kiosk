@@ -40,11 +40,8 @@ function SiteFooter () {
           <span className="footer-icon">📞</span>
           <div className="footer-text">
             <div>{footerPhone}</div>
+            <div>{footerEmail}</div>
           </div>
-        </div>
-        <div className="footer-section">
-          <span className="footer-icon">✉️</span>
-          <span className="footer-text">{footerEmail}</span>
         </div>
         <div className="footer-section">
           <span className="powered-text">Powered by</span>

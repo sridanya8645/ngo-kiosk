@@ -58,15 +58,15 @@
 }
 
 .footer-text {
-  font-size: 0.7rem; /* reduce text size further to fit in one line */
-  line-height: 1.2;
+  font-size: 0.65rem; /* reduce text size further to fit in one line */
+  line-height: 1.1;
   display: flex;
   flex-direction: column;
-  gap: 2px;
+  gap: 1px;
   color: var(--text-primary) !important;
-  white-space: normal;
-  word-break: break-word;
-  overflow-wrap: anywhere;
+  white-space: nowrap; /* prevent text from breaking to second line */
+  word-break: keep-all;
+  overflow-wrap: normal;
 }
 
 .powered-text {
@@ -78,7 +78,7 @@
 }
 
 .pits-logo {
-  height: 80px; /* increase PITS logo size significantly */
+  height: 100px; /* increase PITS logo size even more */
   width: auto;
   object-fit: contain;
   margin-right: env(safe-area-inset-right); /* keep visible on iPad edges */
