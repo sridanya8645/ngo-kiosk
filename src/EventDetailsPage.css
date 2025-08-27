@@ -285,3 +285,32 @@
     flex-direction: column;
   }
 }
+
+/* Datetime input styling */
+input[type="datetime-local"] {
+  cursor: pointer;
+  min-height: 32px;
+  font-family: inherit;
+}
+
+input[type="datetime-local"]:hover {
+  border-color: #007bff;
+  background-color: #f8f9fa;
+}
+
+input[type="datetime-local"]::-webkit-calendar-picker-indicator {
+  cursor: pointer;
+  padding: 2px;
+  border-radius: 2px;
+}
+
+input[type="datetime-local"]::-webkit-calendar-picker-indicator:hover {
+  background-color: #e9ecef;
+}
+
+/* Ensure datetime inputs are clickable */
+.data-cell input[type="datetime-local"] {
+  cursor: pointer;
+  position: relative;
+  z-index: 1;
+}

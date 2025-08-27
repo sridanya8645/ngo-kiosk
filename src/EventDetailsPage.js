@@ -620,24 +620,26 @@ function EventDetailsPage () {
                     placeholder="Event Name"
                   />
                 </div>
-                <div className="data-cell">
-                  <input
-                    type="datetime-local"
-                    name="start_datetime"
-                    value={newEvent.start_datetime}
-                    onChange={(e) => handleInputChange(e)}
-                    className="table-input"
-                  />
-                </div>
-                <div className="data-cell">
-                  <input
-                    type="datetime-local"
-                    name="end_datetime"
-                    value={newEvent.end_datetime}
-                    onChange={(e) => handleInputChange(e)}
-                    className="table-input"
-                  />
-                </div>
+                                 <div className="data-cell">
+                   <input
+                     type="datetime-local"
+                     name="start_datetime"
+                     value={newEvent.start_datetime}
+                     onChange={(e) => handleInputChange(e)}
+                     className="table-input"
+                     placeholder="Select start date & time"
+                   />
+                 </div>
+                 <div className="data-cell">
+                   <input
+                     type="datetime-local"
+                     name="end_datetime"
+                     value={newEvent.end_datetime}
+                     onChange={(e) => handleInputChange(e)}
+                     className="table-input"
+                     placeholder="Select end date & time"
+                   />
+                 </div>
                 <div className="data-cell">
                   <input
                     type="text"
@@ -756,24 +758,184 @@ function EventDetailsPage () {
 
               {/* Regular Events */}
               {filteredEvents.map((event) => (
-                <div key={event.event_id} className="event-row">
+                <div key={event.event_id} className={`event-row ${editingEvent && editingEvent.event_id === event.event_id ? 'edit-row' : ''}`}>
                   <div className="data-cell">{event.event_id}</div>
-                  <div className="data-cell">{event.name}</div>
-                  <div className="data-cell">{formatDateTime(event.start_datetime)}</div>
-                  <div className="data-cell">{formatDateTime(event.end_datetime)}</div>
-                  <div className="data-cell">{event.location}</div>
-                  <div className="data-cell">{event.raffle_tickets}</div>
                   <div className="data-cell">
-                    <span className={`volunteer-status ${event.volunteer_enabled ? 'enabled' : 'disabled'}`}>
-                      {event.volunteer_enabled ? 'Yes' : 'No'}
-                    </span>
+                    {editingEvent && editingEvent.event_id === event.event_id ? (
+                      <input
+                        type="text"
+                        name="name"
+                        value={editingEvent.name}
+                        onChange={(e) => handleInputChange(e, true)}
+                        className="table-input"
+                      />
+                    ) : (
+                      event.name
+                    )}
                   </div>
-                  <div className="data-cell">{event.banner || '-'}</div>
-                  <div className="data-cell">{event.header_image || '-'}</div>
-                  <div className="data-cell">{event.footer_location || '-'}</div>
-                  <div className="data-cell">{event.footer_phone || '-'}</div>
-                  <div className="data-cell">{event.footer_email || '-'}</div>
-                  <div className="data-cell">{event.welcome_text || '-'}</div>
+                  <div className="data-cell">
+                    {editingEvent && editingEvent.event_id === event.event_id ? (
+                      <input
+                        type="datetime-local"
+                        name="start_datetime"
+                        value={formatDateTimeForInput(editingEvent.start_datetime)}
+                        onChange={(e) => handleInputChange(e, true)}
+                        className="table-input"
+                      />
+                    ) : (
+                      formatDateTime(event.start_datetime)
+                    )}
+                  </div>
+                  <div className="data-cell">
+                    {editingEvent && editingEvent.event_id === event.event_id ? (
+                      <input
+                        type="datetime-local"
+                        name="end_datetime"
+                        value={formatDateTimeForInput(editingEvent.end_datetime)}
+                        onChange={(e) => handleInputChange(e, true)}
+                        className="table-input"
+                      />
+                    ) : (
+                      formatDateTime(event.end_datetime)
+                    )}
+                  </div>
+                  <div className="data-cell">
+                    {editingEvent && editingEvent.event_id === event.event_id ? (
+                      <input
+                        type="text"
+                        name="location"
+                        value={editingEvent.location}
+                        onChange={(e) => handleInputChange(e, true)}
+                        className="table-input"
+                      />
+                    ) : (
+                      event.location
+                    )}
+                  </div>
+                  <div className="data-cell">
+                    {editingEvent && editingEvent.event_id === event.event_id ? (
+                      <input
+                        type="text"
+                        name="raffle_tickets"
+                        value={editingEvent.raffle_tickets || ''}
+                        onChange={(e) => handleInputChange(e, true)}
+                        className="table-input"
+                        placeholder="Raffle Tickets"
+                      />
+                    ) : (
+                      event.raffle_tickets
+                    )}
+                  </div>
+                  <div className="data-cell">
+                    {editingEvent && editingEvent.event_id === event.event_id ? (
+                      <div>
+                        <label>
+                          <input
+                            type="radio"
+                            name="volunteer_enabled"
+                            value="true"
+                            checked={editingEvent.volunteer_enabled === true}
+                            onChange={(e) => handleInputChange(e, true)}
+                          /> Yes
+                        </label>
+                        <label>
+                          <input
+                            type="radio"
+                            name="volunteer_enabled"
+                            value="false"
+                            checked={editingEvent.volunteer_enabled === false}
+                            onChange={(e) => handleInputChange(e, true)}
+                          /> No
+                        </label>
+                      </div>
+                    ) : (
+                      <span className={`volunteer-status ${event.volunteer_enabled ? 'enabled' : 'disabled'}`}>
+                        {event.volunteer_enabled ? 'Yes' : 'No'}
+                      </span>
+                    )}
+                  </div>
+                  <div className="data-cell">
+                    {editingEvent && editingEvent.event_id === event.event_id ? (
+                      <input
+                        type="file"
+                        name="banner"
+                        onChange={(e) => handleInputChange(e, true)}
+                        className="table-input"
+                        accept="image/*"
+                      />
+                    ) : (
+                      event.banner || '-'
+                    )}
+                  </div>
+                  <div className="data-cell">
+                    {editingEvent && editingEvent.event_id === event.event_id ? (
+                      <input
+                        type="file"
+                        name="header_image"
+                        onChange={(e) => handleInputChange(e, true)}
+                        className="table-input"
+                        accept="image/*"
+                      />
+                    ) : (
+                      event.header_image || '-'
+                    )}
+                  </div>
+                  <div className="data-cell">
+                    {editingEvent && editingEvent.event_id === event.event_id ? (
+                      <input
+                        type="text"
+                        name="footer_location"
+                        value={editingEvent.footer_location || ''}
+                        onChange={(e) => handleInputChange(e, true)}
+                        className="table-input"
+                        placeholder="Footer Location"
+                      />
+                    ) : (
+                      event.footer_location || '-'
+                    )}
+                  </div>
+                  <div className="data-cell">
+                    {editingEvent && editingEvent.event_id === event.event_id ? (
+                      <input
+                        type="text"
+                        name="footer_phone"
+                        value={editingEvent.footer_phone || ''}
+                        onChange={(e) => handleInputChange(e, true)}
+                        className="table-input"
+                        placeholder="Footer Phone"
+                      />
+                    ) : (
+                      event.footer_phone || '-'
+                    )}
+                  </div>
+                  <div className="data-cell">
+                    {editingEvent && editingEvent.event_id === event.event_id ? (
+                      <input
+                        type="email"
+                        name="footer_email"
+                        value={editingEvent.footer_email || ''}
+                        onChange={(e) => handleInputChange(e, true)}
+                        className="table-input"
+                        placeholder="Footer Email"
+                      />
+                    ) : (
+                      event.footer_email || '-'
+                    )}
+                  </div>
+                  <div className="data-cell">
+                    {editingEvent && editingEvent.event_id === event.event_id ? (
+                      <textarea
+                        name="welcome_text"
+                        value={editingEvent.welcome_text || ''}
+                        onChange={(e) => handleInputChange(e, true)}
+                        className="table-input"
+                        placeholder="Welcome Text"
+                        rows="2"
+                      />
+                    ) : (
+                      event.welcome_text || '-'
+                    )}
+                  </div>
                   <div className="data-cell">
                     {event.created_by_name ? `${event.created_by_name} - ${formatDateTime(event.created_at)}` : formatDateTime(event.created_at)}
                   </div>
@@ -782,25 +944,41 @@ function EventDetailsPage () {
                   </div>
                   <div className="data-cell">
                     <div className="action-buttons">
-                      <button
-                        onClick={() => setEditingEvent(event)}
-                        className="edit-button"
-                      >
-                        Edit
-                      </button>
-                      <button
-                        onClick={() => handleDeleteEvent(event.event_id)}
-                        className="delete-button"
-                      >
-                        Delete
-                      </button>
+                      {editingEvent && editingEvent.event_id === event.event_id ? (
+                        <>
+                                                     <button
+                             onClick={handleEditEvent}
+                             className="save-button"
+                           >
+                            Save
+                          </button>
+                          <button
+                            onClick={() => setEditingEvent(null)}
+                            className="cancel-button"
+                          >
+                            Cancel
+                          </button>
+                        </>
+                      ) : (
+                        <>
+                          <button
+                            onClick={() => setEditingEvent(event)}
+                            className="edit-button"
+                          >
+                            Edit
+                          </button>
+                          <button
+                            onClick={() => handleDeleteEvent(event.event_id)}
+                            className="delete-button"
+                          >
+                            Delete
+                          </button>
+                        </>
+                      )}
                     </div>
                   </div>
                 </div>
               ))}
-
-                             {/* Edit Event Row */}
-               {editingEvent && (
                  <div className="event-row edit-row">
                    <div className="data-cell">{editingEvent.event_id}</div>
                    <div className="data-cell">
@@ -946,7 +1124,6 @@ function EventDetailsPage () {
                      </div>
                    </div>
                  </div>
-               )}
               </div>
             </div>
           </div>
