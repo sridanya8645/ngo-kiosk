@@ -99,9 +99,10 @@
 /* Table Header Row */
 .table-header-row {
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
+  grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr; /* 7 columns */
   background: #8B1C1C;
   color: white;
+  align-items: center;
 }
 
 .header-cell {
@@ -120,11 +121,12 @@
 /* Filter Row */
 .filter-row {
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
+  grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr; /* 7 columns */
   background: #f8f9fa;
   padding: 10px;
   gap: 10px;
   border-bottom: 1px solid #ddd;
+  align-items: center;
 }
 
 .filter-cell {
@@ -150,7 +152,7 @@
 /* Data Rows */
 .data-row {
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
+  grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr; /* 7 columns */
   padding: 12px;
   border-bottom: 1px solid #ddd;
   transition: background-color 0.3s ease;

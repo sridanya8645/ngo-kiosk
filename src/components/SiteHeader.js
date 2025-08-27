@@ -48,7 +48,7 @@ function SiteHeader ({ navVariant }) {
     if (navVariant === 'event-details') {
       return (
         <div className="admin-nav-buttons">
-          <button className="admin-button" onClick={go('/admin/users')}>Manage Users</button>
+          <button className="admin-button" onClick={go('/admin-users')}>Manage Users</button>
           <button className="admin-button" onClick={go('/admin/raffle-spin')}>Raffle Spin</button>
           <button className="admin-button" onClick={go('/admin/raffle-winners')}>Raffle Winners</button>
           <button className="admin-button" onClick={go('/admin/registrations')}>Registration Details</button>

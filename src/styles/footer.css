@@ -78,7 +78,7 @@
 }
 
 .pits-logo {
-  height: 55px; /* increase PITS logo size */
+  height: 80px; /* increase PITS logo size significantly */
   width: auto;
   object-fit: contain;
   margin-right: env(safe-area-inset-right); /* keep visible on iPad edges */

@@ -606,10 +606,10 @@ function EventDetailsPage () {
             <div className="data-table">
               {/* Add New Event Row */}
               <div className="event-row add-event-row">
-                <div className="data-cell col-0">
+                <div className="data-cell">
                   <span className="new-event-label">NEW</span>
                 </div>
-                <div className="data-cell col-1">
+                <div className="data-cell">
                   <input
                     type="text"
                     name="name"
@@ -619,7 +619,7 @@ function EventDetailsPage () {
                     placeholder="Event Name"
                   />
                 </div>
-                <div className="data-cell col-2">
+                <div className="data-cell">
                   <input
                     type="datetime-local"
                     name="start_datetime"
@@ -628,7 +628,7 @@ function EventDetailsPage () {
                     className="table-input"
                   />
                 </div>
-                <div className="data-cell col-3">
+                <div className="data-cell">
                   <input
                     type="datetime-local"
                     name="end_datetime"
@@ -637,7 +637,7 @@ function EventDetailsPage () {
                     className="table-input"
                   />
                 </div>
-                <div className="data-cell col-4">
+                <div className="data-cell">
                   <input
                     type="text"
                     name="location"
@@ -647,7 +647,7 @@ function EventDetailsPage () {
                     placeholder="Location"
                   />
                 </div>
-                <div className="data-cell col-5">
+                <div className="data-cell">
                   <input
                     type="text"
                     name="raffle_tickets"
@@ -657,56 +657,7 @@ function EventDetailsPage () {
                     placeholder="Raffle Tickets"
                   />
                 </div>
-                <div className="data-cell col-6">
-                  <input
-                    type="file"
-                    name="banner"
-                    onChange={(e) => handleInputChange(e)}
-                    className="table-input"
-                    accept="image/*"
-                  />
-                </div>
-                <div className="data-cell col-7">
-                  <input
-                    type="file"
-                    name="header_image"
-                    onChange={(e) => handleInputChange(e)}
-                    className="table-input"
-                    accept="image/*"
-                  />
-                </div>
-
-                <div className="data-cell col-8">
-                  <input
-                    type="text"
-                    name="footer_location"
-                    value={newEvent.footer_location}
-                    onChange={(e) => handleInputChange(e)}
-                    className="table-input"
-                    placeholder="Footer Location"
-                  />
-                </div>
-                <div className="data-cell col-9">
-                  <input
-                    type="text"
-                    name="footer_phone"
-                    value={newEvent.footer_phone}
-                    onChange={(e) => handleInputChange(e)}
-                    className="table-input"
-                    placeholder="Footer Phone"
-                  />
-                </div>
-                <div className="data-cell col-10">
-                  <input
-                    type="email"
-                    name="footer_email"
-                    value={newEvent.footer_email}
-                    onChange={(e) => handleInputChange(e)}
-                    className="table-input"
-                    placeholder="Footer Email"
-                  />
-                </div>
-                <div className="data-cell col-11">
+                <div className="data-cell">
                   <label>
                     <input
                       type="radio"
@@ -726,7 +677,55 @@ function EventDetailsPage () {
                     /> No
                   </label>
                 </div>
-                <div className="data-cell col-12">
+                <div className="data-cell">
+                  <input
+                    type="file"
+                    name="banner"
+                    onChange={(e) => handleInputChange(e)}
+                    className="table-input"
+                    accept="image/*"
+                  />
+                </div>
+                <div className="data-cell">
+                  <input
+                    type="file"
+                    name="header_image"
+                    onChange={(e) => handleInputChange(e)}
+                    className="table-input"
+                    accept="image/*"
+                  />
+                </div>
+                <div className="data-cell">
+                  <input
+                    type="text"
+                    name="footer_location"
+                    value={newEvent.footer_location}
+                    onChange={(e) => handleInputChange(e)}
+                    className="table-input"
+                    placeholder="Footer Location"
+                  />
+                </div>
+                <div className="data-cell">
+                  <input
+                    type="text"
+                    name="footer_phone"
+                    value={newEvent.footer_phone}
+                    onChange={(e) => handleInputChange(e)}
+                    className="table-input"
+                    placeholder="Footer Phone"
+                  />
+                </div>
+                <div className="data-cell">
+                  <input
+                    type="email"
+                    name="footer_email"
+                    value={newEvent.footer_email}
+                    onChange={(e) => handleInputChange(e)}
+                    className="table-input"
+                    placeholder="Footer Email"
+                  />
+                </div>
+                <div className="data-cell">
                   <textarea
                     name="welcome_text"
                     value={newEvent.welcome_text}
@@ -736,13 +735,13 @@ function EventDetailsPage () {
                     rows="2"
                   />
                 </div>
-                <div className="data-cell col-13">
+                <div className="data-cell">
                   <span className="auto-label">Auto</span>
                 </div>
-                <div className="data-cell col-14">
+                <div className="data-cell">
                   <span className="auto-label">Auto</span>
                 </div>
-                <div className="data-cell col-15">
+                <div className="data-cell">
                   <button
                     onClick={(e) => handleAddEvent(e)}
                     className="add-event-button"
@@ -799,155 +798,154 @@ function EventDetailsPage () {
                 </div>
               ))}
 
-              {/* Edit Event Row */}
-              {editingEvent && (
-                <div className="event-row edit-row">
-                  <div className="data-cell col-0">{editingEvent.event_id}</div>
-                  <div className="data-cell col-1">
-                    <input
-                      type="text"
-                      name="name"
-                      value={editingEvent.name}
-                      onChange={(e) => handleInputChange(e, true)}
-                      className="table-input"
-                    />
-                  </div>
-                  <div className="data-cell col-2">
-                    <input
-                      type="datetime-local"
-                      name="start_datetime"
-                      value={formatDateTimeForInput(editingEvent.start_datetime)}
-                      onChange={(e) => handleInputChange(e, true)}
-                      className="table-input"
-                    />
-                  </div>
-                  <div className="data-cell col-3">
-                    <input
-                      type="datetime-local"
-                      name="end_datetime"
-                      value={formatDateTimeForInput(editingEvent.end_datetime)}
-                      onChange={(e) => handleInputChange(e, true)}
-                      className="table-input"
-                    />
-                  </div>
-                  <div className="data-cell col-4">
-                    <input
-                      type="text"
-                      name="location"
-                      value={editingEvent.location}
-                      onChange={(e) => handleInputChange(e, true)}
-                      className="table-input"
-                    />
-                  </div>
-                  <div className="data-cell col-5">
-                    <input
-                      type="text"
-                      name="raffle_tickets"
-                      value={editingEvent.raffle_tickets || ''}
-                      onChange={(e) => handleInputChange(e, true)}
-                      className="table-input"
-                      placeholder="Raffle Tickets"
-                    />
-                  </div>
-                  <div className="data-cell col-6">
-                    <input
-                      type="file"
-                      name="banner"
-                      onChange={(e) => handleInputChange(e, true)}
-                      className="table-input"
-                      accept="image/*"
-                    />
-                  </div>
-                  <div className="data-cell col-7">
-                    <input
-                      type="file"
-                      name="header_image"
-                      onChange={(e) => handleInputChange(e, true)}
-                      className="table-input"
-                      accept="image/*"
-                    />
-                  </div>
-
-                  <div className="data-cell col-8">
-                    <input
-                      type="text"
-                      name="footer_location"
-                      value={editingEvent.footer_location || ''}
-                      onChange={(e) => handleInputChange(e, true)}
-                      className="table-input"
-                      placeholder="Footer Location"
-                    />
-                  </div>
-                  <div className="data-cell col-9">
-                    <input
-                      type="text"
-                      name="footer_phone"
-                      value={editingEvent.footer_phone || ''}
-                      onChange={(e) => handleInputChange(e, true)}
-                      className="table-input"
-                      placeholder="Footer Phone"
-                    />
-                  </div>
-                  <div className="data-cell col-10">
-                    <input
-                      type="email"
-                      name="footer_email"
-                      value={editingEvent.footer_email || ''}
-                      onChange={(e) => handleInputChange(e, true)}
-                      className="table-input"
-                      placeholder="Footer Email"
-                    />
-                  </div>
-                  <div className="data-cell col-11">
-                    <label>
-                      <input
-                        type="radio"
-                        name="volunteer_enabled"
-                        value="true"
-                        checked={editingEvent.volunteer_enabled === true}
-                        onChange={(e) => handleInputChange(e, true)}
-                      /> Yes
-                    </label>
-                    <label>
-                      <input
-                        type="radio"
-                        name="volunteer_enabled"
-                        value="false"
-                        checked={editingEvent.volunteer_enabled === false}
-                        onChange={(e) => handleInputChange(e, true)}
-                      /> No
-                    </label>
-                  </div>
-                  <div className="data-cell col-12">
-                    <textarea
-                      name="welcome_text"
-                      value={editingEvent.welcome_text || ''}
-                      onChange={(e) => handleInputChange(e, true)}
-                      className="table-input"
-                      placeholder="Welcome Text"
-                      rows="2"
-                    />
-                  </div>
-                  <div className="data-cell col-13">{formatDateTime(editingEvent.created_at)}</div>
-                  <div className="data-cell col-14">{formatDateTime(editingEvent.modified_at)}</div>
-                  <div className="data-cell col-15">
-                    <div className="action-buttons">
-                      <button
-                        onClick={handleEditEvent}
-                        className="save-button"
-                      >
-                          Save
-                      </button>
-                      <button
-                        onClick={() => setEditingEvent(null)}
-                        className="cancel-button"
-                      >
-                          Cancel
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              )}
+                             {/* Edit Event Row */}
+               {editingEvent && (
+                 <div className="event-row edit-row">
+                   <div className="data-cell">{editingEvent.event_id}</div>
+                   <div className="data-cell">
+                     <input
+                       type="text"
+                       name="name"
+                       value={editingEvent.name}
+                       onChange={(e) => handleInputChange(e, true)}
+                       className="table-input"
+                     />
+                   </div>
+                   <div className="data-cell">
+                     <input
+                       type="datetime-local"
+                       name="start_datetime"
+                       value={formatDateTimeForInput(editingEvent.start_datetime)}
+                       onChange={(e) => handleInputChange(e, true)}
+                       className="table-input"
+                     />
+                   </div>
+                   <div className="data-cell">
+                     <input
+                       type="datetime-local"
+                       name="end_datetime"
+                       value={formatDateTimeForInput(editingEvent.end_datetime)}
+                       onChange={(e) => handleInputChange(e, true)}
+                       className="table-input"
+                     />
+                   </div>
+                   <div className="data-cell">
+                     <input
+                       type="text"
+                       name="location"
+                       value={editingEvent.location}
+                       onChange={(e) => handleInputChange(e, true)}
+                       className="table-input"
+                     />
+                   </div>
+                   <div className="data-cell">
+                     <input
+                       type="text"
+                       name="raffle_tickets"
+                       value={editingEvent.raffle_tickets || ''}
+                       onChange={(e) => handleInputChange(e, true)}
+                       className="table-input"
+                       placeholder="Raffle Tickets"
+                     />
+                   </div>
+                   <div className="data-cell">
+                     <label>
+                       <input
+                         type="radio"
+                         name="volunteer_enabled"
+                         value="true"
+                         checked={editingEvent.volunteer_enabled === true}
+                         onChange={(e) => handleInputChange(e, true)}
+                       /> Yes
+                     </label>
+                     <label>
+                       <input
+                         type="radio"
+                         name="volunteer_enabled"
+                         value="false"
+                         checked={editingEvent.volunteer_enabled === false}
+                         onChange={(e) => handleInputChange(e, true)}
+                       /> No
+                     </label>
+                   </div>
+                   <div className="data-cell">
+                     <input
+                       type="file"
+                       name="banner"
+                       onChange={(e) => handleInputChange(e, true)}
+                       className="table-input"
+                       accept="image/*"
+                     />
+                   </div>
+                   <div className="data-cell">
+                     <input
+                       type="file"
+                       name="header_image"
+                       onChange={(e) => handleInputChange(e, true)}
+                       className="table-input"
+                       accept="image/*"
+                     />
+                   </div>
+                   <div className="data-cell">
+                     <input
+                       type="text"
+                       name="footer_location"
+                       value={editingEvent.footer_location || ''}
+                       onChange={(e) => handleInputChange(e, true)}
+                       className="table-input"
+                       placeholder="Footer Location"
+                     />
+                   </div>
+                   <div className="data-cell">
+                     <input
+                       type="text"
+                       name="footer_phone"
+                       value={editingEvent.footer_phone || ''}
+                       onChange={(e) => handleInputChange(e, true)}
+                       className="table-input"
+                       placeholder="Footer Phone"
+                     />
+                   </div>
+                   <div className="data-cell">
+                     <input
+                       type="email"
+                       name="footer_email"
+                       value={editingEvent.footer_email || ''}
+                       onChange={(e) => handleInputChange(e, true)}
+                       className="table-input"
+                       placeholder="Footer Email"
+                     />
+                   </div>
+                   <div className="data-cell">
+                     <textarea
+                       name="welcome_text"
+                       value={editingEvent.welcome_text || ''}
+                       onChange={(e) => handleInputChange(e, true)}
+                       className="table-input"
+                       placeholder="Welcome Text"
+                       rows="2"
+                     />
+                   </div>
+                   <div className="data-cell">{formatDateTime(editingEvent.created_at)}</div>
+                   <div className="data-cell">{formatDateTime(editingEvent.modified_at)}</div>
+                   <div className="data-cell">
+                     <div className="action-buttons">
+                       <button
+                         onClick={handleEditEvent}
+                         className="save-button"
+                       >
+                           Save
+                       </button>
+                       <button
+                         onClick={() => setEditingEvent(null)}
+                         className="cancel-button"
+                       >
+                           Cancel
+                       </button>
+                     </div>
+                   </div>
+                 </div>
+               )}
             </div>
           </div>
 
