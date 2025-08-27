@@ -7,6 +7,7 @@
   overflow: hidden;
 }
 
+/* Cache refresh: Event Details table optimized with smaller columns and 150px logo */
 .event-details-main {
   flex: 1;
   overflow-y: auto;

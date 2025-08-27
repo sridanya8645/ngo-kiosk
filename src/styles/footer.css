@@ -1,5 +1,7 @@
 @import './theme.css';
 
+/* Cache refresh: Footer logo optimized to 150px and moved left for better visibility */
+
 .global-footer {
   background: transparent !important;
   border-top: none !important;
