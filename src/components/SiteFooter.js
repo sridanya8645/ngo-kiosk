@@ -34,7 +34,7 @@ function SiteFooter () {
           <div className="footer-text">
             <div>{footerLocation}</div>
             {footerLocationDetails && <div>{footerLocationDetails}</div>}
-          </div>m
+          </div>
         </div>
         <div className="footer-section">
           <span className="footer-icon">📞</span>

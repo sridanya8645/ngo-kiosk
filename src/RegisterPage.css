@@ -365,9 +365,11 @@
 }
 
 .pits-logo {
-  height: 45px;
-  width: auto;
+  height: 250px !important;
+  width: auto !important;
   object-fit: contain;
+  max-width: none !important;
+  min-width: auto !important;
 }
 
 /* Enhanced iPad Pro Responsive Design */
@@ -501,8 +503,11 @@
   }
   
   .pits-logo {
-    width: 95px;
-    height: 48px;
+    height: 250px !important;
+    width: auto !important;
+    object-fit: contain;
+    max-width: none !important;
+    min-width: auto !important;
   }
 }
 
@@ -634,8 +639,11 @@
   }
   
   .pits-logo {
-    width: 110px;
-    height: 55px;
+    height: 250px !important;
+    width: auto !important;
+    object-fit: contain;
+    max-width: none !important;
+    min-width: auto !important;
   }
 }
 

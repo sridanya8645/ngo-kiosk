@@ -462,9 +462,11 @@
 }
 
 .pits-logo {
-  height: 25px;
-  width: auto;
+  height: 250px !important;
+  width: auto !important;
   object-fit: contain;
+  max-width: none !important;
+  min-width: auto !important;
 }
 
 /* Header - Standard across all pages */

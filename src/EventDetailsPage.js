@@ -432,7 +432,7 @@ function EventDetailsPage () {
           </div>
 
           {/* Events Table */}
-          <div className="events-table-container">
+          <div className="registrations-table-container">
             {/* Table Header */}
             <div className="table-header-row">
               <div className="header-cell">Event ID</div>

@@ -78,10 +78,12 @@
 }
 
 .pits-logo {
-  height: 200px; /* increase PITS logo size to 200px */
-  width: auto;
+  height: 250px !important; /* increase PITS logo size to 250px */
+  width: auto !important;
   object-fit: contain;
   margin-right: env(safe-area-inset-right); /* keep visible on iPad edges */
+  max-width: none !important;
+  min-width: auto !important;
 }
 
 /* Responsive layout for phones */
