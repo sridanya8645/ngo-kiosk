@@ -10,7 +10,7 @@ const AdminPage = () => {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
     username: '',
-    password: ''
+    password: '',
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState('');
@@ -24,9 +24,9 @@ const AdminPage = () => {
     const { name, value } = e.target;
     setFormData(prev => ({
       ...prev,
-      [name]: value
+      [name]: value,
     }));
-    
+
     // Clear error when user starts typing
     if (error) {
       setError('');
@@ -45,7 +45,7 @@ const AdminPage = () => {
       const res = await fetch('/api/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ username: formData.username.trim(), password: formData.password })
+        body: JSON.stringify({ username: formData.username.trim(), password: formData.password }),
       });
       if (!res.ok) {
         const data = await res.json().catch(() => ({}));
@@ -54,17 +54,17 @@ const AdminPage = () => {
       const data = await res.json();
       if (data.mfa === 'totp') {
         setUserId(data.userId);
-        try { localStorage.setItem('adminUserId', String(data.userId)); } catch(_) {}
+        try { localStorage.setItem('adminUserId', String(data.userId)); } catch (_) {}
         setStage('totp-mfa');
       } else if (data.mfa === 'totp-enroll') {
         setUserId(data.userId);
-        try { localStorage.setItem('adminUserId', String(data.userId)); } catch(_) {}
+        try { localStorage.setItem('adminUserId', String(data.userId)); } catch (_) {}
         setEnrollSecret(data.manualSecret || '');
         setEnrollLabel(data.label || 'NGO Kiosk:Indoamericanexpo@gmail.com');
         setStage('totp-enroll');
       } else if (data.mfa === 'email') {
         setUserId(data.userId);
-        try { localStorage.setItem('adminUserId', String(data.userId)); } catch(_) {}
+        try { localStorage.setItem('adminUserId', String(data.userId)); } catch (_) {}
         setStage('email-mfa');
       } else {
         // Fallback: require MFA anyway
@@ -85,7 +85,7 @@ const AdminPage = () => {
     try {
       const res = await fetch('/api/verify-mfa', {
         method: 'POST', headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ userId, code: mfaCode.trim() })
+        body: JSON.stringify({ userId, code: mfaCode.trim() }),
       });
       if (!res.ok) {
         const d = await res.json().catch(() => ({}));
@@ -107,7 +107,7 @@ const AdminPage = () => {
     try {
       const res = await fetch('/api/mfa/totp/login', {
         method: 'POST', headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ userId, token: mfaCode.trim() })
+        body: JSON.stringify({ userId, token: mfaCode.trim() }),
       });
       if (!res.ok) {
         const d = await res.json().catch(() => ({}));
@@ -129,7 +129,7 @@ const AdminPage = () => {
     try {
       const res = await fetch('/api/mfa/totp/verify', {
         method: 'POST', headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ userId, token: mfaCode.trim() })
+        body: JSON.stringify({ userId, token: mfaCode.trim() }),
       });
       if (!res.ok) {
         const d = await res.json().catch(() => ({}));
@@ -153,15 +153,15 @@ const AdminPage = () => {
       <main className="admin-main">
         <div className="admin-login-container">
           <h1 className="admin-login-title">Admin Login</h1>
-          
+
           <div className="admin-lottie-container">
-            <Lottie 
-              animationData={loginLottie} 
+            <Lottie
+              animationData={loginLottie}
               loop={true}
               className="admin-lottie"
             />
           </div>
-          
+
           {stage === 'login' && (
             <form onSubmit={handleSubmit} className="admin-login-form">
               <div className="form-group">
@@ -315,4 +315,4 @@ const AdminPage = () => {
   );
 };
 
-export default AdminPage; 
+export default AdminPage;

@@ -13,7 +13,7 @@ import RaffleWinnersPage from './RaffleWinnersPage';
 import AdminRegistrationsPage from './AdminRegistrationsPage';
 import AdminUsersPage from './AdminUsersPage';
 
-function App() {
+function App () {
   useEffect(() => {
     // Check if we're in a private/incognito window
     const isPrivateWindow = () => {
@@ -45,7 +45,7 @@ function App() {
     // Check if we're in a private window and show message if not
     if (!isPrivateWindow()) {
       console.log('App is running in a regular window. For best experience, open in a private/incognito window.');
-      
+
       // Show a subtle notification to open in private window
       const showPrivateWindowMessage = () => {
         const message = document.createElement('div');
@@ -64,7 +64,7 @@ function App() {
         `;
         message.innerHTML = '💡 For best experience, open in a private/incognito window and allow full screen';
         document.body.appendChild(message);
-        
+
         // Remove message after 5 seconds
         setTimeout(() => {
           if (message.parentNode) {
@@ -72,7 +72,7 @@ function App() {
           }
         }, 5000);
       };
-      
+
       setTimeout(showPrivateWindowMessage, 3000);
     }
 

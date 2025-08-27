@@ -1,14 +1,14 @@
-import React, { useEffect, useRef, useState, useCallback } from "react";
-import { Html5Qrcode } from "html5-qrcode";
-import { useNavigate } from "react-router-dom";
-import "./CheckinPage.css";
+import React, { useEffect, useRef, useState, useCallback } from 'react';
+import { Html5Qrcode } from 'html5-qrcode';
+import { useNavigate } from 'react-router-dom';
+import './CheckinPage.css';
 import SiteHeader from './components/SiteHeader';
 import SiteFooter from './components/SiteFooter';
 
-export default function CheckinPage() {
+export default function CheckinPage () {
   const html5QrCodeRef = useRef(null);
-  const [successMsg, setSuccessMsg] = useState("");
-  const [errorMsg, setErrorMsg] = useState("");
+  const [successMsg, setSuccessMsg] = useState('');
+  const [errorMsg, setErrorMsg] = useState('');
   const [scanComplete, setScanComplete] = useState(false);
   const [todaysEvent, setTodaysEvent] = useState(null);
   const [newsletterEvent, setNewsletterEvent] = useState(null);
@@ -26,13 +26,13 @@ export default function CheckinPage() {
     testImage.onerror = () => console.error('Test image failed to load');
     testImage.src = '/sai-baba.png';
     console.log('Testing image path:', '/sai-baba.png');
-    
+
     (async () => {
       try {
-        const res = await fetch("/api/todays-event");
+        const res = await fetch('/api/todays-event');
         if (res.ok) {
           const data = await res.json();
-          console.log("Today's event data:", data);
+          console.log('Today\'s event data:', data);
           if (data && data.banner) {
             const bannerImage = new Image();
             bannerImage.onload = () => console.log('Banner image loaded successfully');
@@ -42,11 +42,11 @@ export default function CheckinPage() {
           setTodaysEvent(data);
         }
       } catch (err) {
-        console.error("Error fetching today's event:", err);
+        console.error('Error fetching today\'s event:', err);
       }
 
       try {
-        const res2 = await fetch("/api/events");
+        const res2 = await fetch('/api/events');
         if (res2.ok) {
           const evs = await res2.json();
           console.log('All events data:', evs);
@@ -138,7 +138,7 @@ export default function CheckinPage() {
               },
               errorMessage => {
                 console.log('Scanner error:', errorMessage);
-              }
+              },
             )
             .then(() => {
               isRunning.current = true;
@@ -162,23 +162,23 @@ export default function CheckinPage() {
 
   const handleCheckin = useCallback(async (registrationId, name) => {
     console.log('Handling check-in for:', registrationId, name);
-    
+
     setScanComplete(true);
-    setSuccessMsg("");
-    setErrorMsg("");
-    
+    setSuccessMsg('');
+    setErrorMsg('');
+
     try {
       const eventIdToSend = selectedEvent?.event_id || null;
       console.log('Sending eventId in check-in request:', eventIdToSend);
-      const response = await fetch("/api/checkin", {
+      const response = await fetch('/api/checkin', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
           registrationId: registrationId,
-          eventId: eventIdToSend
-        })
+          eventId: eventIdToSend,
+        }),
       });
 
       const data = await response.json();
@@ -189,48 +189,48 @@ export default function CheckinPage() {
         } else {
           setSuccessMsg(`✅ Successfully scanned! ${data.name} is now checked in.`);
         }
-        
+
         // Restart scanner after 3 seconds
         setTimeout(() => {
           setScanComplete(false);
-          setSuccessMsg("");
-          
+          setSuccessMsg('');
+
           // Properly stop existing scanner before restarting
           if (html5QrCodeRef.current && isRunning.current) {
             try {
               html5QrCodeRef.current.stop().then(() => {
                 isRunning.current = false;
                 // Clear container and reinitialize
-                const container = document.getElementById("reader-container");
+                const container = document.getElementById('reader-container');
                 if (container) {
                   // Remove all existing content
                   container.innerHTML = '';
-                  
+
                   // Remove any existing elements with reader ID
                   const existingReaders = document.querySelectorAll('#reader');
                   existingReaders.forEach(el => el.remove());
-                  
+
                   // Also remove any Html5Qrcode instances
                   const existingScanners = document.querySelectorAll('[data-testid="qr-reader"]');
                   existingScanners.forEach(el => el.remove());
-                  
-                  const readerDiv = document.createElement("div");
-                  readerDiv.id = "reader";
-                  readerDiv.style.width = "400px";
-                  readerDiv.style.height = "400px";
-                  readerDiv.style.margin = "0 auto";
-                  readerDiv.style.border = "3px solid #8B1C1C";
-                  readerDiv.style.borderRadius = "15px";
-                  readerDiv.style.overflow = "hidden";
-                  readerDiv.style.boxShadow = "0 4px 12px rgba(0,0,0,0.2)";
+
+                  const readerDiv = document.createElement('div');
+                  readerDiv.id = 'reader';
+                  readerDiv.style.width = '400px';
+                  readerDiv.style.height = '400px';
+                  readerDiv.style.margin = '0 auto';
+                  readerDiv.style.border = '3px solid #8B1C1C';
+                  readerDiv.style.borderRadius = '15px';
+                  readerDiv.style.overflow = 'hidden';
+                  readerDiv.style.boxShadow = '0 4px 12px rgba(0,0,0,0.2)';
                   container.appendChild(readerDiv);
-                  
-                                     // Reinitialize scanner (guard)
+
+                  // Reinitialize scanner (guard)
                   if (!html5QrCodeRef.current) {
-                    html5QrCodeRef.current = new Html5Qrcode("reader");
+                    html5QrCodeRef.current = new Html5Qrcode('reader');
                   }
                   html5QrCodeRef.current.start(
-                    { facingMode: "user" },
+                    { facingMode: 'user' },
                     { fps: 10, qrbox: { width: 400, height: 400 } },
                     qrCodeMessage => {
                       if (isProcessingScan.current) { return; }
@@ -239,7 +239,7 @@ export default function CheckinPage() {
                       try {
                         const data = JSON.parse(qrCodeMessage);
                         const registrationId = data.registrationId;
-                        if (!registrationId) throw new Error("No registrationId in QR code");
+                        if (!registrationId) throw new Error('No registrationId in QR code');
                         handleCheckin(registrationId, data.name);
                       } catch (e) {
                         setErrorMsg('❌ Invalid QR code');
@@ -248,7 +248,7 @@ export default function CheckinPage() {
                     },
                     errorMessage => {
                       console.log('Scanner error:', errorMessage);
-                    }
+                    },
                   ).then(() => {
                     isRunning.current = true;
                     isProcessingScan.current = false;
@@ -265,29 +265,28 @@ export default function CheckinPage() {
             }
           }
         }, 3000);
-        } else {
+      } else {
         console.log('Check-in failed:', data);
-        if (data.message && (data.message.includes("already checked in") || data.message.includes("already been scanned"))) {
-          setErrorMsg(`❌ QR already scanned! This registration has already been checked in.`);
+        if (data.message && (data.message.includes('already checked in') || data.message.includes('already been scanned'))) {
+          setErrorMsg('❌ QR already scanned! This registration has already been checked in.');
         } else if (data.error && data.error.includes('QR not valid for selected event')) {
           const extra = data.eventName ? ` This QR belongs to ${data.eventName}.` : '';
           setErrorMsg(`❌ QR not valid for the selected event.${extra}`);
         } else if (data.error) {
           setErrorMsg(`❌ ${data.error}`);
         } else {
-          setErrorMsg("❌ Check-in failed");
+          setErrorMsg('❌ Check-in failed');
         }
         setScanComplete(false);
-          isProcessingScan.current = false;
+        isProcessingScan.current = false;
       }
     } catch (error) {
-      console.error("Check-in error:", error);
-      setErrorMsg("❌ Network error. Please try again.");
+      console.error('Check-in error:', error);
+      setErrorMsg('❌ Network error. Please try again.');
       setScanComplete(false);
-        isProcessingScan.current = false;
+      isProcessingScan.current = false;
     }
   }, [scanComplete, selectedEvent]);
-
 
 
   return (
@@ -304,25 +303,23 @@ export default function CheckinPage() {
           {selectedEvent && (
             <h1 className="checkin-for-text checkin-for-title">Check-in for {selectedEvent.name}</h1>
           )}
-          
-          {/* Banner removed on check-in page per request */}
 
+          {/* Banner removed on check-in page per request */}
 
 
           {/* QR Scanner Section - only show when an event is selected */}
           <div className="scanner-section" style={{ display: selectedEvent ? 'block' : 'none' }}>
             <h3 className="scanner-title">Scan QR Code to Check-In</h3>
-                         <div id="reader-container" className="scanner-container" />
-            
+            <div id="reader-container" className="scanner-container" />
 
-            
+
             {/* Status Messages */}
             {successMsg && (
               <div className="success-message">
                 {successMsg}
               </div>
             )}
-            
+
             {errorMsg && (
               <div className="error-message">
                 {errorMsg}
@@ -332,23 +329,23 @@ export default function CheckinPage() {
             {/* Register Button */
             }
             <div className="checkin-actions">
-              <button 
+              <button
                 onClick={() => navigate('/register')}
                 className="register-button"
               >
                 Register
               </button>
             </div>
-            <div style={{ 
+            <div style={{
               textAlign: 'center',
-              marginTop: '10px'
+              marginTop: '10px',
             }}>
               {selectedEvent && (
-                <p style={{ 
-                  color: 'red', 
-                  fontSize: '0.95rem', 
+                <p style={{
+                  color: 'red',
+                  fontSize: '0.95rem',
                   margin: '0',
-                  fontWeight: '600'
+                  fontWeight: '600',
                 }}>
                   Register for {selectedEvent.name} if not previously registered, then scan the QR code received via email.
                 </p>

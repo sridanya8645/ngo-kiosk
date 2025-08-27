@@ -13,7 +13,7 @@ const AdminUsersPage = () => {
   const [editingUser, setEditingUser] = useState(null);
   const [formData, setFormData] = useState({
     username: '',
-    password: ''
+    password: '',
   });
 
   useEffect(() => {
@@ -25,7 +25,7 @@ const AdminUsersPage = () => {
       setLoading(true);
       const response = await fetch('/api/admin/users');
       const data = await response.json();
-      
+
       if (data.success) {
         setUsers(data.users);
       } else {
@@ -42,7 +42,7 @@ const AdminUsersPage = () => {
     const { name, value } = e.target;
     setFormData(prev => ({
       ...prev,
-      [name]: value
+      [name]: value,
     }));
   };
 
@@ -54,22 +54,22 @@ const AdminUsersPage = () => {
 
   const handleCreateUser = async (e) => {
     e.preventDefault();
-    
+
     try {
       const adminId = generateAdminId();
       const userData = {
         ...formData,
-        admin_id: adminId
+        admin_id: adminId,
       };
 
       const response = await fetch('/api/admin/users', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(userData)
+        body: JSON.stringify(userData),
       });
-      
+
       const data = await response.json();
-      
+
       if (data.success) {
         setShowCreateForm(false);
         setFormData({ username: '', password: '' });
@@ -85,16 +85,16 @@ const AdminUsersPage = () => {
 
   const handleUpdateUser = async (e) => {
     e.preventDefault();
-    
+
     try {
       const response = await fetch(`/api/admin/users/${editingUser.id}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData)
+        body: JSON.stringify(formData),
       });
-      
+
       const data = await response.json();
-      
+
       if (data.success) {
         setEditingUser(null);
         setFormData({ username: '', password: '' });
@@ -112,14 +112,14 @@ const AdminUsersPage = () => {
     if (!window.confirm('Are you sure you want to delete this admin user?')) {
       return;
     }
-    
+
     try {
       const response = await fetch(`/api/admin/users/${userId}`, {
-        method: 'DELETE'
+        method: 'DELETE',
       });
-      
+
       const data = await response.json();
-      
+
       if (data.success) {
         fetchUsers();
         setError('');
@@ -135,7 +135,7 @@ const AdminUsersPage = () => {
     setEditingUser(user);
     setFormData({
       username: user.username,
-      password: ''
+      password: '',
     });
   };
 
@@ -159,19 +159,19 @@ const AdminUsersPage = () => {
   return (
     <div className="admin-users-container">
       <SiteHeader navVariant="admin-users" />
-      
+
       <main className="admin-users-main">
         <div className="admin-users-content">
           <div className="admin-users-header">
             <h1>Admin Users Management</h1>
             <div className="header-actions">
-              <button 
+              <button
                 className="create-user-btn"
                 onClick={() => setShowCreateForm(true)}
               >
                 + Create New Admin
               </button>
-              <button 
+              <button
                 className="back-btn"
                 onClick={() => navigate('/event-details')}
               >
@@ -202,7 +202,7 @@ const AdminUsersPage = () => {
                     required
                   />
                 </div>
-                
+
                 <div className="form-group">
                   <label>Password:</label>
                   <input
@@ -213,15 +213,15 @@ const AdminUsersPage = () => {
                     required
                   />
                 </div>
-                
+
                 <div className="form-info">
                   <p><strong>Note:</strong> Admin ID will be auto-generated when you create the user.</p>
                 </div>
-                
+
                 <div className="form-actions">
                   <button type="submit" className="submit-btn">Create User</button>
-                  <button 
-                    type="button" 
+                  <button
+                    type="button"
                     className="cancel-btn"
                     onClick={() => {
                       setShowCreateForm(false);
@@ -250,7 +250,7 @@ const AdminUsersPage = () => {
                     required
                   />
                 </div>
-                
+
                 <div className="form-group">
                   <label>Password: (leave blank to keep current)</label>
                   <input
@@ -261,11 +261,11 @@ const AdminUsersPage = () => {
                     placeholder="Enter new password or leave blank"
                   />
                 </div>
-                
+
                 <div className="form-info">
                   <p><strong>Admin ID:</strong> {editingUser.admin_id} (cannot be changed)</p>
                 </div>
-                
+
                 <div className="form-actions">
                   <button type="submit" className="submit-btn">Update User</button>
                   <button type="button" className="cancel-btn" onClick={cancelEdit}>
@@ -279,7 +279,7 @@ const AdminUsersPage = () => {
           {/* Users List */}
           <div className="users-list">
             <h2>Admin Users ({users.length})</h2>
-            
+
             {users.length === 0 ? (
               <p className="no-users">No admin users found.</p>
             ) : (
@@ -311,14 +311,14 @@ const AdminUsersPage = () => {
                         <td>{user.created_by_name || 'System'}</td>
                         <td>
                           <div className="action-buttons">
-                            <button 
+                            <button
                               className="edit-btn"
                               onClick={() => startEdit(user)}
                             >
                               Edit
                             </button>
                             {user.id !== 1 && (
-                              <button 
+                              <button
                                 className="delete-btn"
                                 onClick={() => handleDeleteUser(user.id)}
                               >
@@ -336,7 +336,7 @@ const AdminUsersPage = () => {
           </div>
         </div>
       </main>
-      
+
       <SiteFooter />
     </div>
   );

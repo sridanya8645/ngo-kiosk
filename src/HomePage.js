@@ -34,23 +34,23 @@ const HomePage = () => {
         <h1 className="welcome-title">
           {currentEvent?.welcome_text || 'Welcome to Indo American Fair 2025'}
         </h1>
-        
+
         <div className="main-image-container">
-          <img 
-            src={currentEvent?.banner || "/Image (4).jpg"} 
-            alt="Event" 
-            className="main-image" 
+          <img
+            src={currentEvent?.banner || '/Image (4).jpg'}
+            alt="Event"
+            className="main-image"
           />
         </div>
 
         <div className="action-container" style={{ display: 'flex', gap: 12, justifyContent: 'center' }}>
-          <button 
+          <button
             className="checkin-button"
             onClick={() => navigate('/register')}
           >
             Register
           </button>
-          <button 
+          <button
             className="checkin-button"
             onClick={() => navigate('/checkin')}
           >
@@ -64,4 +64,4 @@ const HomePage = () => {
   );
 };
 
-export default HomePage; 
+export default HomePage;

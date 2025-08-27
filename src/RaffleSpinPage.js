@@ -39,16 +39,16 @@ const RaffleSpinPage = () => {
           fetch('/api/raffle/eligible-users', { cache: 'no-store' }),
           fetch('/api/raffle-winners', { cache: 'no-store' }),
           fetch('/api/events', { cache: 'no-store' }),
-          fetch('/api/todays-event', { cache: 'no-store' })
+          fetch('/api/todays-event', { cache: 'no-store' }),
         ]);
         const [eligibleUsersData, winnersData, eventsData, todayEvent] = await Promise.all([
-          eligibleRes.json(), winnersRes.json(), eventsRes.json(), todayRes.json()
+          eligibleRes.json(), winnersRes.json(), eventsRes.json(), todayRes.json(),
         ]);
 
         console.log('Eligible users (checked in today):', eligibleUsersData);
         console.log('Winners:', winnersData);
         console.log('All events:', eventsData);
-        console.log("Today's event:", todayEvent);
+        console.log('Today\'s event:', todayEvent);
 
         // Sort events and compute local date helpers
         const normalize = (d) => { const dt = new Date(d); return new Date(dt.getFullYear(), dt.getMonth(), dt.getDate()).getTime(); };
@@ -71,7 +71,7 @@ const RaffleSpinPage = () => {
           const withDates = sorted.map(e => ({
             ...e,
             _start: parseLocalYMD(e.start_datetime),
-            _end: parseLocalYMD(e.end_datetime) || parseLocalYMD(e.start_datetime)
+            _end: parseLocalYMD(e.end_datetime) || parseLocalYMD(e.start_datetime),
           }));
           const inRange = withDates.find(e => e._start && e._end && e._start.getTime() <= today.getTime() && today.getTime() <= e._end.getTime());
           selected = inRange || null;
@@ -79,8 +79,8 @@ const RaffleSpinPage = () => {
         setSelectedEvent(selected);
 
         // Filter out already won users
-        const availableUsers = eligibleUsersData.filter(user => 
-          !winnersData.some(winner => winner.registration_id === user.id)
+        const availableUsers = eligibleUsersData.filter(user =>
+          !winnersData.some(winner => winner.registration_id === user.id),
         );
         console.log('Available users for wheel:', availableUsers);
         setEligibleUsers(availableUsers);
@@ -97,17 +97,17 @@ const RaffleSpinPage = () => {
       return;
     }
     const filtered = eligibleUsers.filter(u => Number(u.event_id) === Number(selectedEvent.event_id));
-    
+
     // Show ALL users who checked in today - no sampling restrictions
     let wheelData = filtered;
     if (filtered.length > 0) {
       wheelData = filtered.map((user, index) => ({
         ...user,
         _segmentSize: 1,
-        _startIndex: index
+        _startIndex: index,
       }));
     }
-    
+
     setRegistrations(wheelData);
   }, [selectedEvent, eligibleUsers]);
 
@@ -127,10 +127,10 @@ const RaffleSpinPage = () => {
         },
         body: JSON.stringify({
           registrationId: winner.id,
-          prize: 'Raffle Prize'
-        })
+          prize: 'Raffle Prize',
+        }),
       });
-      
+
       if (response.ok) {
         console.log('Winner saved successfully');
         // Remove winner from the wheel immediately
@@ -147,7 +147,7 @@ const RaffleSpinPage = () => {
 
   const spinWheel = () => {
     if (registrations.length === 0) return;
-    
+
     // Select directly from the wheel - no count restrictions
     const randomIndex = Math.floor(Math.random() * registrations.length);
     setPrizeNumber(randomIndex);
@@ -158,23 +158,23 @@ const RaffleSpinPage = () => {
 
   const handleStopSpinning = () => {
     setMustSpin(false);
-    
+
     // If we already have a winner stored (for both large and small datasets)
     if (winner) {
       triggerConfetti();
-      
+
       // Persist winner to backend
       fetch('/api/raffle-winners', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ registrationId: winner.id })
+        body: JSON.stringify({ registrationId: winner.id }),
       })
-      .then(() => {
+        .then(() => {
         // Remove winner from eligible users
-        setEligibleUsers(prev => prev.filter(u => u.id !== winner.id));
-        setWinner(null);
-      })
-      .catch(err => console.error('Failed to save winner:', err));
+          setEligibleUsers(prev => prev.filter(u => u.id !== winner.id));
+          setWinner(null);
+        })
+        .catch(err => console.error('Failed to save winner:', err));
     } else {
       // Fallback for small datasets without stored winner
       const selected = registrations[prizeNumber];
@@ -186,13 +186,13 @@ const RaffleSpinPage = () => {
         fetch('/api/raffle-winners', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ registrationId: selected.id })
+          body: JSON.stringify({ registrationId: selected.id }),
         })
-        .then(() => {
+          .then(() => {
           // Remove winner from the wheel list so they can't win again
-          setRegistrations(prev => prev.filter(u => u.id !== selected.id));
-        })
-        .catch(err => console.error('Failed to save winner:', err));
+            setRegistrations(prev => prev.filter(u => u.id !== selected.id));
+          })
+          .catch(err => console.error('Failed to save winner:', err));
       }
     }
   };
@@ -208,19 +208,19 @@ const RaffleSpinPage = () => {
       // Fetch updated eligible users and winners
       const [eligibleResponse, winnersResponse] = await Promise.all([
         fetch('/api/raffle/eligible-users'),
-        fetch('/api/raffle-winners')
+        fetch('/api/raffle-winners'),
       ]);
-      
+
       const [eligibleUsers, winners] = await Promise.all([
         eligibleResponse.json(),
-        winnersResponse.json()
+        winnersResponse.json(),
       ]);
-      
+
       // Filter out already won users
-      const availableUsers = eligibleUsers.filter(user => 
-        !winners.some(winner => winner.registration_id === user.id)
+      const availableUsers = eligibleUsers.filter(user =>
+        !winners.some(winner => winner.registration_id === user.id),
       );
-      
+
       setEligibleUsers(availableUsers);
       setRegistrations(availableUsers); // Update registrations for the wheel
       console.log('Wheel refreshed with', availableUsers.length, 'available users');
@@ -279,7 +279,7 @@ const RaffleSpinPage = () => {
                   const datePart = typeof selectedEvent.start_datetime === 'string' ? selectedEvent.start_datetime.split('T')[0] : new Date(selectedEvent.start_datetime).toISOString().split('T')[0];
                   const dt = new Date(`${datePart}T00:00:00`);
                   return dt.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' });
-                })()}                
+                })()}
               </div>
               <div className="registration-count">
                 Total Checked-in: {registrations.length} participants
@@ -300,10 +300,10 @@ const RaffleSpinPage = () => {
                     const lastNameInitial = nameParts.length > 1 ? nameParts[1][0] : '';
                     return `${firstName} ${lastNameInitial}.`;
                   })() : `ID: ${reg.id}`,
-                  style: { 
+                  style: {
                     backgroundColor: generateColors(registrations.length)[index],
-                    textColor: '#000'
-                  }
+                    textColor: '#000',
+                  },
                 }))}
                 onStopSpinning={handleStopSpinning}
                 textDistance={registrations.length > 1000 ? 85 : registrations.length > 500 ? 80 : 75}
@@ -338,25 +338,25 @@ const RaffleSpinPage = () => {
               textAlign: 'center',
               background: 'linear-gradient(135deg, #8B0000, #2F4F4F)',
               border: '3px solid #FFD700',
-              boxShadow: '0 6px 18px rgba(0,0,0,0.35)'
+              boxShadow: '0 6px 18px rgba(0,0,0,0.35)',
             }}>
               <h3 style={{
                 fontSize: '1.3rem',
                 margin: '0 0 6px 0',
                 color: '#FFD700',
-                fontWeight: 'bold'
+                fontWeight: 'bold',
               }}>🎉 WINNER! 🎉</h3>
               <p style={{
                 fontSize: '1.1rem',
                 fontWeight: '700',
                 margin: '3px 0',
-                color: '#FFFFFF'
+                color: '#FFFFFF',
               }}>{winner.name}</p>
               <p style={{
                 fontSize: '0.9rem',
                 color: '#FFD700',
                 margin: '1px 0',
-                fontWeight: '700'
+                fontWeight: '700',
               }}>ID: {winner.id}</p>
             </div>
           )}
@@ -384,6 +384,6 @@ const RaffleSpinPage = () => {
       </div>
     </div>
   );
-  };
-  
+};
+
 export default RaffleSpinPage;

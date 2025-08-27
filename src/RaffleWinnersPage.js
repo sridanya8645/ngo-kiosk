@@ -1,32 +1,32 @@
-import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import "./RaffleWinnersPage.css";
+import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import './RaffleWinnersPage.css';
 import SiteHeader from './components/SiteHeader';
 import SiteFooter from './components/SiteFooter';
 
 const columns = [
-  { key: "registration_id", label: "Registration ID" },
-  { key: "name", label: "Winner Name" },
-  { key: "email", label: "Email" },
-  { key: "phone", label: "Phone" },
-  { key: "event_name", label: "Event Name" },
-  { key: "win_date", label: "Win Date" },
-  { key: "win_time", label: "Win Time" },
+  { key: 'registration_id', label: 'Registration ID' },
+  { key: 'name', label: 'Winner Name' },
+  { key: 'email', label: 'Email' },
+  { key: 'phone', label: 'Phone' },
+  { key: 'event_name', label: 'Event Name' },
+  { key: 'win_date', label: 'Win Date' },
+  { key: 'win_time', label: 'Win Time' },
 ];
 
-export default function RaffleWinnersPage() {
+export default function RaffleWinnersPage () {
   const [winners, setWinners] = useState([]);
   const [filters, setFilters] = useState({
-    registration_id: "",
-    name: "",
-    email: "",
-    phone: "",
-    event_name: "",
-    win_date: "",
-    win_time: "",
+    registration_id: '',
+    name: '',
+    email: '',
+    phone: '',
+    event_name: '',
+    win_date: '',
+    win_time: '',
   });
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
+  const [error, setError] = useState('');
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -34,13 +34,13 @@ export default function RaffleWinnersPage() {
       try {
         setLoading(true);
         setError('');
-        const res = await fetch("/api/raffle-winners");
+        const res = await fetch('/api/raffle-winners');
         if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
         const data = await res.json();
         setWinners(Array.isArray(data) ? data : []);
       } catch (error) {
         console.error('RaffleWinnersPage: Error fetching raffle winners:', error);
-        setError("Failed to load winners.");
+        setError('Failed to load winners.');
       } finally {
         setLoading(false);
       }
@@ -54,13 +54,13 @@ export default function RaffleWinnersPage() {
       const v = filters[col.key];
       if (!v) return true;
       return (row[col.key] ?? '').toString().toLowerCase().includes(v.toLowerCase());
-    })
+    }),
   );
 
   const downloadExcel = () => {
     const headers = columns.map(col => col.label).join(',');
-    const csvContent = filtered.map(row => [row.registration_id||'',row.name||'',row.email||'',row.phone||'',row.event_name||'',row.win_date||'',row.win_time||''].join(',')).join('\n');
-    const blob = new Blob([headers+'\n'+csvContent], { type: 'text/csv;charset=utf-8;' });
+    const csvContent = filtered.map(row => [row.registration_id || '',row.name || '',row.email || '',row.phone || '',row.event_name || '',row.win_date || '',row.win_time || ''].join(',')).join('\n');
+    const blob = new Blob([headers + '\n' + csvContent], { type: 'text/csv;charset=utf-8;' });
     const link = document.createElement('a');
     link.href = URL.createObjectURL(blob);
     link.download = `raffle_winners_${new Date().toISOString().split('T')[0]}.csv`;
@@ -106,7 +106,7 @@ export default function RaffleWinnersPage() {
 
                   <div className="data-table">
                     {filtered.length === 0 ? (
-                      <div className="no-data-message"><span className="no-data-icon">🏆</span><p>{winners.length === 0 ? "No winners yet. Winners will appear here when raffles are conducted." : "No winners found matching the filters."}</p></div>
+                      <div className="no-data-message"><span className="no-data-icon">🏆</span><p>{winners.length === 0 ? 'No winners yet. Winners will appear here when raffles are conducted.' : 'No winners found matching the filters.'}</p></div>
                     ) : (
                       filtered.map((w, idx) => (
                         <div key={idx} className="event-row winner-row">
@@ -131,4 +131,4 @@ export default function RaffleWinnersPage() {
       </div>
     </div>
   );
-} 
+}

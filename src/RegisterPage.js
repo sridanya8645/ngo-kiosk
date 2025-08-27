@@ -10,7 +10,7 @@ const RegisterPage = () => {
     name: '',
     phone: '',
     email: '',
-    interested_to_volunteer: 'No'
+    interested_to_volunteer: 'No',
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitSuccess, setSubmitSuccess] = useState(false);
@@ -59,7 +59,7 @@ const RegisterPage = () => {
           _end: parseLocalYMD(e.end_datetime) || parseLocalYMD(e.start_datetime),
         }));
 
-        const sorted = withDates.sort((a,b) => (a._start?.getTime?.()||0) - (b._start?.getTime?.()||0));
+        const sorted = withDates.sort((a,b) => (a._start?.getTime?.() || 0) - (b._start?.getTime?.() || 0));
         const isTodayInRange = (e) => e._start && e._end && e._start.getTime() <= today.getTime() && today.getTime() <= e._end.getTime();
         let todays = sorted.find(isTodayInRange) || null;
         if (!todays) {
@@ -81,14 +81,14 @@ const RegisterPage = () => {
     const { name, value } = e.target;
     setFormData(prev => ({
       ...prev,
-      [name]: value
+      [name]: value,
     }));
-    
+
     // Clear error when user starts typing
     if (errors[name]) {
       setErrors(prev => ({
         ...prev,
-        [name]: ''
+        [name]: '',
       }));
     }
   };
@@ -98,15 +98,15 @@ const RegisterPage = () => {
     if (!selectedEvent || !selectedEvent.event_id) {
       newErrors.event = 'Event not available for today';
     }
-    
+
     if (!formData.name.trim()) {
       newErrors.name = 'Name is required';
     }
-    
+
     if (!formData.phone.trim()) {
       newErrors.phone = 'Phone number is required';
     }
-    
+
     if (!formData.email.trim()) {
       newErrors.email = 'Email is required';
     } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
@@ -119,10 +119,10 @@ const RegisterPage = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
+
     console.log('🔄 Form submission started');
     console.log('📝 Form data:', formData);
-    
+
     // Validate form and block submit when invalid
     const isValid = validateForm();
     if (!isValid) {
@@ -135,9 +135,9 @@ const RegisterPage = () => {
 
     try {
       console.log('🌐 Sending registration request...');
-      
+
       // Use the auto-selected event for today
-      let eventId = selectedEvent?.event_id || null;
+      const eventId = selectedEvent?.event_id || null;
       if (!eventId) {
         console.error('No events found');
         setErrors({ submit: 'No events available for registration.' });
@@ -149,13 +149,13 @@ const RegisterPage = () => {
         headers: {
           'Content-Type': 'application/json',
         },
-                 body: JSON.stringify({
-           name: formData.name,
-           phone: formData.phone,
-           email: formData.email,
-           eventId: eventId,
-           interested_to_volunteer: formData.interested_to_volunteer === 'Yes'
-         })
+        body: JSON.stringify({
+          name: formData.name,
+          phone: formData.phone,
+          email: formData.email,
+          eventId: eventId,
+          interested_to_volunteer: formData.interested_to_volunteer === 'Yes',
+        }),
       });
 
       console.log('📡 Registration response status:', response.status);
@@ -164,20 +164,20 @@ const RegisterPage = () => {
       if (response.ok) {
         const responseData = await response.json();
         console.log('📡 Registration response data:', responseData);
-        
+
         if (responseData.success) {
           console.log('✅ Registration successful! Showing message and resetting form for next person');
           setSubmitSuccess(true);
           setTimeout(async () => {
             setSubmitSuccess(false);
-                         setFormData({ name: '', phone: '', email: '', interested_to_volunteer: 'No' });
-                         try {
-               const r = await fetch('/api/todays-event');
-               if (r.ok) {
-                 const ev = await r.json();
-                 if (ev && ev.event_id) setSelectedEvent(ev);
-               }
-             } catch (_) {}
+            setFormData({ name: '', phone: '', email: '', interested_to_volunteer: 'No' });
+            try {
+              const r = await fetch('/api/todays-event');
+              if (r.ok) {
+                const ev = await r.json();
+                if (ev && ev.event_id) setSelectedEvent(ev);
+              }
+            } catch (_) {}
           }, 3000);
         } else {
           console.error('❌ Registration failed:', responseData.message);
@@ -215,7 +215,7 @@ const RegisterPage = () => {
       width: '400px',
       display: 'block !important',
       visibility: 'visible !important',
-      opacity: '1 !important'
+      opacity: '1 !important',
     }}>
       <div className="success-icon">✅</div>
       <h2 className="success-title">Registration Successful!</h2>
@@ -225,7 +225,7 @@ const RegisterPage = () => {
         borderRadius: '8px',
         padding: '15px',
         margin: '15px 0',
-        color: '#155724'
+        color: '#155724',
       }}>
         <p className="success-message" style={{ margin: 0, color: '#155724' }}>
           Thanks for registering for {selectedEvent?.name || 'the event'}. You have successfully registered and checked in!
@@ -254,12 +254,12 @@ const RegisterPage = () => {
         weekday: 'long',
         month: 'short',
         day: 'numeric',
-        year: 'numeric'
+        year: 'numeric',
       });
       const timeStr = ev.time ? dateTime.toLocaleTimeString('en-US', {
         hour: 'numeric',
         minute: '2-digit',
-        hour12: true
+        hour12: true,
       }) : '';
       return `${ev.name} (${dateStr}${timeStr ? ` at ${timeStr}` : ''})`;
     } catch (e) {
@@ -278,18 +278,18 @@ const RegisterPage = () => {
           <h1 className="register-title" style={{ color: '#000' }}>
             {selectedEvent ? `Register for ${selectedEvent.name}` : 'Register'}
           </h1>
-          
+
           {/* Raffle text directly below title */}
-          <div style={{ 
-            textAlign: 'center', 
+          <div style={{
+            textAlign: 'center',
             margin: '6px 0 10px 0',
             color: '#8B1C1C',
             fontSize: '1rem',
-            fontWeight: '600'
+            fontWeight: '600',
           }}>
             {selectedEvent?.raffle_tickets || 'Register and get a chance to win $200 Raffle ticket!!'}
           </div>
-          
+
           {/* Form third - only show if not submitted */}
           {!submitSuccess && (
             <>
@@ -392,7 +392,7 @@ const RegisterPage = () => {
               </form>
             </>
           )}
-          
+
           {/* Show success message when submitted */}
           {submitSuccess && (
             <>
@@ -408,4 +408,4 @@ const RegisterPage = () => {
   );
 };
 
-export default RegisterPage; 
+export default RegisterPage;
