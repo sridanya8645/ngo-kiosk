@@ -330,13 +330,13 @@
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
   backdrop-filter: blur(10px);
   border: 1px solid rgba(255, 255, 255, 0.2);
-  width: 95%; /* Slightly reduced width for better centering */
-  max-width: 2200px; /* Slightly reduced maximum width */
-  min-width: 1600px; /* Keep minimum width for bigger table */
+  width: 98%; /* Increased width for better visibility */
+  max-width: 2400px; /* Increased maximum width */
+  min-width: 1400px; /* Reduced minimum width for better fit */
   overflow-x: auto;
   overflow-y: hidden;
-  /* Column proportions tuned for content fit (16 columns) */
-  --events-cols: 0.8fr 2.5fr 1.8fr 1.8fr 1.5fr 1fr 1.2fr 1.2fr 1.5fr 1fr 1fr 1fr 1.5fr 1.5fr 1.5fr 1.5fr;
+  /* Column proportions optimized for better visibility (16 columns) */
+  --events-cols: 1fr 2.5fr 1.8fr 1.8fr 1.5fr 1.2fr 1.2fr 1.2fr 1.5fr 1.2fr 1.2fr 1.2fr 1.8fr 1.8fr 1.8fr 2fr;
   /* Ensure perfect centering */
   position: relative;
   left: 50%;
@@ -411,17 +411,18 @@
 .events-table-container .header-cell {
   text-align: left;
   min-width: 0;
-  padding: 15px 12px; /* Increased padding for bigger table */
+  padding: 18px 15px; /* Increased padding for better visibility */
   border-right: 1px solid #6B0F0F;
   background: #8B1C1C;
   color: #fff;
   font-weight: 600;
-  font-size: 1rem; /* Increased font size for better readability */
+  font-size: 1.1rem; /* Increased font size for better readability */
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
   position: relative;
   cursor: col-resize;
+  line-height: 1.2; /* Better line height for readability */
 }
 
 .events-table-container .header-cell::after {
@@ -577,17 +578,18 @@
 .events-table-container .data-cell {
   display: flex;
   align-items: center;
-  min-height: 40px;
-  font-size: 0.9rem;
+  min-height: 50px; /* Increased height for better visibility */
+  font-size: 1rem; /* Increased font size */
   color: #333;
   min-width: 0;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  padding: 12px 20px; /* moves spacing into cells to align header/filter edges */
+  padding: 15px 20px; /* Increased padding for better spacing */
   border-right: 1px solid #ddd;
   box-sizing: border-box;
   background: #fff;
+  line-height: 1.3; /* Better line height */
 }
 .events-table-container .data-cell:last-child { border-right: none; }
 
@@ -647,9 +649,11 @@
 
 .action-buttons {
   display: flex;
-  gap: 8px;
+  gap: 10px; /* Increased gap for better separation */
   z-index: 10;
   position: relative;
+  flex-wrap: nowrap; /* Prevent wrapping */
+  min-width: 200px; /* Ensure minimum width for buttons */
 }
 
 /* Button Styles */
@@ -658,13 +662,17 @@
 .edit-button,
 .delete-button,
 .cancel-button {
-  padding: 8px 15px;
-  font-size: 0.9rem;
+  padding: 10px 18px; /* Increased padding for better visibility */
+  font-size: 1rem; /* Increased font size */
   font-weight: bold;
   border: none;
   border-radius: 6px;
   cursor: pointer;
   transition: all 0.3s ease;
+  white-space: nowrap; /* Prevent text wrapping */
+  min-width: 80px; /* Minimum width for buttons */
+  text-align: center;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.2); /* Add shadow for better visibility */
 }
 
 .add-button,
@@ -1095,7 +1103,8 @@ select.table-input:focus {
   
   .action-buttons {
     flex-direction: column;
-    gap: 4px;
+    gap: 6px; /* Increased gap for better separation */
+    min-width: 150px; /* Adjusted for mobile */
   }
   
   .add-button,
@@ -1103,8 +1112,9 @@ select.table-input:focus {
   .edit-button,
   .delete-button,
   .cancel-button {
-    font-size: 0.8rem;
-    padding: 6px 12px;
+    font-size: 0.9rem; /* Slightly larger than before */
+    padding: 8px 15px; /* Increased padding */
+    min-width: 70px; /* Adjusted minimum width */
   }
 }
 

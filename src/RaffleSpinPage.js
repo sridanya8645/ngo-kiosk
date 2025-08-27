@@ -34,30 +34,43 @@ const RaffleSpinPage = () => {
   useEffect(() => {
     (async () => {
       try {
-        // Fetch eligible users (checked in TODAY), winners, events, and today's event
-        const [eligibleRes, winnersRes, eventsRes, todayRes] = await Promise.all([
-          fetch('/api/raffle/eligible-users', { cache: 'no-store' }),
+        // Fetch today's events (multiple events for the same day)
+        const todayRes = await fetch('/api/todays-events', { cache: 'no-store' });
+        const todayEvents = await todayRes.json();
+        
+        if (todayEvents && todayEvents.length > 0) {
+          setEvents(todayEvents);
+          // Auto-select the first event if only one event
+          if (todayEvents.length === 1) {
+            setSelectedEvent(todayEvents[0]);
+            setEventInfo(todayEvents[0]);
+          }
+        }
+
+        // Fetch eligible users (checked in TODAY), winners, and events
+        const [eligibleRes, winnersRes, eventsRes] = await Promise.all([
+          fetch(`/api/raffle/eligible-users${selectedEvent ? `?eventId=${selectedEvent.event_id}` : ''}`, { cache: 'no-store' }),
           fetch('/api/raffle-winners', { cache: 'no-store' }),
           fetch('/api/events', { cache: 'no-store' }),
-          fetch('/api/todays-event', { cache: 'no-store' }),
         ]);
-        const [eligibleUsersData, winnersData, eventsData, todayEvent] = await Promise.all([
-          eligibleRes.json(), winnersRes.json(), eventsRes.json(), todayRes.json(),
+        const [eligibleUsersData, winnersData, eventsData] = await Promise.all([
+          eligibleRes.json(), winnersRes.json(), eventsRes.json(),
         ]);
 
         console.log('Eligible users (checked in today):', eligibleUsersData);
         console.log('Winners:', winnersData);
         console.log('All events:', eventsData);
-        console.log('Today\'s event:', todayEvent);
+        console.log('Today\'s events:', todayEvents);
 
-        // Sort events and compute local date helpers
-        const normalize = (d) => { const dt = new Date(d); return new Date(dt.getFullYear(), dt.getMonth(), dt.getDate()).getTime(); };
-        const sorted = [...eventsData].sort((a,b) => normalize(a.date) - normalize(b.date));
-        setEvents(sorted);
+        // Fallback: if no today's events, use all events
+        if (!todayEvents || todayEvents.length === 0) {
+          // Sort events and compute local date helpers
+          const normalize = (d) => { const dt = new Date(d); return new Date(dt.getFullYear(), dt.getMonth(), dt.getDate()).getTime(); };
+          const sorted = [...eventsData].sort((a,b) => normalize(a.date) - normalize(b.date));
+          setEvents(sorted);
 
-        // Auto-select today's event (no dropdown). If endpoint returns null, compute fallback using [date, end_date]
-        let selected = (todayEvent && todayEvent.event_id) ? todayEvent : null;
-        if (!selected) {
+          // Auto-select today's event (no dropdown). If endpoint returns null, compute fallback using [date, end_date]
+          let selected = null;
           const parseLocalYMD = (val) => {
             if (!val) return null;
             try {
@@ -75,8 +88,9 @@ const RaffleSpinPage = () => {
           }));
           const inRange = withDates.find(e => e._start && e._end && e._start.getTime() <= today.getTime() && today.getTime() <= e._end.getTime());
           selected = inRange || null;
+          setSelectedEvent(selected);
+          setEventInfo(selected);
         }
-        setSelectedEvent(selected);
 
         // Filter out already won users
         const availableUsers = eligibleUsersData.filter(user =>
@@ -96,7 +110,35 @@ const RaffleSpinPage = () => {
       setRegistrations([]);
       return;
     }
-    const filtered = eligibleUsers.filter(u => Number(u.event_id) === Number(selectedEvent.event_id));
+    
+    // Fetch fresh data for the selected event
+    const fetchEventSpecificData = async () => {
+      try {
+        const [eligibleRes, winnersRes] = await Promise.all([
+          fetch(`/api/raffle/eligible-users?eventId=${selectedEvent.event_id}`, { cache: 'no-store' }),
+          fetch('/api/raffle-winners', { cache: 'no-store' }),
+        ]);
+        
+        const [eligibleUsers, winners] = await Promise.all([
+          eligibleRes.json(),
+          winnersRes.json(),
+        ]);
+        
+        // Filter out already won users
+        const availableUsers = eligibleUsers.filter(user =>
+          !winners.some(winner => winner.registration_id === user.id),
+        );
+        
+        setEligibleUsers(availableUsers);
+        setRegistrations(availableUsers);
+        console.log(`Wheel updated for event ${selectedEvent.name} with ${availableUsers.length} available users`);
+      } catch (error) {
+        console.error('Error fetching event-specific data:', error);
+      }
+    };
+    
+    fetchEventSpecificData();
+  }, [selectedEvent]);
 
     // Show ALL users who checked in today - no sampling restrictions
     let wheelData = filtered;
@@ -207,7 +249,7 @@ const RaffleSpinPage = () => {
     try {
       // Fetch updated eligible users and winners
       const [eligibleResponse, winnersResponse] = await Promise.all([
-        fetch('/api/raffle/eligible-users'),
+        fetch(`/api/raffle/eligible-users${selectedEvent ? `?eventId=${selectedEvent.event_id}` : ''}`),
         fetch('/api/raffle-winners'),
       ]);
 
@@ -264,9 +306,82 @@ const RaffleSpinPage = () => {
 
         <div className="raffle-main">
           {/* Title */}
-          <h1 className="raffle-title">Spin the Wheel to Reveal the Winner!</h1>
+          <h1 className="raffle-title">
+            {selectedEvent ? `Spin the Wheel for ${selectedEvent.name}` : 'Spin the Wheel to Reveal the Winner!'}
+          </h1>
 
-          {/* Event selector removed: auto-select today's event */}
+          {/* Event Selection Dropdown */}
+          {events.length > 1 && (
+            <div className="event-selection-container" style={{
+              margin: '20px 0',
+              textAlign: 'center'
+            }}>
+              <label htmlFor="event-select" style={{
+                display: 'block',
+                marginBottom: '10px',
+                fontWeight: '600',
+                color: '#333',
+                fontSize: '1.1rem'
+              }}>Select Event:</label>
+              <select
+                id="event-select"
+                value={selectedEvent ? selectedEvent.event_id : ''}
+                onChange={(e) => {
+                  const event = events.find(ev => ev.event_id === parseInt(e.target.value));
+                  setSelectedEvent(event);
+                  setEventInfo(event);
+                }}
+                style={{
+                  padding: '12px 20px',
+                  borderRadius: '10px',
+                  border: '2px solid #8B1C1C',
+                  fontSize: '1.1rem',
+                  minWidth: '300px',
+                  backgroundColor: '#fff',
+                  color: '#333'
+                }}
+              >
+                <option value="">-- Select an Event --</option>
+                {events.map(event => (
+                  <option key={event.event_id} value={event.event_id}>
+                    {event.name} ({new Date(event.start_datetime).toLocaleDateString()})
+                  </option>
+                ))}
+              </select>
+            </div>
+          )}
+
+          {/* Show message if no event selected */}
+          {!selectedEvent && events.length > 1 && (
+            <div style={{
+              textAlign: 'center',
+              margin: '20px 0',
+              padding: '20px',
+              backgroundColor: '#fff3cd',
+              border: '1px solid #ffeaa7',
+              borderRadius: '10px',
+              color: '#856404',
+              fontSize: '1.1rem'
+            }}>
+              <p>Please select an event to continue with the raffle.</p>
+            </div>
+          )}
+
+          {/* Show message if no events available */}
+          {(!selectedEvent && events.length <= 1) && (
+            <div style={{
+              textAlign: 'center',
+              margin: '20px 0',
+              padding: '20px',
+              backgroundColor: '#f8d7da',
+              border: '1px solid #f5c6cb',
+              borderRadius: '10px',
+              color: '#721c24',
+              fontSize: '1.1rem'
+            }}>
+              <p>No events available for today.</p>
+            </div>
+          )}
 
           {/* Event Info and Date - show only after selection */}
           {selectedEvent && (

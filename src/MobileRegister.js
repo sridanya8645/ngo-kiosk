@@ -26,51 +26,55 @@ const MobileRegister = () => {
   useEffect(() => {
     (async () => {
       try {
-        // Helper to parse YYYY-MM-DD from string or date-like without timezone shifts
-        const parseLocalYMD = (val) => {
-          if (!val) return null;
-          try {
-            const str = typeof val === 'string' ? val.split('T')[0] : new Date(val).toISOString().split('T')[0];
-            const [y, m, d] = str.split('-').map(Number);
-            return new Date(y, m - 1, d);
-          } catch (_) { return null; }
-        };
-
-        // Try dedicated endpoint first (considers end_date on backend) and prevent caching
-        const te = await fetch('/api/todays-event', { cache: 'no-store' });
+        // Fetch today's events (multiple events for the same day)
+        const te = await fetch('/api/todays-events', { cache: 'no-store' });
         if (te.ok) {
-          const ev = await te.json();
-          if (ev && ev.event_id) {
-            setSelectedEvent(ev);
+          const events = await te.json();
+          if (events && events.length > 0) {
+            setEvents(events);
+            // Auto-select the first event if only one event
+            if (events.length === 1) {
+              setSelectedEvent(events[0]);
+            }
           }
         }
 
-        // Always fetch full list to keep data fresh and have fallback
-        const res = await fetch('/api/events', { cache: 'no-store' });
-        if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
-        const events = await res.json();
+        // Fallback: fetch all events if today's events endpoint fails
+        if (events.length === 0) {
+          const res = await fetch('/api/events', { cache: 'no-store' });
+          if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
+          const allEvents = await res.json();
 
-        const now = new Date();
-        const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+          // Helper to parse YYYY-MM-DD from string or date-like without timezone shifts
+          const parseLocalYMD = (val) => {
+            if (!val) return null;
+            try {
+              const str = typeof val === 'string' ? val.split('T')[0] : new Date(val).toISOString().split('T')[0];
+              const [y, m, d] = str.split('-').map(Number);
+              return new Date(y, m - 1, d);
+            } catch (_) { return null; }
+          };
 
-        const withDates = (events || []).map(e => ({
-          ...e,
-          _start: parseLocalYMD(e.start_datetime),
-          _end: parseLocalYMD(e.end_datetime) || parseLocalYMD(e.start_datetime),
-        }));
+          const now = new Date();
+          const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
 
-        const sorted = withDates.sort((a,b) => (a._start?.getTime?.() || 0) - (b._start?.getTime?.() || 0));
-        const isTodayInRange = (e) => e._start && e._end && e._start.getTime() <= today.getTime() && today.getTime() <= e._end.getTime();
-        let todays = sorted.find(isTodayInRange) || null;
-        if (!todays) {
-          const todayStr = new Date().toLocaleDateString('en-CA');
-          const key = (v) => (typeof v === 'string' ? v.split('T')[0] : new Date(v).toISOString().split('T')[0]);
-          todays = sorted.find(e => key(e.start_datetime) === todayStr || key(e.end_datetime || e.start_datetime) === todayStr) || null;
+          const withDates = (allEvents || []).map(e => ({
+            ...e,
+            _start: parseLocalYMD(e.start_datetime),
+            _end: parseLocalYMD(e.end_datetime) || parseLocalYMD(e.start_datetime),
+          }));
+
+          const sorted = withDates.sort((a,b) => (a._start?.getTime?.() || 0) - (b._start?.getTime?.() || 0));
+          const isTodayInRange = (e) => e._start && e._end && e._start.getTime() <= today.getTime() && today.getTime() <= e._end.getTime();
+          const todaysEvents = sorted.filter(isTodayInRange);
+          
+          if (todaysEvents.length > 0) {
+            setEvents(todaysEvents);
+            if (todaysEvents.length === 1) {
+              setSelectedEvent(todaysEvents[0]);
+            }
+          }
         }
-
-        setEvents(sorted);
-        // If dedicated endpoint didn't return, pick from computed
-        setSelectedEvent(prev => prev && prev.event_id ? prev : todays);
       } catch (error) {
         console.error('Error fetching events in MobileRegister:', error);
       }
@@ -95,8 +99,14 @@ const MobileRegister = () => {
 
   const validateForm = () => {
     const newErrors = {};
+    
+    // Check if event is selected (required when multiple events or no events)
     if (!selectedEvent || !selectedEvent.event_id) {
-      newErrors.event = 'Event not available for today';
+      if (events.length > 1) {
+        newErrors.event = 'Please select an event to continue';
+      } else {
+        newErrors.event = 'Event not available for today';
+      }
     }
 
     if (!formData.name.trim()) {
@@ -255,19 +265,89 @@ const MobileRegister = () => {
             {selectedEvent ? `Register for ${selectedEvent.name}` : 'Register'}
           </h1>
 
-          {/* Raffle text directly below title */}
-          <div style={{
-            textAlign: 'center',
-            margin: '6px 0 10px 0',
-            color: '#8B1C1C',
-            fontSize: '1rem',
-            fontWeight: '600',
-          }}>
-            {selectedEvent?.raffle_tickets || 'Register and get a chance to win $200 Raffle ticket!!'}
-          </div>
+          {/* Event Selection Dropdown */}
+          {events.length > 1 && (
+            <div className="event-selection-container" style={{
+              margin: '15px 0',
+              textAlign: 'center'
+            }}>
+              <label htmlFor="event-select" style={{
+                display: 'block',
+                marginBottom: '8px',
+                fontWeight: '600',
+                color: '#333'
+              }}>Select Event:</label>
+              <select
+                id="event-select"
+                value={selectedEvent ? selectedEvent.event_id : ''}
+                onChange={(e) => {
+                  const event = events.find(ev => ev.event_id === parseInt(e.target.value));
+                  setSelectedEvent(event);
+                }}
+                style={{
+                  padding: '10px 15px',
+                  borderRadius: '8px',
+                  border: '2px solid #ddd',
+                  fontSize: '1rem',
+                  minWidth: '250px',
+                  backgroundColor: '#fff'
+                }}
+              >
+                <option value="">-- Select an Event --</option>
+                {events.map(event => (
+                  <option key={event.event_id} value={event.event_id}>
+                    {event.name} ({new Date(event.start_datetime).toLocaleDateString()})
+                  </option>
+                ))}
+              </select>
+            </div>
+          )}
 
-          {/* Form third - only show if not submitted */}
-          {!submitSuccess && (
+          {/* Show message if no event selected */}
+          {!selectedEvent && events.length > 1 && (
+            <div style={{
+              textAlign: 'center',
+              margin: '15px 0',
+              padding: '15px',
+              backgroundColor: '#fff3cd',
+              border: '1px solid #ffeaa7',
+              borderRadius: '8px',
+              color: '#856404'
+            }}>
+              <p>Please select an event to continue with registration.</p>
+            </div>
+          )}
+
+          {/* Show message if no events available */}
+          {(!selectedEvent && events.length <= 1) && (
+            <div style={{
+              textAlign: 'center',
+              margin: '15px 0',
+              padding: '15px',
+              backgroundColor: '#f8d7da',
+              border: '1px solid #f5c6cb',
+              borderRadius: '8px',
+              color: '#721c24'
+            }}>
+              <p>No events available for today.</p>
+            </div>
+          )}
+
+          {/* Raffle text directly below title */}
+          {selectedEvent && (
+            <div style={{
+              textAlign: 'center',
+              margin: '6px 0 10px 0',
+              color: '#8B1C1C',
+              fontSize: '1rem',
+              fontWeight: '600',
+            }}>
+              {selectedEvent?.raffle_tickets || 'Register and get a chance to win $200 Raffle ticket!!'}
+            </div>
+          )}
+
+          {/* Form third - only show if not submitted and event is selected */}
+          {!submitSuccess && selectedEvent && (
             <>
               <form onSubmit={handleSubmit} className="mobile-register-form">
                 {/* Event is auto-selected for today; selector removed */}

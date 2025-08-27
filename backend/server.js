@@ -228,15 +228,61 @@ app.post('/api/login', validate('login'), async (req, res) => {
         for (let i = 0; i < 32; i++) {
           secret += base32Chars[Math.floor(Math.random() * base32Chars.length)];
         }
-        const label = 'Indoamericanexpo@gmail.com';
+        const label = user.username; // Use the user's email as label
         const issuer = 'NGO Kiosk';
         
         // Store the secret temporarily for enrollment
         if (!global.totpEnrollment) global.totpEnrollment = new Map();
         global.totpEnrollment.set(user.id, {
           secret: secret,
-          timestamp: Date.now()
+          timestamp: Date.now(),
+          userEmail: user.username // Store user's email for sending MFA codes
         });
+        
+        // Send TOTP secret to user's email
+        try {
+          const transporter = await createVerifiedTransporter('ssl');
+          const mailOptions = {
+            from: GMAIL_USER,
+            to: user.username, // Send to user's email
+            subject: 'NGO Kiosk - MFA Setup Required',
+            html: `
+              <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
+                <h2 style="color: #333;">🔐 MFA Setup Required</h2>
+                <p>Hello,</p>
+                <p>You have been granted admin access to the NGO Kiosk system. To complete your setup, please use the following secret key in your authenticator app:</p>
+                
+                <div style="background: #f8f9fa; padding: 20px; border-radius: 10px; margin: 20px 0; border: 2px solid #ddd;">
+                  <h3 style="margin-top: 0; color: #333;">Your Secret Key:</h3>
+                  <p style="font-family: monospace; font-size: 18px; background: #fff; padding: 15px; border-radius: 5px; border: 1px solid #ccc; margin: 10px 0;">
+                    <strong>${secret}</strong>
+                  </p>
+                  <p style="font-size: 14px; color: #666; margin: 10px 0;">
+                    <strong>Account:</strong> ${issuer}:${label}
+                  </p>
+                </div>
+                
+                <p><strong>Instructions:</strong></p>
+                <ol>
+                  <li>Open your authenticator app (Google Authenticator, Authy, etc.)</li>
+                  <li>Add a new account</li>
+                  <li>Enter the secret key above</li>
+                  <li>Return to the login page and enter the 6-digit code</li>
+                </ol>
+                
+                <p style="color: #666; font-size: 14px;">This secret key is for your account only. Keep it secure and do not share it with others.</p>
+                
+                <p>Best regards,<br><strong>NGO Kiosk Team</strong></p>
+              </div>
+            `
+          };
+          
+          await transporter.sendMail(mailOptions);
+          console.log('✅ MFA setup email sent to:', user.username);
+        } catch (emailError) {
+          console.error('❌ Failed to send MFA setup email:', emailError);
+          // Continue with setup even if email fails
+        }
         
         res.json({
           success: true,
@@ -418,6 +464,46 @@ app.post('/api/mfa/totp/verify', validate('mfa'), async (req, res) => {
         "UPDATE users SET totp_secret = ? WHERE id = ?",
         [secret, userId]
       );
+      
+      // Send confirmation email to user
+      try {
+        const userEmail = enrollment.userEmail;
+        const transporter = await createVerifiedTransporter('ssl');
+        const mailOptions = {
+          from: GMAIL_USER,
+          to: userEmail,
+          subject: 'NGO Kiosk - MFA Setup Complete',
+          html: `
+            <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
+              <h2 style="color: #28a745;">✅ MFA Setup Complete</h2>
+              <p>Hello,</p>
+              <p>Your Multi-Factor Authentication (MFA) setup has been completed successfully!</p>
+              
+              <div style="background: #f8f9fa; padding: 20px; border-radius: 10px; margin: 20px 0; border: 2px solid #28a745;">
+                <h3 style="margin-top: 0; color: #28a745;">Setup Confirmed</h3>
+                <p>Your authenticator app is now configured and you can log in to the NGO Kiosk admin panel using your 6-digit codes.</p>
+              </div>
+              
+              <p><strong>Next Steps:</strong></p>
+              <ul>
+                <li>You can now log in to the admin panel</li>
+                <li>Use your 6-digit authenticator codes for future logins</li>
+                <li>Keep your authenticator app secure</li>
+              </ul>
+              
+              <p style="color: #666; font-size: 14px;">If you did not complete this setup, please contact the system administrator immediately.</p>
+              
+              <p>Best regards,<br><strong>NGO Kiosk Team</strong></p>
+            </div>
+          `
+        };
+        
+        await transporter.sendMail(mailOptions);
+        console.log('✅ MFA setup confirmation email sent to:', userEmail);
+      } catch (emailError) {
+        console.error('❌ Failed to send MFA confirmation email:', emailError);
+        // Continue even if email fails
+      }
       
       // Clean up enrollment
       global.totpEnrollment.delete(userId);
@@ -754,6 +840,36 @@ app.get('/api/test-db', async (req, res) => {
       error: "Database test failed", 
       details: error.message,
       stack: error.stack
+    });
+  }
+});
+
+// Fix table structures endpoint
+app.post('/api/fix-table-structures', async (req, res) => {
+  try {
+    console.log('🔄 Starting table structure fixes...');
+    
+    // Import the fix function
+    const { fixTableStructures } = require('./fix-table-structures');
+    
+    // Run the migration
+    await fixTableStructures();
+    
+    console.log('✅ Table structure fixes completed');
+    res.json({ 
+      success: true, 
+      message: 'Table structures fixed successfully',
+      details: {
+        events: 'Updated with proper datetime fields, audit trails, and VARCHAR raffle_tickets',
+        raffle_winners: 'Added prize column and improved foreign key constraints'
+      }
+    });
+  } catch (error) {
+    console.error('❌ Error fixing table structures:', error);
+    res.status(500).json({ 
+      success: false, 
+      message: 'Failed to fix table structures',
+      error: error.message 
     });
   }
 });
@@ -1106,56 +1222,103 @@ app.delete('/api/events/:id', async (req, res) => {
   }
 });
 
- // Get today's event (including events that span multiple days)
- app.get('/api/todays-event', async (req, res) => {
-   try {
-     const today = new Date().toISOString().split('T')[0];
-     console.log('🔍 Fetching today\'s event for date:', today);
-     
-     // Get events that are active today (either start today or are ongoing)
-             const [rows] = await pool.execute(`
-          SELECT
-            id as event_id,
-            name,
-            start_datetime,
-            end_datetime,
-            location,
-            raffle_tickets,
-            banner,
-            header_image,
-            footer_location,
-            footer_phone,
-            footer_email,
-            volunteer_enabled,
-            welcome_text,
-            created_at,
-            modified_at,
-            (SELECT username FROM users WHERE id = events.created_by) as created_by_name,
-            (SELECT username FROM users WHERE id = events.modified_by) as modified_by_name
-          FROM events
-          WHERE DATE(start_datetime) <= ? AND DATE(end_datetime) >= ?
-          ORDER BY start_datetime DESC
-          LIMIT 1
-        `, [today, today]);
-     
-     if (rows[0]) {
-       console.log('✅ Today\'s event found:', rows[0].name);
-       console.log('📅 Event period:', new Date(rows[0].start_datetime).toLocaleDateString(), 'to', new Date(rows[0].end_datetime).toLocaleDateString());
-       if (rows[0].banner) {
-         console.log('📸 Banner path:', rows[0].banner);
-       } else {
-         console.log('❌ No banner for today\'s event');
-       }
-     } else {
-       console.log('❌ No event found for today');
-     }
-     
-     res.json(rows[0] || null);
-   } catch (error) {
-     console.error('Get today\'s event error:', error);
-     res.status(500).json({ error: "Failed to fetch today's event" });
-   }
- });
+ // Get today's events (including events that span multiple days)
+app.get('/api/todays-events', async (req, res) => {
+  try {
+    const today = new Date().toISOString().split('T')[0];
+    console.log('🔍 Fetching today\'s events for date:', today);
+    
+    // Get all events that are active today (either start today or are ongoing)
+    const [rows] = await pool.execute(`
+      SELECT
+        id as event_id,
+        name,
+        start_datetime,
+        end_datetime,
+        location,
+        raffle_tickets,
+        banner,
+        header_image,
+        footer_location,
+        footer_phone,
+        footer_email,
+        volunteer_enabled,
+        welcome_text,
+        created_at,
+        modified_at,
+        (SELECT username FROM users WHERE id = events.created_by) as created_by_name,
+        (SELECT username FROM users WHERE id = events.modified_by) as modified_by_name
+      FROM events
+      WHERE DATE(start_datetime) <= ? AND DATE(end_datetime) >= ?
+      ORDER BY start_datetime ASC
+    `, [today, today]);
+    
+    if (rows.length > 0) {
+      console.log(`✅ Found ${rows.length} events for today`);
+      rows.forEach((event, index) => {
+        console.log(`${index + 1}. ${event.name} (${new Date(event.start_datetime).toLocaleDateString()} to ${new Date(event.end_datetime).toLocaleDateString()})`);
+      });
+    } else {
+      console.log('❌ No events found for today');
+    }
+    
+    res.json(rows);
+  } catch (error) {
+    console.error('Get today\'s events error:', error);
+    res.status(500).json({ error: "Failed to fetch today's events" });
+  }
+});
+
+// Get today's event (including events that span multiple days) - for backward compatibility
+app.get('/api/todays-event', async (req, res) => {
+  try {
+    const today = new Date().toISOString().split('T')[0];
+    console.log('🔍 Fetching today\'s event for date:', today);
+    
+    // Get events that are active today (either start today or are ongoing)
+    const [rows] = await pool.execute(`
+      SELECT
+        id as event_id,
+        name,
+        start_datetime,
+        end_datetime,
+        location,
+        raffle_tickets,
+        banner,
+        header_image,
+        footer_location,
+        footer_phone,
+        footer_email,
+        volunteer_enabled,
+        welcome_text,
+        created_at,
+        modified_at,
+        (SELECT username FROM users WHERE id = events.created_by) as created_by_name,
+        (SELECT username FROM users WHERE id = events.modified_by) as modified_by_name
+      FROM events
+      WHERE DATE(start_datetime) <= ? AND DATE(end_datetime) >= ?
+      ORDER BY start_datetime DESC
+      LIMIT 1
+    `, [today, today]);
+    
+    if (rows[0]) {
+      console.log('✅ Today\'s event found:', rows[0].name);
+      console.log('📅 Event period:', new Date(rows[0].start_datetime).toLocaleDateString(), 'to', new Date(rows[0].end_datetime).toLocaleDateString());
+      if (rows[0].banner) {
+        console.log('📸 Banner path:', rows[0].banner);
+      } else {
+        console.log('❌ No banner for today\'s event');
+      }
+    } else {
+      console.log('❌ No event found for today');
+    }
+    
+    res.json(rows[0] || null);
+  } catch (error) {
+    console.error('Get today\'s event error:', error);
+    res.status(500).json({ error: "Failed to fetch today's event" });
+  }
+});
 
 // Get all registrations
 app.get('/api/registrations', async (req, res) => {
@@ -1284,10 +1447,21 @@ app.post('/api/registrations/reset-checkins', async (req, res) => {
 // Raffle endpoints
 app.get('/api/raffle/eligible-users', async (req, res) => {
   try {
-    // Get users who checked in TODAY only
-    const [rows] = await pool.execute(
-      "SELECT * FROM registrations WHERE checked_in = 1 AND DATE(checkin_date) = CURDATE()"
-    );
+    const { eventId } = req.query;
+    
+    let query, params;
+    
+    if (eventId) {
+      // Get users who checked in TODAY for a specific event
+      query = "SELECT * FROM registrations WHERE checked_in = 1 AND DATE(checkin_date) = CURDATE() AND event_id = ?";
+      params = [eventId];
+    } else {
+      // Get users who checked in TODAY only (for backward compatibility)
+      query = "SELECT * FROM registrations WHERE checked_in = 1 AND DATE(checkin_date) = CURDATE()";
+      params = [];
+    }
+    
+    const [rows] = await pool.execute(query, params);
     res.json(rows);
   } catch (error) {
     console.error('Get eligible users error:', error);

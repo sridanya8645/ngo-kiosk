@@ -26,51 +26,55 @@ const RegisterPage = () => {
   useEffect(() => {
     (async () => {
       try {
-        // Helper to parse YYYY-MM-DD from string or date-like without timezone shifts
-        const parseLocalYMD = (val) => {
-          if (!val) return null;
-          try {
-            const str = typeof val === 'string' ? val.split('T')[0] : new Date(val).toISOString().split('T')[0];
-            const [y, m, d] = str.split('-').map(Number);
-            return new Date(y, m - 1, d);
-          } catch (_) { return null; }
-        };
-
-        // Try dedicated endpoint first (considers end_date on backend) and prevent caching
-        const te = await fetch('/api/todays-event', { cache: 'no-store' });
+        // Fetch today's events (multiple events for the same day)
+        const te = await fetch('/api/todays-events', { cache: 'no-store' });
         if (te.ok) {
-          const ev = await te.json();
-          if (ev && ev.event_id) {
-            setSelectedEvent(ev);
+          const events = await te.json();
+          if (events && events.length > 0) {
+            setEvents(events);
+            // Auto-select the first event if only one event
+            if (events.length === 1) {
+              setSelectedEvent(events[0]);
+            }
           }
         }
 
-        // Always fetch full list to keep data fresh and have fallback
-        const res = await fetch('/api/events', { cache: 'no-store' });
-        if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
-        const events = await res.json();
+        // Fallback: fetch all events if today's events endpoint fails
+        if (events.length === 0) {
+          const res = await fetch('/api/events', { cache: 'no-store' });
+          if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
+          const allEvents = await res.json();
 
-        const now = new Date();
-        const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+          // Helper to parse YYYY-MM-DD from string or date-like without timezone shifts
+          const parseLocalYMD = (val) => {
+            if (!val) return null;
+            try {
+              const str = typeof val === 'string' ? val.split('T')[0] : new Date(val).toISOString().split('T')[0];
+              const [y, m, d] = str.split('-').map(Number);
+              return new Date(y, m - 1, d);
+            } catch (_) { return null; }
+          };
 
-        const withDates = (events || []).map(e => ({
-          ...e,
-          _start: parseLocalYMD(e.start_datetime),
-          _end: parseLocalYMD(e.end_datetime) || parseLocalYMD(e.start_datetime),
-        }));
+          const now = new Date();
+          const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
 
-        const sorted = withDates.sort((a,b) => (a._start?.getTime?.() || 0) - (b._start?.getTime?.() || 0));
-        const isTodayInRange = (e) => e._start && e._end && e._start.getTime() <= today.getTime() && today.getTime() <= e._end.getTime();
-        let todays = sorted.find(isTodayInRange) || null;
-        if (!todays) {
-          const todayStr = new Date().toLocaleDateString('en-CA');
-          const key = (v) => (typeof v === 'string' ? v.split('T')[0] : new Date(v).toISOString().split('T')[0]);
-          todays = sorted.find(e => key(e.start_datetime) === todayStr || key(e.end_datetime || e.start_datetime) === todayStr) || null;
+          const withDates = (allEvents || []).map(e => ({
+            ...e,
+            _start: parseLocalYMD(e.start_datetime),
+            _end: parseLocalYMD(e.end_datetime) || parseLocalYMD(e.start_datetime),
+          }));
+
+          const sorted = withDates.sort((a,b) => (a._start?.getTime?.() || 0) - (b._start?.getTime?.() || 0));
+          const isTodayInRange = (e) => e._start && e._end && e._start.getTime() <= today.getTime() && today.getTime() <= e._end.getTime();
+          const todaysEvents = sorted.filter(isTodayInRange);
+          
+          if (todaysEvents.length > 0) {
+            setEvents(todaysEvents);
+            if (todaysEvents.length === 1) {
+              setSelectedEvent(todaysEvents[0]);
+            }
+          }
         }
-
-        setEvents(sorted);
-        // If dedicated endpoint didn't return, pick from computed
-        setSelectedEvent(prev => prev && prev.event_id ? prev : todays);
       } catch (error) {
         console.error('Error fetching events in RegisterPage:', error);
       }
@@ -95,7 +99,13 @@ const RegisterPage = () => {
 
   const validateForm = () => {
     const newErrors = {};
-    if (!selectedEvent || !selectedEvent.event_id) {
+    
+    // Validate event selection
+    if (events.length > 1 && (!selectedEvent || !selectedEvent.event_id)) {
+      newErrors.event = 'Please select an event';
+    } else if (events.length === 0) {
+      newErrors.event = 'No events available for today';
+    } else if (!selectedEvent || !selectedEvent.event_id) {
       newErrors.event = 'Event not available for today';
     }
 
@@ -294,8 +304,41 @@ const RegisterPage = () => {
           {!submitSuccess && (
             <>
               <form onSubmit={handleSubmit} className="register-form">
-                {/* Event is auto-selected for today; selector removed */}
-                {errors.event && <span className="error-message">{errors.event}</span>}
+                {/* Event Selection Dropdown - show only if multiple events */}
+                {events.length > 1 && (
+                  <div className="form-group">
+                    <label htmlFor="event-select" className="form-label">Select Event *</label>
+                    <select
+                      id="event-select"
+                      value={selectedEvent?.event_id || ''}
+                      onChange={handleEventChange}
+                      className={`form-input ${errors.event ? 'error' : ''}`}
+                      required
+                    >
+                      <option value="">-- Select an event --</option>
+                      {events.map((event) => (
+                        <option key={event.event_id} value={event.event_id}>
+                          {event.name} ({new Date(event.start_datetime).toLocaleDateString('en-US', {
+                            weekday: 'short',
+                            month: 'short',
+                            day: 'numeric',
+                            hour: '2-digit',
+                            minute: '2-digit',
+                            hour12: true
+                          })})
+                        </option>
+                      ))}
+                    </select>
+                    {errors.event && <span className="error-message">{errors.event}</span>}
+                  </div>
+                )}
+                
+                {/* Show error if no events available */}
+                {events.length === 0 && (
+                  <div className="form-group">
+                    <span className="error-message">No events available for today. Please check back later.</span>
+                  </div>
+                )}
                 <div className="form-group">
                   <label htmlFor="name" className="form-label">Full Name *</label>
                   <input

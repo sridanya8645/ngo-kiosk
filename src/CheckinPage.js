@@ -29,41 +29,47 @@ export default function CheckinPage () {
 
     (async () => {
       try {
-        const res = await fetch('/api/todays-event');
+        // Fetch today's events (multiple events for the same day)
+        const res = await fetch('/api/todays-events');
         if (res.ok) {
-          const data = await res.json();
-          console.log('Today\'s event data:', data);
-          if (data && data.banner) {
-            const bannerImage = new Image();
-            bannerImage.onload = () => console.log('Banner image loaded successfully');
-            bannerImage.onerror = () => console.error('Banner image failed to load:', data.banner);
-            bannerImage.src = data.banner;
+          const events = await res.json();
+          console.log('Today\'s events data:', events);
+          if (events && events.length > 0) {
+            setEvents(events);
+            // Auto-select the first event if only one event
+            if (events.length === 1) {
+              setSelectedEvent(events[0]);
+              setTodaysEvent(events[0]);
+            }
           }
-          setTodaysEvent(data);
         }
       } catch (err) {
-        console.error('Error fetching today\'s event:', err);
+        console.error('Error fetching today\'s events:', err);
       }
 
-      try {
-        const res2 = await fetch('/api/events');
-        if (res2.ok) {
-          const evs = await res2.json();
-          console.log('All events data:', evs);
-          const getDateKey = (val) => {
-            if (!val) return '';
-            if (typeof val === 'string') return val.split('T')[0];
-            try { return new Date(val).toISOString().split('T')[0]; } catch { return ''; }
-          };
-          const normalize = (d) => { try { const dt = new Date(d); return new Date(dt.getFullYear(), dt.getMonth(), dt.getDate()).getTime(); } catch { return 0; } };
-          const sorted = [...evs].sort((a,b) => normalize(a.start_datetime) - normalize(b.start_datetime));
-          const todayKey = new Date().toLocaleDateString('en-CA');
-          const todays = sorted.find(e => getDateKey(e.start_datetime) === todayKey) || null;
-          setEvents(sorted);
-          setSelectedEvent(todays || sorted[0] || null);
+      // Fallback: fetch all events if today's events endpoint fails
+      if (events.length === 0) {
+        try {
+          const res2 = await fetch('/api/events');
+          if (res2.ok) {
+            const evs = await res2.json();
+            console.log('All events data:', evs);
+            const getDateKey = (val) => {
+              if (!val) return '';
+              if (typeof val === 'string') return val.split('T')[0];
+              try { return new Date(val).toISOString().split('T')[0]; } catch { return ''; }
+            };
+            const normalize = (d) => { try { const dt = new Date(d); return new Date(dt.getFullYear(), dt.getMonth(), dt.getDate()).getTime(); } catch { return 0; } };
+            const sorted = [...evs].sort((a,b) => normalize(a.start_datetime) - normalize(b.start_datetime));
+            const todayKey = new Date().toLocaleDateString('en-CA');
+            const todays = sorted.find(e => getDateKey(e.start_datetime) === todayKey) || null;
+            setEvents(sorted);
+            setSelectedEvent(todays || sorted[0] || null);
+            setTodaysEvent(todays || sorted[0] || null);
+          }
+        } catch (err) {
+          console.error('Error fetching events:', err);
         }
-      } catch (err) {
-        console.error('Error fetching events:', err);
       }
     })();
   }, []);
@@ -299,13 +305,84 @@ export default function CheckinPage () {
       <main className="checkin-main">
         <div className="checkin-content">
           {/* Use event title as main heading */}
-          {/* Auto-select today's event; hide selector */}
-          {selectedEvent && (
-            <h1 className="checkin-for-text checkin-for-title">Check-in for {selectedEvent.name}</h1>
+          <h1 className="checkin-for-text checkin-for-title">
+            {selectedEvent ? `Check-in for ${selectedEvent.name}` : 'Check-in'}
+          </h1>
+
+          {/* Event Selection Dropdown */}
+          {events.length > 1 && (
+            <div className="event-selection-container" style={{
+              margin: '20px 0',
+              textAlign: 'center'
+            }}>
+              <label htmlFor="event-select" style={{
+                display: 'block',
+                marginBottom: '10px',
+                fontWeight: '600',
+                color: '#333',
+                fontSize: '1.1rem'
+              }}>Select Event:</label>
+              <select
+                id="event-select"
+                value={selectedEvent ? selectedEvent.event_id : ''}
+                onChange={(e) => {
+                  const event = events.find(ev => ev.event_id === parseInt(e.target.value));
+                  setSelectedEvent(event);
+                  setTodaysEvent(event);
+                }}
+                style={{
+                  padding: '12px 20px',
+                  borderRadius: '10px',
+                  border: '2px solid #8B1C1C',
+                  fontSize: '1.1rem',
+                  minWidth: '300px',
+                  backgroundColor: '#fff',
+                  color: '#333'
+                }}
+              >
+                <option value="">-- Select an Event --</option>
+                {events.map(event => (
+                  <option key={event.event_id} value={event.event_id}>
+                    {event.name} ({new Date(event.start_datetime).toLocaleDateString()})
+                  </option>
+                ))}
+              </select>
+            </div>
+          )}
+
+          {/* Show message if no event selected */}
+          {!selectedEvent && events.length > 1 && (
+            <div style={{
+              textAlign: 'center',
+              margin: '20px 0',
+              padding: '20px',
+              backgroundColor: '#fff3cd',
+              border: '1px solid #ffeaa7',
+              borderRadius: '10px',
+              color: '#856404',
+              fontSize: '1.1rem'
+            }}>
+              <p>Please select an event to continue with check-in.</p>
+            </div>
+          )}
+
+          {/* Show message if no events available */}
+          {(!selectedEvent && events.length <= 1) && (
+            <div style={{
+              textAlign: 'center',
+              margin: '20px 0',
+              padding: '20px',
+              backgroundColor: '#f8d7da',
+              border: '1px solid #f5c6cb',
+              borderRadius: '10px',
+              color: '#721c24',
+              fontSize: '1.1rem'
+            }}>
+              <p>No events available for today.</p>
+            </div>
           )}
 
           {/* Banner removed on check-in page per request */}
-
 
           {/* QR Scanner Section - only show when an event is selected */}
           <div className="scanner-section" style={{ display: selectedEvent ? 'block' : 'none' }}>

@@ -43,18 +43,28 @@ async function initializeDatabase() {
       )
     `);
 
-    // Create events table
+    // Create events table with proper structure
     await connection.execute(`
       CREATE TABLE IF NOT EXISTS events (
         id INT AUTO_INCREMENT PRIMARY KEY,
         name VARCHAR(255) NOT NULL,
-        date DATE NOT NULL,
-        time TIME NOT NULL,
-        end_date DATE,
-        end_time TIME,
-        location VARCHAR(255) NOT NULL,
-        raffle_tickets INT DEFAULT 0,
-        banner VARCHAR(500)
+        start_datetime DATETIME NOT NULL,
+        end_datetime DATETIME NOT NULL,
+        location VARCHAR(500) NOT NULL,
+        raffle_tickets VARCHAR(255) DEFAULT '',
+        banner VARCHAR(500),
+        header_image VARCHAR(500),
+        footer_location VARCHAR(500),
+        footer_phone VARCHAR(50),
+        footer_email VARCHAR(255),
+        volunteer_enabled BOOLEAN DEFAULT FALSE,
+        welcome_text TEXT,
+        created_by INT,
+        modified_by INT,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        modified_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+        FOREIGN KEY (created_by) REFERENCES users(id) ON DELETE SET NULL,
+        FOREIGN KEY (modified_by) REFERENCES users(id) ON DELETE SET NULL
       )
     `);
 
@@ -76,19 +86,20 @@ async function initializeDatabase() {
       )
     `);
 
-    // Create raffle_winners table
+    // Create raffle_winners table with proper structure
     await connection.execute(`
       CREATE TABLE IF NOT EXISTS raffle_winners (
         id INT AUTO_INCREMENT PRIMARY KEY,
-        registration_id INT,
+        registration_id INT NOT NULL,
         name VARCHAR(255) NOT NULL,
         phone VARCHAR(20) NOT NULL,
         email VARCHAR(255) NOT NULL,
-        event_name VARCHAR(255),
-        win_date DATE,
-        win_time TIME,
+        event_name VARCHAR(255) NOT NULL,
+        win_date DATE NOT NULL,
+        win_time TIME NOT NULL,
         won_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-        FOREIGN KEY (registration_id) REFERENCES registrations(id) ON DELETE SET NULL
+        prize VARCHAR(255),
+        FOREIGN KEY (registration_id) REFERENCES registrations(id) ON DELETE CASCADE
       )
     `);
 
@@ -105,29 +116,68 @@ async function initializeDatabase() {
       console.log('totp_secret column already exists');
     }
 
-    // Ensure events table has all required columns
+    // Migrate events table to new structure
     try {
-      await connection.execute(`
-        ALTER TABLE events ADD COLUMN end_date DATE
-      `);
+      // Check if old columns exist and migrate data
+      const [columns] = await connection.execute(`
+        SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS 
+        WHERE TABLE_SCHEMA = ? AND TABLE_NAME = 'events'
+      `, [process.env.DB_NAME || 'ngo_kiosk']);
+      
+      const columnNames = columns.map(col => col.COLUMN_NAME);
+      
+      // If old structure exists, migrate to new structure
+      if (columnNames.includes('date') && columnNames.includes('time') && !columnNames.includes('start_datetime')) {
+        console.log('🔄 Migrating events table to new structure...');
+        
+        // Add new columns
+        await connection.execute(`ALTER TABLE events ADD COLUMN start_datetime DATETIME`);
+        await connection.execute(`ALTER TABLE events ADD COLUMN end_datetime DATETIME`);
+        await connection.execute(`ALTER TABLE events ADD COLUMN header_image VARCHAR(500)`);
+        await connection.execute(`ALTER TABLE events ADD COLUMN footer_location VARCHAR(500)`);
+        await connection.execute(`ALTER TABLE events ADD COLUMN footer_phone VARCHAR(50)`);
+        await connection.execute(`ALTER TABLE events ADD COLUMN footer_email VARCHAR(255)`);
+        await connection.execute(`ALTER TABLE events ADD COLUMN volunteer_enabled BOOLEAN DEFAULT FALSE`);
+        await connection.execute(`ALTER TABLE events ADD COLUMN welcome_text TEXT`);
+        await connection.execute(`ALTER TABLE events ADD COLUMN created_by INT`);
+        await connection.execute(`ALTER TABLE events ADD COLUMN modified_by INT`);
+        await connection.execute(`ALTER TABLE events ADD COLUMN created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP`);
+        await connection.execute(`ALTER TABLE events ADD COLUMN modified_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP`);
+        
+        // Migrate existing data
+        await connection.execute(`
+          UPDATE events 
+          SET start_datetime = CONCAT(date, ' ', time),
+              end_datetime = CONCAT(COALESCE(end_date, date), ' ', COALESCE(end_time, time))
+        `);
+        
+        // Change raffle_tickets to VARCHAR if it's INT
+        if (columnNames.includes('raffle_tickets')) {
+          await connection.execute(`ALTER TABLE events MODIFY COLUMN raffle_tickets VARCHAR(255) DEFAULT ''`);
+        }
+        
+        console.log('✅ Events table migration completed');
+      }
     } catch (error) {
-      console.log('end_date column already exists');
+      console.log('Events table migration error (may already be migrated):', error.message);
     }
 
+    // Migrate raffle_winners table to new structure
     try {
-      await connection.execute(`
-        ALTER TABLE events ADD COLUMN end_time TIME
-      `);
+      const [columns] = await connection.execute(`
+        SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS 
+        WHERE TABLE_SCHEMA = ? AND TABLE_NAME = 'raffle_winners'
+      `, [process.env.DB_NAME || 'ngo_kiosk']);
+      
+      const columnNames = columns.map(col => col.COLUMN_NAME);
+      
+      if (!columnNames.includes('prize')) {
+        console.log('🔄 Adding prize column to raffle_winners table...');
+        await connection.execute(`ALTER TABLE raffle_winners ADD COLUMN prize VARCHAR(255)`);
+        console.log('✅ Prize column added to raffle_winners table');
+      }
     } catch (error) {
-      console.log('end_time column already exists');
-    }
-
-    try {
-      await connection.execute(`
-        ALTER TABLE events ADD COLUMN raffle_tickets INT DEFAULT 0
-      `);
-    } catch (error) {
-      console.log('raffle_tickets column already exists');
+      console.log('Raffle winners table migration error:', error.message);
     }
 
     // Removed sample events insertion - events should only be added through admin interface
