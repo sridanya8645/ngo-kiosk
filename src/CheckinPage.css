@@ -633,8 +633,11 @@
   }
   
   .pits-logo {
-    width: 95px;
-    height: 48px;
+    height: 250px !important;
+    width: auto !important;
+    object-fit: contain;
+    max-width: none !important;
+    min-width: auto !important;
   }
 }
 
@@ -756,8 +759,11 @@
   }
   
   .pits-logo {
-    width: 110px;
-    height: 55px;
+    height: 250px !important;
+    width: auto !important;
+    object-fit: contain;
+    max-width: none !important;
+    min-width: auto !important;
   }
 }
 
@@ -879,8 +885,11 @@
   }
   
   .pits-logo {
-    width: 90px;
-    height: 45px;
+    height: 250px !important;
+    width: auto !important;
+    object-fit: contain;
+    max-width: none !important;
+    min-width: auto !important;
   }
 }
 
@@ -1002,8 +1011,11 @@
   }
   
   .pits-logo {
-    width: 90px;
-    height: 45px;
+    height: 250px !important;
+    width: auto !important;
+    object-fit: contain;
+    max-width: none !important;
+    min-width: auto !important;
   }
 }
 
@@ -1051,8 +1063,11 @@
   }
   
   .pits-logo {
-    width: clamp(60px, 8vw, 110px);
-    height: clamp(30px, 4vw, 55px);
+    height: 250px !important;
+    width: auto !important;
+    object-fit: contain;
+    max-width: none !important;
+    min-width: auto !important;
   }
 }
 
@@ -1317,7 +1332,11 @@
   }
   
   .pits-logo {
-    height: 25px;
+    height: 250px !important;
+    width: auto !important;
+    object-fit: contain;
+    max-width: none !important;
+    min-width: auto !important;
   }
 }
 

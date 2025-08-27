@@ -649,7 +649,11 @@
   }
   
   .pits-logo {
-    height: 25px;
+    height: 250px !important;
+    width: auto !important;
+    object-fit: contain;
+    max-width: none !important;
+    min-width: auto !important;
   }
 }
 
