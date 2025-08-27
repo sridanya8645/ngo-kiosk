@@ -34,7 +34,7 @@ function SiteFooter () {
           <div className="footer-text">
             <div>{footerLocation}</div>
             {footerLocationDetails && <div>{footerLocationDetails}</div>}
-          </div>
+          </div>m
         </div>
         <div className="footer-section">
           <span className="footer-icon">📞</span>
@@ -45,7 +45,7 @@ function SiteFooter () {
         </div>
         <div className="footer-section">
           <span className="powered-text">Powered by</span>
-          <img src="/PITS-removebg-preview.png" alt="Princeton IT Services" className="pits-logo" />
+          <img src="/PIS LOGO (2) 1.png" alt="Princeton IT Services" className="pits-logo" />
         </div>
       </div>
     </footer>

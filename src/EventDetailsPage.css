@@ -68,7 +68,7 @@
 }
 
 /* Table Styles */
-.events-table-container {
+.registrations-table-container {
   background: white;
   border-radius: 8px;
   overflow: hidden;
@@ -136,6 +136,13 @@
   background: #f5f5f5;
   color: #999;
   cursor: not-allowed;
+}
+
+/* Data Table */
+.data-table {
+  background: white;
+  flex: 1 1 auto;
+  overflow-y: auto;
 }
 
 /* Data Rows */

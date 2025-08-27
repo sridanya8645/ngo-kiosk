@@ -603,7 +603,8 @@ function EventDetailsPage () {
             </div>
 
             {/* Data Table */}
-            <div className="data-table">
+            <div className="registrations-table-container">
+              <div className="data-table">
               {/* Add New Event Row */}
               <div className="event-row add-event-row">
                 <div className="data-cell">
@@ -946,6 +947,7 @@ function EventDetailsPage () {
                    </div>
                  </div>
                )}
+              </div>
             </div>
           </div>
 

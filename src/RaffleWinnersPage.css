@@ -129,6 +129,13 @@
   align-items: center;
 }
 
+/* Data Table */
+.data-table {
+  background: white;
+  flex: 1 1 auto;
+  overflow-y: auto;
+}
+
 .filter-cell {
   display: flex;
   align-items: center;
@@ -150,7 +157,7 @@
 }
 
 /* Data Rows */
-.data-row {
+.registration-row {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr; /* 7 columns */
   padding: 12px;
@@ -159,15 +166,15 @@
   align-items: center;
 }
 
-.data-row:hover {
+.registration-row:hover {
   background: #f0f0f0;
 }
 
-.data-row:nth-child(even) {
+.registration-row:nth-child(even) {
   background: #f8f9fa;
 }
 
-.data-row:nth-child(odd) {
+.registration-row:nth-child(odd) {
   background: white;
 }
 

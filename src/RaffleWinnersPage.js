@@ -109,7 +109,8 @@ export default function RaffleWinnersPage () {
 
                 {/* Winners Table */}
                 <div className="registrations-table-container">
-                  {/* Table Header */}
+                  <div className="data-table">
+                    {/* Table Header */}
                   <div className="table-header-row">
                     <div className="header-cell">Registration ID</div>
                     <div className="header-cell">Winner Name</div>
@@ -189,7 +190,7 @@ export default function RaffleWinnersPage () {
 
                   {/* Data Rows */}
                   {filtered.map((winner) => (
-                    <div key={winner.id} className="data-row">
+                    <div key={winner.id} className="registration-row">
                       <div className="data-cell">{winner.registration_id}</div>
                       <div className="data-cell">{winner.name}</div>
                       <div className="data-cell">{winner.email}</div>
@@ -199,6 +200,7 @@ export default function RaffleWinnersPage () {
                       <div className="data-cell">{winner.win_time}</div>
                     </div>
                   ))}
+                  </div>
                 </div>
               </>
             )}
