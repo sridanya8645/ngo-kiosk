@@ -599,9 +599,10 @@ function EventDetailsPage () {
                   className="filter-input"
                   disabled
                 />
-                           </div>
+              </div>
+            </div>
 
-             {/* Data Table */}
+            {/* Data Table */}
             <div className="data-table">
               {/* Add New Event Row */}
               <div className="event-row add-event-row">
