@@ -47,9 +47,10 @@
   display: flex;
   align-items: center;
   gap: 0;
-  justify-content: center;
+  justify-content: flex-start; /* align to start for better logo visibility */
   flex: 0 0 auto; /* do not stretch to the edge */
-  padding-right: 4px; /* reduce padding to fit more content */
+  padding-right: 20px; /* increase padding to give logo more space */
+  padding-left: 0; /* remove left padding to move logo left */
   flex-direction: column; /* stack powered by above logo */
 }
 
@@ -80,10 +81,11 @@
 }
 
 .pits-logo {
-  height: 150px !important; /* reduce PITS logo size to 150px */
+  height: 50px !important; /* reduce PITS logo size to 50px */
   width: auto !important;
   object-fit: contain;
   margin-right: 0; /* remove right margin to move logo left */
+  margin-left: -10px; /* move logo further left for better visibility */
   max-width: none !important;
   min-width: auto !important;
 }
@@ -116,7 +118,7 @@
   .footer-icon { font-size: 0.95rem; }
   .footer-text { font-size: 0.75rem; }
   .powered-text { font-size: 0.75rem; }
-  .pits-logo { height: 50px; margin-bottom: 2px; }
+  .pits-logo { height: 50px !important; margin-bottom: 2px; margin-left: -5px; }
 }
 
 /* Responsive layout for tablets (iPad) */
@@ -141,8 +143,9 @@
     white-space: normal; /* allow address to wrap to 2 lines */
   }
   .pits-logo { 
-    height: 150px; /* medium size for iPad */
+    height: 50px !important; /* medium size for iPad */
     margin-bottom: 0;
+    margin-left: -8px; /* move logo left on iPad */
   }
 }
 

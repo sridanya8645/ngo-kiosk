@@ -120,7 +120,7 @@
   backdrop-filter: blur(10px);
   cursor: pointer;
   transition: border-color 0.3s ease;
-  min-height: 50px;
+  min-height: 50px !important;
   width: 100%;
   box-sizing: border-box;
 }
@@ -263,7 +263,7 @@
   .submit-button {
     padding: 16px 20px;
     font-size: 1.1rem;
-    min-height: 50px;
+    min-height: 50px !important;
   }
   
   .mobile-registration-success {
@@ -462,7 +462,7 @@
 }
 
 .pits-logo {
-  height: 150px !important;
+  height: 50px !important;
   width: auto !important;
   object-fit: contain;
   max-width: none !important;
@@ -488,7 +488,7 @@
 }
 
 .logo-image {
-  height: 50px;
+  height: 50px !important;
   width: 50px;
   object-fit: contain;
   border-radius: 50%;
