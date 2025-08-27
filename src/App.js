@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react'; // Manual deployment trigger - updated
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import './App.css';
+import ErrorBoundary from './components/ErrorBoundary';
 import HomePage from './HomePage';
 import CheckinPage from './CheckinPage';
 import RegisterPage from './RegisterPage';
@@ -79,22 +80,24 @@ function App() {
   }, []);
 
   return (
-    <Router>
-      <div className="App">
-        <Routes>
-          <Route path="/" element={<HomePage />} />
-          <Route path="/checkin" element={<CheckinPage />} />
-          <Route path="/register" element={<RegisterPage />} />
-          <Route path="/mobile-register" element={<MobileRegister />} />
-          <Route path="/admin" element={<AdminPage />} />
-          <Route path="/event-details" element={<EventDetailsPage />} />
-          <Route path="/admin/raffle-spin" element={<RaffleSpinPage />} />
-          <Route path="/admin/raffle-winners" element={<RaffleWinnersPage />} />
-          <Route path="/admin/registrations" element={<AdminRegistrationsPage />} />
-          <Route path="/admin-users" element={<AdminUsersPage />} />
-        </Routes>
-      </div>
-    </Router>
+    <ErrorBoundary>
+      <Router>
+        <div className="App">
+          <Routes>
+            <Route path="/" element={<HomePage />} />
+            <Route path="/checkin" element={<CheckinPage />} />
+            <Route path="/register" element={<RegisterPage />} />
+            <Route path="/mobile-register" element={<MobileRegister />} />
+            <Route path="/admin" element={<AdminPage />} />
+            <Route path="/event-details" element={<EventDetailsPage />} />
+            <Route path="/admin/raffle-spin" element={<RaffleSpinPage />} />
+            <Route path="/admin/raffle-winners" element={<RaffleWinnersPage />} />
+            <Route path="/admin/registrations" element={<AdminRegistrationsPage />} />
+            <Route path="/admin-users" element={<AdminUsersPage />} />
+          </Routes>
+        </div>
+      </Router>
+    </ErrorBoundary>
   );
 }
 

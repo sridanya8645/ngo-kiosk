@@ -18,6 +18,7 @@
     "express-rate-limit": "^7.1.5",
     "fs": "^0.0.1-security",
     "html5-qrcode": "^2.3.8",
+    "joi": "^17.12.2",
     "lottie-react": "^2.4.1",
     "multer": "^1.4.5-lts.1",
     "mysql2": "^3.14.3",
@@ -41,7 +42,10 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "postbuild": "node -e \"const fs=require('fs');const path=require('path');function copyDir(src,dest){if(!fs.existsSync(dest))fs.mkdirSync(dest,{recursive:true});const items=fs.readdirSync(src);items.forEach(item=>{const srcPath=path.join(src,item);const destPath=path.join(dest,item);if(fs.statSync(srcPath).isDirectory()){copyDir(srcPath,destPath)}else{fs.copyFileSync(srcPath,destPath)}})}copyDir('build','backend/public')\"",
-    "deploy": "npm run build && npm run postbuild"
+    "deploy": "npm run build && npm run postbuild",
+    "lint": "eslint src/**/*.{js,jsx}",
+    "lint:fix": "eslint src/**/*.{js,jsx} --fix",
+    "format": "prettier --write src/**/*.{js,jsx,css,md}"
   },
   "eslintConfig": {
     "extends": [
@@ -62,7 +66,11 @@
   },
   "devDependencies": {
     "concurrently": "^8.2.2",
+    "eslint": "^8.57.0",
     "eslint-config-react-app": "^7.0.1",
-    "nodemon": "^3.0.1"
+    "eslint-plugin-react": "^7.34.0",
+    "eslint-plugin-react-hooks": "^4.6.0",
+    "nodemon": "^3.0.1",
+    "prettier": "^3.2.5"
   }
 }
