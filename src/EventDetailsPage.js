@@ -13,16 +13,15 @@ function EventDetailsPage () {
     end_datetime: '',
     location: '',
     raffle_tickets: '',
+    volunteer_enabled: '',
     banner: '',
     header_image: '',
     footer_location: '',
     footer_phone: '',
     footer_email: '',
-    volunteer_enabled: '',
     welcome_text: '',
     created_at: '',
     modified_at: '',
-    actions: '',
   });
   const [editingEvent, setEditingEvent] = useState(null);
   const [newEvent, setNewEvent] = useState({
@@ -49,6 +48,25 @@ function EventDetailsPage () {
   const [resizeStartX, setResizeStartX] = useState(0);
   const [resizeColumnIndex, setResizeColumnIndex] = useState(null);
 
+  // Define columns for the table
+  const columns = [
+    { key: 'event_id', label: 'Event ID' },
+    { key: 'name', label: 'Event Name' },
+    { key: 'start_datetime', label: 'Start Date' },
+    { key: 'end_datetime', label: 'End Date' },
+    { key: 'location', label: 'Location' },
+    { key: 'raffle_tickets', label: 'Raffle Text' },
+    { key: 'volunteer_enabled', label: 'Volunteer Enabled' },
+    { key: 'banner', label: 'Banner' },
+    { key: 'header_image', label: 'Header Image' },
+    { key: 'footer_location', label: 'Footer Location' },
+    { key: 'footer_phone', label: 'Footer Phone' },
+    { key: 'footer_email', label: 'Footer Email' },
+    { key: 'welcome_text', label: 'Welcome Text' },
+    { key: 'created_at', label: 'Created' },
+    { key: 'modified_at', label: 'Modified' },
+    { key: 'actions', label: 'Actions' },
+  ];
 
   // Format datetime for display
   const formatDateTime = (datetime) => {
@@ -99,22 +117,56 @@ function EventDetailsPage () {
     return (
       (filters.event_id === '' || event.event_id?.toString().includes(filters.event_id)) &&
       (filters.name === '' || event.name?.toLowerCase().includes(filters.name.toLowerCase())) &&
-      (filters.start_datetime === '' || formatDateTime(event.start_datetime)?.toLowerCase().includes(filters.start_datetime.toLowerCase())) &&
-      (filters.end_datetime === '' || formatDateTime(event.end_datetime)?.toLowerCase().includes(filters.end_datetime.toLowerCase())) &&
+      (filters.start_datetime === '' || formatDateTime(event.start_datetime).toLowerCase().includes(filters.start_datetime.toLowerCase())) &&
+      (filters.end_datetime === '' || formatDateTime(event.end_datetime).toLowerCase().includes(filters.end_datetime.toLowerCase())) &&
       (filters.location === '' || event.location?.toLowerCase().includes(filters.location.toLowerCase())) &&
-      (filters.raffle_tickets === '' || event.raffle_tickets?.toString().includes(filters.raffle_tickets)) &&
-      (filters.created_at === '' || formatDateTime(event.created_at)?.toLowerCase().includes(filters.created_at.toLowerCase())) &&
-      (filters.modified_at === '' || formatDateTime(event.modified_at)?.toLowerCase().includes(filters.modified_at.toLowerCase()))
+      (filters.raffle_tickets === '' || event.raffle_tickets?.toLowerCase().includes(filters.raffle_tickets.toLowerCase())) &&
+      (filters.volunteer_enabled === '' || filters.volunteer_enabled === 'all' || 
+       (filters.volunteer_enabled === 'yes' && event.volunteer_enabled) ||
+       (filters.volunteer_enabled === 'no' && !event.volunteer_enabled)) &&
+      (filters.banner === '' || (event.banner && event.banner.toLowerCase().includes(filters.banner.toLowerCase()))) &&
+      (filters.header_image === '' || (event.header_image && event.header_image.toLowerCase().includes(filters.header_image.toLowerCase()))) &&
+      (filters.footer_location === '' || (event.footer_location && event.footer_location.toLowerCase().includes(filters.footer_location.toLowerCase()))) &&
+      (filters.footer_phone === '' || (event.footer_phone && event.footer_phone.toLowerCase().includes(filters.footer_phone.toLowerCase()))) &&
+      (filters.footer_email === '' || (event.footer_email && event.footer_email.toLowerCase().includes(filters.footer_email.toLowerCase()))) &&
+      (filters.welcome_text === '' || (event.welcome_text && event.welcome_text.toLowerCase().includes(filters.welcome_text.toLowerCase()))) &&
+      (filters.created_at === '' || formatDateTime(event.created_at).toLowerCase().includes(filters.created_at.toLowerCase())) &&
+      (filters.modified_at === '' || formatDateTime(event.modified_at).toLowerCase().includes(filters.modified_at.toLowerCase()))
     );
   });
 
-  // Handle filter changes
   const handleFilterChange = (e) => {
-    const { name, value } = e.target;
-    setFilters(prev => ({
-      ...prev,
-      [name]: value,
-    }));
+    setFilters({ ...filters, [e.target.name]: e.target.value });
+  };
+
+  const downloadExcel = () => {
+    const headers = columns.map(col => col.label).join(',');
+    const csvContent = filteredEvents.map(event => [
+      event.event_id || '',
+      event.name || '',
+      formatDateTime(event.start_datetime) || '',
+      formatDateTime(event.end_datetime) || '',
+      event.location || '',
+      event.raffle_tickets || '',
+      event.volunteer_enabled ? 'Yes' : 'No',
+      event.banner || '',
+      event.header_image || '',
+      event.footer_location || '',
+      event.footer_phone || '',
+      event.footer_email || '',
+      event.welcome_text || '',
+      formatDateTime(event.created_at) || '',
+      formatDateTime(event.modified_at) || '',
+      'Actions'
+    ].join(',')).join('\n');
+    
+    const blob = new Blob([headers + '\n' + csvContent], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement('a');
+    link.href = URL.createObjectURL(blob);
+    link.download = `events_${new Date().toISOString().split('T')[0]}.csv`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
   };
 
   // Handle input changes
@@ -366,227 +418,189 @@ function EventDetailsPage () {
         <div className="event-details-content">
           <h1 className="event-details-title">Event Details</h1>
 
+          {/* Stats and Download Section */}
+          <div className="events-stats-section">
+            <div className="events-count">
+              📋 Total Events: {filteredEvents.length}
+            </div>
+            <button
+              onClick={downloadExcel}
+              className="download-excel-button"
+            >
+              📊 DOWNLOAD EXCEL FILE
+            </button>
+          </div>
+
           {/* Events Table */}
           <div className="events-table-container">
             {/* Table Header */}
             <div className="table-header-row">
-              <div
-                className="header-cell col-0"
-                data-label="Event ID"
-                onMouseDown={(e) => handleResizeStart(e, 0)}
-              >
-                  Event ID
-              </div>
-              <div
-                className="header-cell col-1"
-                data-label="Event Name"
-                onMouseDown={(e) => handleResizeStart(e, 1)}
-              >
-                  Event Name
-              </div>
-              <div
-                className="header-cell col-2"
-                data-label="Start Date & Time"
-                onMouseDown={(e) => handleResizeStart(e, 2)}
-              >
-                  Start Date & Time
-              </div>
-              <div
-                className="header-cell col-3"
-                data-label="End Date & Time"
-                onMouseDown={(e) => handleResizeStart(e, 3)}
-              >
-                  End Date & Time
-              </div>
-              <div
-                className="header-cell col-4"
-                data-label="Location"
-                onMouseDown={(e) => handleResizeStart(e, 4)}
-              >
-                  Location
-              </div>
-              <div
-                className="header-cell col-5"
-                data-label="Raffle Tickets"
-                onMouseDown={(e) => handleResizeStart(e, 5)}
-              >
-                  Raffle Tickets
-              </div>
-              <div
-                className="header-cell col-6"
-                data-label="Banner"
-                onMouseDown={(e) => handleResizeStart(e, 6)}
-              >
-                  Banner
-              </div>
-              <div
-                className="header-cell col-7"
-                data-label="Header Image"
-                onMouseDown={(e) => handleResizeStart(e, 7)}
-              >
-                  Header Image
-              </div>
-              <div
-                className="header-cell col-8"
-                data-label="Footer Location"
-                onMouseDown={(e) => handleResizeStart(e, 8)}
-              >
-                  Footer Location
-              </div>
-              <div
-                className="header-cell col-9"
-                data-label="Footer Phone"
-                onMouseDown={(e) => handleResizeStart(e, 9)}
-              >
-                  Footer Phone
-              </div>
-              <div
-                className="header-cell col-10"
-                data-label="Footer Email"
-                onMouseDown={(e) => handleResizeStart(e, 10)}
-              >
-                  Footer Email
-              </div>
-              <div
-                className="header-cell col-11"
-                data-label="Volunteer"
-                onMouseDown={(e) => handleResizeStart(e, 11)}
-              >
-                  Volunteer
-              </div>
-              <div
-                className="header-cell col-12"
-                data-label="Welcome Text"
-                onMouseDown={(e) => handleResizeStart(e, 12)}
-              >
-                  Welcome Text
-              </div>
-              <div
-                className="header-cell col-13"
-                data-label="Created"
-                onMouseDown={(e) => handleResizeStart(e, 13)}
-              >
-                  Created
-              </div>
-              <div
-                className="header-cell col-14"
-                data-label="Modified"
-                onMouseDown={(e) => handleResizeStart(e, 14)}
-              >
-                  Modified
-              </div>
-              <div
-                className="header-cell col-15"
-                data-label="Actions"
-                onMouseDown={(e) => handleResizeStart(e, 15)}
-              >
-                  Actions
-              </div>
+              <div className="header-cell">Event ID</div>
+              <div className="header-cell">Event Name</div>
+              <div className="header-cell">Start Date</div>
+              <div className="header-cell">End Date</div>
+              <div className="header-cell">Location</div>
+              <div className="header-cell">Raffle Text</div>
+              <div className="header-cell">Volunteer Enabled</div>
+              <div className="header-cell">Banner</div>
+              <div className="header-cell">Header Image</div>
+              <div className="header-cell">Footer Location</div>
+              <div className="header-cell">Footer Phone</div>
+              <div className="header-cell">Footer Email</div>
+              <div className="header-cell">Welcome Text</div>
+              <div className="header-cell">Created</div>
+              <div className="header-cell">Modified</div>
+              <div className="header-cell">Actions</div>
             </div>
 
             {/* Filter Row */}
             <div className="filter-row">
-              <div className="filter-cell col-0">
+              <div className="filter-cell">
                 <input
                   name="event_id"
-                  value={filters.event_id || ''}
+                  value={filters.event_id}
                   onChange={handleFilterChange}
                   placeholder="Filter Event ID"
                   className="filter-input"
                 />
               </div>
-              <div className="filter-cell col-1">
+              <div className="filter-cell">
                 <input
                   name="name"
-                  value={filters.name || ''}
+                  value={filters.name}
                   onChange={handleFilterChange}
                   placeholder="Filter Event Name"
                   className="filter-input"
                 />
               </div>
-              <div className="filter-cell col-2">
+              <div className="filter-cell">
                 <input
                   name="start_datetime"
-                  value={filters.start_datetime || ''}
+                  value={filters.start_datetime}
                   onChange={handleFilterChange}
-                  placeholder="Filter Start Date & Time"
+                  placeholder="Filter Start Date"
                   className="filter-input"
                 />
               </div>
-              <div className="filter-cell col-3">
+              <div className="filter-cell">
                 <input
                   name="end_datetime"
-                  value={filters.end_datetime || ''}
+                  value={filters.end_datetime}
                   onChange={handleFilterChange}
-                  placeholder="Filter End Date & Time"
+                  placeholder="Filter End Date"
                   className="filter-input"
                 />
               </div>
-              <div className="filter-cell col-4">
+              <div className="filter-cell">
                 <input
                   name="location"
-                  value={filters.location || ''}
+                  value={filters.location}
                   onChange={handleFilterChange}
                   placeholder="Filter Location"
                   className="filter-input"
                 />
               </div>
-              <div className="filter-cell col-5">
+              <div className="filter-cell">
                 <input
                   name="raffle_tickets"
-                  value={filters.raffle_tickets || ''}
+                  value={filters.raffle_tickets}
                   onChange={handleFilterChange}
-                  placeholder="Filter Raffle Tickets"
+                  placeholder="Filter Raffle Text"
                   className="filter-input"
                 />
               </div>
-              <div className="filter-cell col-6">
+              <div className="filter-cell">
+                <select
+                  name="volunteer_enabled"
+                  value={filters.volunteer_enabled}
+                  onChange={handleFilterChange}
+                  className="filter-input"
+                >
+                  <option value="">All</option>
+                  <option value="yes">Yes</option>
+                  <option value="no">No</option>
+                </select>
+              </div>
+              <div className="filter-cell">
                 <input
                   name="banner"
-                  value={filters.banner || ''}
+                  value={filters.banner}
                   onChange={handleFilterChange}
                   placeholder="Filter Banner"
                   className="filter-input"
                 />
               </div>
-              <div className="filter-cell col-7">
+              <div className="filter-cell">
                 <input
                   name="header_image"
-                  value={filters.header_image || ''}
+                  value={filters.header_image}
                   onChange={handleFilterChange}
                   placeholder="Filter Header Image"
                   className="filter-input"
                 />
               </div>
-
-              <div className="filter-cell col-8">
+              <div className="filter-cell">
                 <input
                   name="footer_location"
-                  value={filters.footer_location || ''}
+                  value={filters.footer_location}
                   onChange={handleFilterChange}
                   placeholder="Filter Footer Location"
                   className="filter-input"
                 />
               </div>
-              <div className="filter-cell col-9">
+              <div className="filter-cell">
                 <input
                   name="footer_phone"
-                  value={filters.footer_phone || ''}
+                  value={filters.footer_phone}
                   onChange={handleFilterChange}
                   placeholder="Filter Footer Phone"
                   className="filter-input"
                 />
               </div>
-              <div className="filter-cell col-10">
+              <div className="filter-cell">
                 <input
                   name="footer_email"
-                  value={filters.footer_email || ''}
+                  value={filters.footer_email}
                   onChange={handleFilterChange}
                   placeholder="Filter Footer Email"
                   className="filter-input"
                 />
               </div>
-              <div className="filter-cell col-11">
+              <div className="filter-cell">
+                <input
+                  name="welcome_text"
+                  value={filters.welcome_text}
+                  onChange={handleFilterChange}
+                  placeholder="Filter Welcome Text"
+                  className="filter-input"
+                />
+              </div>
+              <div className="filter-cell">
+                <input
+                  name="created_at"
+                  value={filters.created_at}
+                  onChange={handleFilterChange}
+                  placeholder="Filter Created"
+                  className="filter-input"
+                />
+              </div>
+              <div className="filter-cell">
+                <input
+                  name="modified_at"
+                  value={filters.modified_at}
+                  onChange={handleFilterChange}
+                  placeholder="Filter Modified"
+                  className="filter-input"
+                />
+              </div>
+              <div className="filter-cell">
+                <input
+                  placeholder="Filter Actions"
+                  className="filter-input"
+                  disabled
+                />
+              </div>
+            </div>
                 <input
                   name="volunteer_enabled"
                   value={filters.volunteer_enabled || ''}
@@ -788,65 +802,42 @@ function EventDetailsPage () {
               {/* Regular Events */}
               {filteredEvents.map((event) => (
                 <div key={event.event_id} className="event-row">
-                  <div className="data-cell col-0" data-label="Event ID">{event.event_id}</div>
-                  <div className="data-cell col-1" data-label="Event Name">{event.name}</div>
-                  <div className="data-cell col-2" data-label="Start Date & Time">{formatDateTime(event.start_datetime)}</div>
-                  <div className="data-cell col-3" data-label="End Date & Time">{formatDateTime(event.end_datetime)}</div>
-                  <div className="data-cell col-4" data-label="Location">{event.location}</div>
-                  <div className="data-cell col-5" data-label="Raffle Tickets">{event.raffle_tickets}</div>
-                  <div className="data-cell col-6" data-label="Banner">
-                    {event.banner ? (
-                      <img src={event.banner} alt="Banner" className="banner-thumbnail" />
-                    ) : (
-                      <span className="no-banner">No Banner</span>
-                    )}
-                  </div>
-                  <div className="data-cell col-7" data-label="Header Image">
-                    {event.header_image ? (
-                      <img src={event.header_image} alt="Header" className="header-thumbnail" />
-                    ) : (
-                      <span className="no-header">No Header Image</span>
-                    )}
-                  </div>
-
-                  <div className="data-cell col-8" data-label="Footer Location">
-                    {event.footer_location || 'Not set'}
-                  </div>
-                  <div className="data-cell col-9" data-label="Footer Phone">
-                    {event.footer_phone || 'Not set'}
-                  </div>
-                  <div className="data-cell col-10" data-label="Footer Email">
-                    {event.footer_email || 'Not set'}
-                  </div>
-                  <div className="data-cell col-11" data-label="Volunteer">
+                  <div className="data-cell">{event.event_id}</div>
+                  <div className="data-cell">{event.name}</div>
+                  <div className="data-cell">{formatDateTime(event.start_datetime)}</div>
+                  <div className="data-cell">{formatDateTime(event.end_datetime)}</div>
+                  <div className="data-cell">{event.location}</div>
+                  <div className="data-cell">{event.raffle_tickets}</div>
+                  <div className="data-cell">
                     <span className={`volunteer-status ${event.volunteer_enabled ? 'enabled' : 'disabled'}`}>
                       {event.volunteer_enabled ? 'Yes' : 'No'}
                     </span>
                   </div>
-                  <div className="data-cell col-12" data-label="Welcome Text">
-                    <div className="content-preview">
-                      {event.welcome_text ? event.welcome_text.substring(0, 50) + '...' : 'No text'}
-                    </div>
-                  </div>
-                  <div className="data-cell col-13" data-label="Created">
+                  <div className="data-cell">{event.banner || '-'}</div>
+                  <div className="data-cell">{event.header_image || '-'}</div>
+                  <div className="data-cell">{event.footer_location || '-'}</div>
+                  <div className="data-cell">{event.footer_phone || '-'}</div>
+                  <div className="data-cell">{event.footer_email || '-'}</div>
+                  <div className="data-cell">{event.welcome_text || '-'}</div>
+                  <div className="data-cell">
                     {event.created_by_name ? `${event.created_by_name} - ${formatDateTime(event.created_at)}` : formatDateTime(event.created_at)}
                   </div>
-                  <div className="data-cell col-14" data-label="Modified">
+                  <div className="data-cell">
                     {event.modified_by_name ? `${event.modified_by_name} - ${formatDateTime(event.modified_at)}` : formatDateTime(event.modified_at)}
                   </div>
-                  <div className="data-cell col-15" data-label="Actions">
+                  <div className="data-cell">
                     <div className="action-buttons">
                       <button
                         onClick={() => setEditingEvent(event)}
                         className="edit-button"
                       >
-                         Edit
+                        Edit
                       </button>
                       <button
                         onClick={() => handleDeleteEvent(event.event_id)}
                         className="delete-button"
                       >
-                         Delete
+                        Delete
                       </button>
                     </div>
                   </div>
