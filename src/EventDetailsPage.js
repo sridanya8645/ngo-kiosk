@@ -599,55 +599,9 @@ function EventDetailsPage () {
                   className="filter-input"
                   disabled
                 />
-              </div>
-            </div>
-                <input
-                  name="volunteer_enabled"
-                  value={filters.volunteer_enabled || ''}
-                  onChange={handleFilterChange}
-                  placeholder="Filter Volunteer"
-                  className="filter-input"
-                />
-              </div>
-              <div className="filter-cell col-12">
-                <input
-                  name="welcome_text"
-                  value={filters.welcome_text || ''}
-                  onChange={handleFilterChange}
-                  placeholder="Filter Welcome"
-                  className="filter-input"
-                />
-              </div>
-              <div className="filter-cell col-13">
-                <input
-                  name="created_at"
-                  value={filters.created_at || ''}
-                  onChange={handleFilterChange}
-                  placeholder="Filter Created"
-                  className="filter-input"
-                />
-              </div>
-              <div className="filter-cell col-14">
-                <input
-                  name="modified_at"
-                  value={filters.modified_at || ''}
-                  onChange={handleFilterChange}
-                  placeholder="Filter Modified"
-                  className="filter-input"
-                />
-              </div>
-              <div className="filter-cell col-15">
-                <input
-                  name="actions"
-                  value={filters.actions || ''}
-                  onChange={handleFilterChange}
-                  placeholder="Filter Actions"
-                  className="filter-input"
-                />
-              </div>
-            </div>
+                           </div>
 
-            {/* Data Table */}
+             {/* Data Table */}
             <div className="data-table">
               {/* Add New Event Row */}
               <div className="event-row add-event-row">
