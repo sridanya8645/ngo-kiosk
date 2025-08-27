@@ -64,8 +64,8 @@
   flex-direction: column;
   gap: 1px;
   color: var(--text-primary) !important;
-  white-space: nowrap; /* prevent text from breaking to second line */
-  word-break: keep-all;
+  white-space: normal; /* allow text to wrap to 2 lines for address */
+  word-break: normal;
   overflow-wrap: normal;
 }
 
@@ -78,7 +78,7 @@
 }
 
 .pits-logo {
-  height: 100px; /* increase PITS logo size even more */
+  height: 200px; /* increase PITS logo size to 200px */
   width: auto;
   object-fit: contain;
   margin-right: env(safe-area-inset-right); /* keep visible on iPad edges */
@@ -113,5 +113,32 @@
   .footer-text { font-size: 0.75rem; }
   .powered-text { font-size: 0.75rem; }
   .pits-logo { height: 50px; margin-bottom: 2px; }
+}
+
+/* Responsive layout for tablets (iPad) */
+@media (min-width: 641px) and (max-width: 1024px) {
+  .footer-content {
+    flex-direction: row !important; /* keep horizontal layout on iPad */
+    justify-content: space-between !important;
+    align-items: center;
+    gap: 20px; /* equal spacing between components */
+  }
+  .footer-section {
+    flex: 1 1 auto;
+    justify-content: center;
+    text-align: center;
+  }
+  .footer-section:has(.powered-text) {
+    flex: 0 0 auto;
+    justify-content: center;
+  }
+  .footer-text {
+    font-size: 0.7rem; /* slightly larger for iPad */
+    white-space: normal; /* allow address to wrap to 2 lines */
+  }
+  .pits-logo { 
+    height: 150px; /* medium size for iPad */
+    margin-bottom: 0;
+  }
 }
 
