@@ -52,7 +52,18 @@ const schemas = {
     phone: Joi.string().optional().min(10).max(20),
     registrationId: Joi.number().integer().positive().optional(),
     eventId: Joi.number().integer().positive().optional()
-  }).or('phone', 'registrationId')
+  }).or('phone', 'registrationId'),
+
+  // Raffle winner validation
+  raffleWinner: Joi.object({
+    registrationId: Joi.number().integer().positive().required(),
+    prize: Joi.string().optional().max(255)
+  }),
+
+  // Test email validation
+  testEmail: Joi.object({
+    testEmail: Joi.string().email().required()
+  })
 };
 
 // Validation middleware factory

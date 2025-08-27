@@ -4,7 +4,7 @@ require('dotenv').config();
 // Import middleware and configurations
 const { corsMiddleware, handlePreflight } = require('./middleware/cors');
 const { errorHandler, notFoundHandler, asyncHandler } = require('./middleware/errorHandler');
-const { sanitizeInput } = require('./middleware/validation');
+const { sanitizeInput, validate } = require('./middleware/validation');
 const rateLimits = require('./middleware/rateLimit');
 const { pool, testConnection, healthCheck } = require('./config/database');
 const { initializeDatabase } = require('./db');
@@ -37,6 +37,9 @@ app.use('/api/register', rateLimits.registration);
 app.use('/api/mobile-register', rateLimits.registration);
 app.use('/api/checkin', rateLimits.checkin);
 app.use('/api/admin', rateLimits.admin);
+
+// Apply public event rate limit to main pages for high-volume traffic
+app.use('/', rateLimits.publicEvent);
 
 // Request logging middleware (development only)
 if (process.env.NODE_ENV === 'development') {
@@ -183,7 +186,7 @@ setTimeout(() => {
 }, 2000); // Wait 2 seconds before initializing database
 
 // Login endpoint
-app.post('/api/login', async (req, res) => {
+app.post('/api/login', validate('login'), async (req, res) => {
   try {
     const { username, password } = req.body;
     console.log('Login attempt for username:', username);
@@ -253,7 +256,7 @@ app.post('/api/login', async (req, res) => {
 });
 
 // MFA verification endpoint
-app.post('/api/verify-mfa', async (req, res) => {
+app.post('/api/verify-mfa', validate('mfa'), async (req, res) => {
   try {
     const { userId, code } = req.body;
     
@@ -325,7 +328,7 @@ function base32Decode(str) {
 }
 
 // TOTP MFA endpoints
-app.post('/api/mfa/totp/login', async (req, res) => {
+app.post('/api/mfa/totp/login', validate('mfa'), async (req, res) => {
   try {
     const { userId, token } = req.body;
     
@@ -374,7 +377,7 @@ app.post('/api/mfa/totp/login', async (req, res) => {
   }
 });
 
-app.post('/api/mfa/totp/verify', async (req, res) => {
+app.post('/api/mfa/totp/verify', validate('mfa'), async (req, res) => {
   try {
     const { userId, token } = req.body;
     
@@ -430,7 +433,7 @@ app.post('/api/mfa/totp/verify', async (req, res) => {
 });
 
 // Register endpoint
-app.post('/api/register', async (req, res) => {
+app.post('/api/register', validate('registration'), async (req, res) => {
   try {
     console.log("Register endpoint hit");
     const { name, phone, email, eventId, interested_to_volunteer } = req.body;
@@ -559,7 +562,7 @@ app.post('/api/register', async (req, res) => {
 });
 
 // Mobile register endpoint
-app.post('/api/mobile-register', async (req, res) => {
+app.post('/api/mobile-register', validate('registration'), async (req, res) => {
   try {
     console.log("Mobile register endpoint hit");
     const { name, phone, email, eventId, interested_to_volunteer } = req.body;
@@ -870,7 +873,7 @@ function convertTo24Hour(timeStr) {
 app.post('/api/events', upload.fields([
   { name: 'banner', maxCount: 1 },
   { name: 'header_image', maxCount: 1 }
-]), async (req, res) => {
+]), validate('event'), async (req, res) => {
   try {
          const { name, start_datetime, end_datetime, location, raffle_tickets, footer_location, footer_phone, footer_email, volunteer_enabled, welcome_text, created_by } = req.body;
     
@@ -967,7 +970,7 @@ app.post('/api/events', upload.fields([
 app.put('/api/events/:id', upload.fields([
   { name: 'banner', maxCount: 1 },
   { name: 'header_image', maxCount: 1 }
-]), async (req, res) => {
+]), validate('event'), async (req, res) => {
   try {
          const { name, start_datetime, end_datetime, location, raffle_tickets, footer_location, footer_phone, footer_email, volunteer_enabled, welcome_text, modified_by } = req.body;
     const { id } = req.params;
@@ -1166,7 +1169,7 @@ app.get('/api/registrations', async (req, res) => {
 });
 
 // Check-in endpoint
-app.post('/api/checkin', async (req, res) => {
+app.post('/api/checkin', validate('checkin'), async (req, res) => {
   try {
     const { phone, registrationId, eventId } = req.body;
     
@@ -1292,7 +1295,7 @@ app.get('/api/raffle/eligible-users', async (req, res) => {
   }
 });
 
-app.post('/api/raffle/save-winner', async (req, res) => {
+app.post('/api/raffle/save-winner', validate('raffleWinner'), async (req, res) => {
   try {
     const { registrationId, prize } = req.body;
     const [rows] = await pool.execute(
@@ -1340,7 +1343,7 @@ app.get('/api/raffle-winners', async (req, res) => {
 });
 
 // New: Save a raffle winner (called from spin wheel)
-app.post('/api/raffle-winners', async (req, res) => {
+app.post('/api/raffle-winners', validate('raffleWinner'), async (req, res) => {
   try {
     const { registrationId } = req.body;
     if (!registrationId) {
@@ -1421,7 +1424,7 @@ app.post('/api/upload-banner', upload.single('banner'), async (req, res) => {
 });
 
 // Test email sending with a simple test
-app.post('/api/test-email-send', async (req, res) => {
+app.post('/api/test-email-send', validate('testEmail'), async (req, res) => {
   try {
     const { testEmail } = req.body;
     
@@ -1497,7 +1500,7 @@ app.get('/api/test-email', async (req, res) => {
 });
 
 // Simple email test endpoint
-app.post('/api/test-email-simple', async (req, res) => {
+app.post('/api/test-email-simple', validate('testEmail'), async (req, res) => {
   try {
     const { testEmail } = req.body;
     
@@ -1558,7 +1561,7 @@ app.get('/api/admin/users', async (req, res) => {
 });
 
 // Create new admin user
-app.post('/api/admin/users', async (req, res) => {
+app.post('/api/admin/users', validate('adminUser'), async (req, res) => {
   try {
     const { username, password, admin_id } = req.body;
     
@@ -1607,7 +1610,7 @@ app.post('/api/admin/users', async (req, res) => {
 });
 
 // Update admin user
-app.put('/api/admin/users/:id', async (req, res) => {
+app.put('/api/admin/users/:id', validate('adminUser'), async (req, res) => {
   try {
     const { id } = req.params;
     const { username, password, is_active } = req.body;
