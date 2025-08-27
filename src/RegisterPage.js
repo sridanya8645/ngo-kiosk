@@ -247,8 +247,8 @@ const RegisterPage = () => {
 
   // Event change handler
   const handleEventChange = (e) => {
-    const id = Number(e.target.value);
-    const ev = events.find(evt => Number(evt.id) === id) || null;
+    const eventId = Number(e.target.value);
+    const ev = events.find(evt => Number(evt.event_id) === eventId) || null;
     setSelectedEvent(ev);
     if (errors.event) {
       setErrors(prev => ({ ...prev, event: '' }));
