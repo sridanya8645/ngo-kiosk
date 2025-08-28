@@ -412,6 +412,18 @@ function EventDetailsPage () {
     }
   }, [isResizing, resizeStartX, resizeColumnIndex, columnWidths]);
 
+  // Debug datetime-local inputs
+  useEffect(() => {
+    const datetimeInputs = document.querySelectorAll('input[type="datetime-local"]');
+    console.log('Found datetime-local inputs:', datetimeInputs.length);
+    datetimeInputs.forEach((input, index) => {
+      console.log(`Input ${index}:`, input);
+      console.log(`Input ${index} type:`, input.type);
+      console.log(`Input ${index} value:`, input.value);
+      console.log(`Input ${index} placeholder:`, input.placeholder);
+    });
+  }, [events, editingEvent, newEvent]);
+
 
   return (
     <div className="event-details-container">

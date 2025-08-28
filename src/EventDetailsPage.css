@@ -286,31 +286,114 @@
   }
 }
 
-/* Datetime input styling */
+/* Datetime input styling - Enhanced for better compatibility */
 input[type="datetime-local"] {
-  cursor: pointer;
-  min-height: 32px;
-  font-family: inherit;
+  cursor: pointer !important;
+  min-height: 32px !important;
+  font-family: inherit !important;
+  position: relative !important;
+  z-index: 10 !important;
+  background-color: white !important;
+  border: 1px solid #ccc !important;
+  border-radius: 4px !important;
+  padding: 6px 8px !important;
+  font-size: 0.85rem !important;
+  width: 100% !important;
+  box-sizing: border-box !important;
 }
 
 input[type="datetime-local"]:hover {
-  border-color: #007bff;
-  background-color: #f8f9fa;
+  border-color: #007bff !important;
+  background-color: #f8f9fa !important;
+}
+
+input[type="datetime-local"]:focus {
+  outline: none !important;
+  border-color: #007bff !important;
+  box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25) !important;
 }
 
 input[type="datetime-local"]::-webkit-calendar-picker-indicator {
-  cursor: pointer;
-  padding: 2px;
-  border-radius: 2px;
+  cursor: pointer !important;
+  padding: 2px !important;
+  border-radius: 2px !important;
+  background-color: transparent !important;
+  position: relative !important;
+  z-index: 11 !important;
 }
 
 input[type="datetime-local"]::-webkit-calendar-picker-indicator:hover {
-  background-color: #e9ecef;
+  background-color: #e9ecef !important;
 }
 
-/* Ensure datetime inputs are clickable */
+/* Firefox specific styles */
+input[type="datetime-local"]::-moz-calendar-picker-indicator {
+  cursor: pointer !important;
+  padding: 2px !important;
+  border-radius: 2px !important;
+}
+
+/* Ensure datetime inputs are clickable and visible */
 .data-cell input[type="datetime-local"] {
-  cursor: pointer;
-  position: relative;
-  z-index: 1;
+  cursor: pointer !important;
+  position: relative !important;
+  z-index: 10 !important;
+  display: block !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+}
+
+/* Override any conflicting styles */
+.table-input[type="datetime-local"] {
+  cursor: pointer !important;
+  position: relative !important;
+  z-index: 10 !important;
+  background-color: white !important;
+  border: 1px solid #ccc !important;
+  border-radius: 4px !important;
+  padding: 6px 8px !important;
+  font-size: 0.85rem !important;
+  width: 100% !important;
+  box-sizing: border-box !important;
+  min-height: 32px !important;
+}
+
+/* Override global date input styles that might conflict */
+input[type="date"],
+input[type="datetime-local"] {
+  cursor: pointer !important;
+  font-family: inherit !important;
+  background-color: white !important;
+  border: 1px solid #ccc !important;
+  border-radius: 4px !important;
+  padding: 6px 8px !important;
+  font-size: 0.85rem !important;
+  width: 100% !important;
+  box-sizing: border-box !important;
+  min-height: 32px !important;
+  position: relative !important;
+  z-index: 10 !important;
+  display: block !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+}
+
+/* Force datetime-local inputs to be visible and clickable */
+.event-row .data-cell input[type="datetime-local"],
+.add-event-row .data-cell input[type="datetime-local"] {
+  cursor: pointer !important;
+  position: relative !important;
+  z-index: 10 !important;
+  background-color: white !important;
+  border: 1px solid #ccc !important;
+  border-radius: 4px !important;
+  padding: 6px 8px !important;
+  font-size: 0.85rem !important;
+  width: 100% !important;
+  box-sizing: border-box !important;
+  min-height: 32px !important;
+  display: block !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  pointer-events: auto !important;
 }
