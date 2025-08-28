@@ -86,16 +86,16 @@
 /* Table Header Row */
 .table-header-row {
   display: grid;
-  grid-template-columns: 0.6fr 1fr 0.7fr 0.7fr 0.9fr 0.8fr 0.6fr 0.6fr 0.6fr 0.8fr 0.8fr 0.8fr 1fr 0.7fr 0.7fr 0.6fr;
+  grid-template-columns: 0.4fr 0.8fr 0.5fr 0.5fr 0.6fr 0.5fr 0.4fr 0.4fr 0.4fr 0.5fr 0.5fr 0.5fr 0.7fr 0.5fr 0.5fr 0.4fr;
   background: #8B1C1C;
   color: white;
 }
 
 .header-cell {
-  padding: 6px 4px;
+  padding: 4px 2px;
   text-align: left;
   font-weight: bold;
-  font-size: 0.75rem;
+  font-size: 0.65rem;
   white-space: nowrap;
   border-right: 1px solid #8B1C1C;
 }
@@ -107,7 +107,7 @@
 /* Filter Row */
 .filter-row {
   display: grid;
-  grid-template-columns: 0.6fr 1fr 0.7fr 0.7fr 0.9fr 0.8fr 0.6fr 0.6fr 0.6fr 0.8fr 0.8fr 0.8fr 1fr 0.7fr 0.7fr 0.6fr;
+  grid-template-columns: 0.4fr 0.8fr 0.5fr 0.5fr 0.6fr 0.5fr 0.4fr 0.4fr 0.4fr 0.5fr 0.5fr 0.5fr 0.7fr 0.5fr 0.5fr 0.4fr;
   background: #f8f9fa;
   padding: 10px;
   gap: 10px;
@@ -121,10 +121,10 @@
 
 .filter-input {
   width: 100%;
-  padding: 4px 6px;
+  padding: 3px 4px;
   border: 1px solid #ddd;
   border-radius: 4px;
-  font-size: 0.8rem;
+  font-size: 0.7rem;
   background: white;
 }
 
@@ -150,7 +150,7 @@
 /* Data Rows */
 .event-row {
   display: grid;
-  grid-template-columns: 0.6fr 1fr 0.7fr 0.7fr 0.9fr 0.8fr 0.6fr 0.6fr 0.6fr 0.8fr 0.8fr 0.8fr 1fr 0.7fr 0.7fr 0.6fr;
+  grid-template-columns: 0.4fr 0.8fr 0.5fr 0.5fr 0.6fr 0.5fr 0.4fr 0.4fr 0.4fr 0.5fr 0.5fr 0.5fr 0.7fr 0.5fr 0.5fr 0.4fr;
   padding: 12px;
   border-bottom: 1px solid #ddd;
   transition: background-color 0.3s ease;
@@ -170,9 +170,9 @@
 }
 
 .data-cell {
-  padding: 4px 6px;
+  padding: 3px 4px;
   text-align: left;
-  font-size: 0.8rem;
+  font-size: 0.7rem;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -185,13 +185,13 @@
 
 /* Volunteer Status */
 .volunteer-status {
-  padding: 4px 8px;
-  border-radius: 12px;
-  font-size: 0.8rem;
+  padding: 2px 6px;
+  border-radius: 8px;
+  font-size: 0.7rem;
   font-weight: 600;
   text-align: center;
   display: inline-block;
-  min-width: 40px;
+  min-width: 30px;
 }
 
 .volunteer-status.enabled {
@@ -209,15 +209,15 @@
 /* Action Buttons */
 .action-buttons {
   display: flex;
-  gap: 8px;
+  gap: 4px;
   justify-content: center;
 }
 
 .edit-button, .delete-button {
-  padding: 6px 12px;
+  padding: 4px 8px;
   border: none;
   border-radius: 4px;
-  font-size: 0.8rem;
+  font-size: 0.7rem;
   font-weight: 600;
   cursor: pointer;
   transition: background-color 0.3s ease;
@@ -366,11 +366,11 @@ input[type="datetime-local"] {
   background-color: white !important;
   border: 1px solid #ccc !important;
   border-radius: 4px !important;
-  padding: 4px 6px !important;
-  font-size: 0.75rem !important;
+  padding: 3px 4px !important;
+  font-size: 0.65rem !important;
   width: 100% !important;
   box-sizing: border-box !important;
-  min-height: 28px !important;
+  min-height: 24px !important;
   position: relative !important;
   z-index: 10 !important;
   display: block !important;
@@ -387,11 +387,11 @@ input[type="datetime-local"] {
   background-color: white !important;
   border: 1px solid #ccc !important;
   border-radius: 4px !important;
-  padding: 4px 6px !important;
-  font-size: 0.75rem !important;
+  padding: 3px 4px !important;
+  font-size: 0.65rem !important;
   width: 100% !important;
   box-sizing: border-box !important;
-  min-height: 28px !important;
+  min-height: 24px !important;
   display: block !important;
   visibility: visible !important;
   opacity: 1 !important;
@@ -400,7 +400,7 @@ input[type="datetime-local"] {
 
 /* Override table-input for smaller size */
 .table-input {
-  padding: 4px 6px !important;
-  font-size: 0.75rem !important;
-  min-height: 28px !important;
+  padding: 3px 4px !important;
+  font-size: 0.65rem !important;
+  min-height: 24px !important;
 }
