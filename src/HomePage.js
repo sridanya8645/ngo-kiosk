@@ -50,12 +50,6 @@ const HomePage = () => {
           >
             Register
           </button>
-          <button
-            className="checkin-button"
-            onClick={() => navigate('/checkin')}
-          >
-            Check-In
-          </button>
         </div>
       </main>
 

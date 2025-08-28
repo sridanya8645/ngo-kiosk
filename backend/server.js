@@ -665,36 +665,15 @@ app.post('/api/mobile-register', validate('registration'), async (req, res) => {
     
     const event = eventRows[0];
     
-    // Insert registration with checked_in = 0 for mobile register (needs QR check-in)
+    // Insert registration with checked_in = 1 and checkin_date = NOW() for mobile register (automatic check-in)
     const [result] = await pool.execute(
-      "INSERT INTO registrations (name, phone, email, event_id, event_name, event_date, interested_to_volunteer, checked_in, registered_at) VALUES (?, ?, ?, ?, ?, ?, ?, 0, NOW())",
+      "INSERT INTO registrations (name, phone, email, event_id, event_name, event_date, interested_to_volunteer, checked_in, checkin_date, registered_at) VALUES (?, ?, ?, ?, ?, ?, ?, 1, NOW(), NOW())",
       [name, phone, email, eventId, event.name, event.start_datetime, interested_to_volunteer]
     );
     
     const registrationId = result.insertId;
     
-    // Generate QR code data
-    const qrData = JSON.stringify({
-      registrationId: registrationId,
-      name: name,
-      phone: phone,
-      email: email
-    });
-    
-    // Generate QR code as buffer for attachment
-    const qrCodeBuffer = await QRCode.toBuffer(qrData, {
-      width: 200,
-      margin: 2,
-      color: {
-        dark: '#000000',
-        light: '#FFFFFF'
-      },
-      errorCorrectionLevel: 'L'
-    });
-    
-    console.log('🔍 QR code generated as buffer for mobile register');
-    
-    // Send email with QR code
+    // Send confirmation email without QR code for mobile register (automatic check-in)
     try {
       console.log('🔍 Attempting to send email to:', email);
       
@@ -703,7 +682,7 @@ app.post('/api/mobile-register', validate('registration'), async (req, res) => {
         // Still return success but without email
         return res.json({ 
           success: true, 
-          message: "Registration successful! Email credentials not configured.",
+          message: "Registration successful! You have been automatically checked in. Email credentials not configured.",
           registrationId: registrationId
         });
       }
@@ -728,13 +707,6 @@ app.post('/api/mobile-register', validate('registration'), async (req, res) => {
         from: GMAIL_USER,
         to: email,
         subject: `Registration Confirmed for ${event.name}`,
-        attachments: [
-          {
-            filename: `qr-code-${registrationId}.png`,
-            content: qrCodeBuffer,
-            contentType: 'image/png'
-          }
-        ],
         html: `
           <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
             <div style="text-align: center; margin-bottom: 20px;">
@@ -753,16 +725,15 @@ app.post('/api/mobile-register', validate('registration'), async (req, res) => {
               <p style="margin: 8px 0;"><span style="color: #666;">🆔</span> <strong>Registration ID:</strong> ${registrationId}</p>
             </div>
             
-            <p style="font-size: 16px; color: #333;">Please bring this email and scan the attached QR code at the kiosk during check-in. We look forward to welcoming you!</p>
+            <p style="font-size: 16px; color: #333;">You have been automatically checked in for this event. We look forward to welcoming you!</p>
             
             <div style="text-align: center; margin: 30px 0;">
               <div style="background: #f8f9fa; padding: 20px; border-radius: 10px; margin: 15px 0; border: 2px solid #ddd;">
                 <p style="font-size: 16px; color: #333; margin: 0 0 15px 0; font-weight: bold;">📱 <strong>Registration ID:</strong> ${registrationId}</p>
                 <p style="font-size: 14px; color: #666; margin: 5px 0; font-family: monospace;">Event: ${event.name}</p>
                 <p style="font-size: 14px; color: #666; margin: 5px 0; font-family: monospace;">Date & Time: ${new Date(event.start_datetime).toLocaleString()}</p>
-                <p style="font-size: 12px; color: #999; margin: 10px 0 0 0;">Show this ID at check-in</p>
+                <p style="font-size: 12px; color: #999; margin: 10px 0 0 0;">You are automatically checked in</p>
               </div>
-              <p style="font-size: 14px; color: #666; margin-top: 10px;">QR code attached to this email</p>
             </div>
             
             <p style="font-size: 16px; color: #333;">Warm regards,<br><strong>${event.welcome_text ? (event.welcome_text.includes('Welcome to ') ? event.welcome_text.replace('Welcome to ', '') : event.welcome_text) : event.name} Team</strong></p>

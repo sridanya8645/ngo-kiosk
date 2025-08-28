@@ -289,17 +289,6 @@ const RegisterPage = () => {
             {selectedEvent ? `Register for ${selectedEvent.name}` : 'Register'}
           </h1>
 
-          {/* Raffle text directly below title */}
-          <div style={{
-            textAlign: 'center',
-            margin: '6px 0 10px 0',
-            color: '#8B1C1C',
-            fontSize: '1rem',
-            fontWeight: '600',
-          }}>
-            {selectedEvent?.raffle_tickets || 'Register and get a chance to win $200 Raffle ticket!!'}
-          </div>
-
           {/* Form third - only show if not submitted */}
           {!submitSuccess && (
             <>
@@ -431,6 +420,32 @@ const RegisterPage = () => {
                   >
                     {isSubmitting ? 'Registering...' : 'Register'}
                   </button>
+                </div>
+
+                {/* Raffle text after register button */}
+                <div style={{
+                  textAlign: 'center',
+                  margin: '20px 0 10px 0',
+                  color: '#8B1C1C',
+                  fontSize: '1.2rem',
+                  fontWeight: '700',
+                }}>
+                  {selectedEvent?.raffle_tickets || 'Register and get a chance to win $200 Raffle ticket!!'}
+                </div>
+
+                {/* Lottie Animation */}
+                <div style={{
+                  textAlign: 'center',
+                  margin: '20px 0',
+                }}>
+                  <lottie-player
+                    src="/visa card.json"
+                    background="transparent"
+                    speed="1"
+                    style={{ width: '200px', height: '200px', margin: '0 auto' }}
+                    loop
+                    autoplay
+                  ></lottie-player>
                 </div>
               </form>
             </>
