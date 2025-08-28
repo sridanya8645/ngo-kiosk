@@ -64,6 +64,7 @@ const RaffleSpinPage = () => {
         console.log('Winners:', winnersData);
         console.log('All events:', eventsData);
         console.log('Today\'s events:', todayEvents);
+        console.log('Current date:', new Date().toISOString().split('T')[0]);
 
         // Fallback: if no today's events, use all events
         if (!todayEvents || todayEvents.length === 0) {

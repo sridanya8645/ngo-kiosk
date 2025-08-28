@@ -415,6 +415,21 @@ input[type="datetime-local"] {
   display: grid !important;
   width: 100% !important;
   min-width: 100% !important;
+  align-items: center !important;
+  gap: 0 !important;
+  table-layout: fixed !important;
+}
+
+/* Improve table alignment */
+.registrations-table-container .header-cell,
+.registrations-table-container .data-cell,
+.registrations-table-container .filter-cell {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: flex-start !important;
+  text-align: left !important;
+  vertical-align: middle !important;
+  box-sizing: border-box !important;
 }
 
 /* Ensure table container doesn't break */

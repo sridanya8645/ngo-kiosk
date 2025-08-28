@@ -1424,11 +1424,11 @@ app.get('/api/raffle/eligible-users', async (req, res) => {
     
     if (eventId) {
       // Get users who checked in TODAY for a specific event
-      query = "SELECT * FROM registrations WHERE checked_in = 1 AND DATE(checkin_date) = CURDATE() AND event_id = ?";
+      query = "SELECT * FROM registrations WHERE checked_in = 1 AND DATE(checkin_date) = CURDATE() AND event_id = ? ORDER BY checkin_date DESC";
       params = [eventId];
     } else {
       // Get users who checked in TODAY only (for backward compatibility)
-      query = "SELECT * FROM registrations WHERE checked_in = 1 AND DATE(checkin_date) = CURDATE()";
+      query = "SELECT * FROM registrations WHERE checked_in = 1 AND DATE(checkin_date) = CURDATE() ORDER BY checkin_date DESC";
       params = [];
     }
     
