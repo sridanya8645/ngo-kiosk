@@ -280,6 +280,10 @@ function EventDetailsPage () {
 
   // Edit event
   const handleEditEvent = async () => {
+    if (!editingEvent) {
+      setError('No event selected for editing.');
+      return;
+    }
     try {
       const formData = new FormData();
       formData.append('name', editingEvent.name);
@@ -413,7 +417,7 @@ function EventDetailsPage () {
     <div className="event-details-container">
       <SiteHeader navVariant="event-details" />
 
-      {/* Main Content */}
+      {/* Main Content - Force refresh deployment */}
       <main className="event-details-main">
         <div className="event-details-content">
           <h1 className="event-details-title">Event Details</h1>
@@ -978,152 +982,7 @@ function EventDetailsPage () {
                     </div>
                   </div>
                 </div>
-              ))}
-                 <div className="event-row edit-row">
-                   <div className="data-cell">{editingEvent.event_id}</div>
-                   <div className="data-cell">
-                     <input
-                       type="text"
-                       name="name"
-                       value={editingEvent.name}
-                       onChange={(e) => handleInputChange(e, true)}
-                       className="table-input"
-                     />
-                   </div>
-                   <div className="data-cell">
-                     <input
-                       type="datetime-local"
-                       name="start_datetime"
-                       value={formatDateTimeForInput(editingEvent.start_datetime)}
-                       onChange={(e) => handleInputChange(e, true)}
-                       className="table-input"
-                     />
-                   </div>
-                   <div className="data-cell">
-                     <input
-                       type="datetime-local"
-                       name="end_datetime"
-                       value={formatDateTimeForInput(editingEvent.end_datetime)}
-                       onChange={(e) => handleInputChange(e, true)}
-                       className="table-input"
-                     />
-                   </div>
-                   <div className="data-cell">
-                     <input
-                       type="text"
-                       name="location"
-                       value={editingEvent.location}
-                       onChange={(e) => handleInputChange(e, true)}
-                       className="table-input"
-                     />
-                   </div>
-                   <div className="data-cell">
-                     <input
-                       type="text"
-                       name="raffle_tickets"
-                       value={editingEvent.raffle_tickets || ''}
-                       onChange={(e) => handleInputChange(e, true)}
-                       className="table-input"
-                       placeholder="Raffle Tickets"
-                     />
-                   </div>
-                   <div className="data-cell">
-                     <label>
-                       <input
-                         type="radio"
-                         name="volunteer_enabled"
-                         value="true"
-                         checked={editingEvent.volunteer_enabled === true}
-                         onChange={(e) => handleInputChange(e, true)}
-                       /> Yes
-                     </label>
-                     <label>
-                       <input
-                         type="radio"
-                         name="volunteer_enabled"
-                         value="false"
-                         checked={editingEvent.volunteer_enabled === false}
-                         onChange={(e) => handleInputChange(e, true)}
-                       /> No
-                     </label>
-                   </div>
-                   <div className="data-cell">
-                     <input
-                       type="file"
-                       name="banner"
-                       onChange={(e) => handleInputChange(e, true)}
-                       className="table-input"
-                       accept="image/*"
-                     />
-                   </div>
-                   <div className="data-cell">
-                     <input
-                       type="file"
-                       name="header_image"
-                       onChange={(e) => handleInputChange(e, true)}
-                       className="table-input"
-                       accept="image/*"
-                     />
-                   </div>
-                   <div className="data-cell">
-                     <input
-                       type="text"
-                       name="footer_location"
-                       value={editingEvent.footer_location || ''}
-                       onChange={(e) => handleInputChange(e, true)}
-                       className="table-input"
-                       placeholder="Footer Location"
-                     />
-                   </div>
-                   <div className="data-cell">
-                     <input
-                       type="text"
-                       name="footer_phone"
-                       value={editingEvent.footer_phone || ''}
-                       onChange={(e) => handleInputChange(e, true)}
-                       className="table-input"
-                       placeholder="Footer Phone"
-                     />
-                   </div>
-                   <div className="data-cell">
-                     <input
-                       type="email"
-                       name="footer_email"
-                       value={editingEvent.footer_email || ''}
-                       onChange={(e) => handleInputChange(e, true)}
-                       className="table-input"
-                       placeholder="Footer Email"
-                     />
-                   </div>
-                   <div className="data-cell">
-                     <textarea
-                       name="welcome_text"
-                       value={editingEvent.welcome_text || ''}
-                       onChange={(e) => handleInputChange(e, true)}
-                       className="table-input"
-                       placeholder="Welcome Text"
-                       rows="2"
-                     />
-                   </div>
-                   <div className="data-cell">{formatDateTime(editingEvent.created_at)}</div>
-                   <div className="data-cell">{formatDateTime(editingEvent.modified_at)}</div>
-                   <div className="data-cell">
-                     <div className="action-buttons">
-                       <button
-                         onClick={handleEditEvent}
-                         className="save-button"
-                       >
-                           Save
-                       </button>
-                       <button
-                         onClick={() => setEditingEvent(null)}
-                         className="cancel-button"
-                       >
-                           Cancel
-                       </button>
-                     </div>
-                   </div>
-                 </div>
+                             ))}
               </div>
             </div>
           </div>
