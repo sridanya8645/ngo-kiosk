@@ -89,6 +89,8 @@
   grid-template-columns: 0.4fr 0.8fr 0.5fr 0.5fr 0.6fr 0.5fr 0.4fr 0.4fr 0.4fr 0.5fr 0.5fr 0.5fr 0.7fr 0.5fr 0.5fr 0.4fr;
   background: #8B1C1C;
   color: white;
+  gap: 0;
+  grid-gap: 0;
 }
 
 .header-cell {
@@ -110,7 +112,8 @@
   grid-template-columns: 0.4fr 0.8fr 0.5fr 0.5fr 0.6fr 0.5fr 0.4fr 0.4fr 0.4fr 0.5fr 0.5fr 0.5fr 0.7fr 0.5fr 0.5fr 0.4fr;
   background: #f8f9fa;
   padding: 10px;
-  gap: 10px;
+  gap: 0;
+  grid-gap: 0;
   border-bottom: 1px solid #ddd;
 }
 
@@ -155,6 +158,8 @@
   border-bottom: 1px solid #ddd;
   transition: background-color 0.3s ease;
   align-items: center;
+  gap: 0;
+  grid-gap: 0;
 }
 
 .event-row:hover {
@@ -407,7 +412,7 @@ input[type="datetime-local"] {
   min-height: 24px !important;
 }
 
-/* Force table layout to prevent breaking */
+/* Force table layout to prevent breaking - EXACT SAME SIZING */
 .registrations-table-container .table-header-row,
 .registrations-table-container .filter-row,
 .registrations-table-container .event-row {
@@ -418,9 +423,10 @@ input[type="datetime-local"] {
   align-items: center !important;
   gap: 0 !important;
   table-layout: fixed !important;
+  grid-gap: 0 !important;
 }
 
-/* Improve table alignment */
+/* Force EXACT same sizing for all cells */
 .registrations-table-container .header-cell,
 .registrations-table-container .data-cell,
 .registrations-table-container .filter-cell {
@@ -430,6 +436,10 @@ input[type="datetime-local"] {
   text-align: left !important;
   vertical-align: middle !important;
   box-sizing: border-box !important;
+  width: 100% !important;
+  min-width: 0 !important;
+  max-width: none !important;
+  flex: 1 !important;
 }
 
 /* Ensure table container doesn't break */
@@ -439,7 +449,7 @@ input[type="datetime-local"] {
   min-width: 100% !important;
 }
 
-/* Force smaller text and padding */
+/* Force smaller text and padding - EXACT SAME FOR ALL */
 .registrations-table-container .header-cell,
 .registrations-table-container .data-cell,
 .registrations-table-container .filter-cell {
@@ -448,4 +458,21 @@ input[type="datetime-local"] {
   white-space: nowrap !important;
   overflow: hidden !important;
   text-overflow: ellipsis !important;
+  margin: 0 !important;
+  border-spacing: 0 !important;
+}
+
+/* Override filter row padding to not affect cell alignment */
+.registrations-table-container .filter-row {
+  padding: 10px 0 !important;
+  gap: 0 !important;
+  grid-gap: 0 !important;
+}
+
+/* Ensure all cells have exact same dimensions */
+.registrations-table-container .header-cell,
+.registrations-table-container .data-cell,
+.registrations-table-container .filter-cell {
+  box-sizing: border-box !important;
+  border-collapse: collapse !important;
 }
