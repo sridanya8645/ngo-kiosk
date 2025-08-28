@@ -86,16 +86,16 @@
 /* Table Header Row */
 .table-header-row {
   display: grid;
-  grid-template-columns: 0.8fr 1.2fr 0.9fr 0.9fr 1.1fr 1fr 0.8fr 0.8fr 0.8fr 1fr 1fr 1fr 1.2fr 0.9fr 0.9fr 0.8fr;
+  grid-template-columns: 0.6fr 1fr 0.7fr 0.7fr 0.9fr 0.8fr 0.6fr 0.6fr 0.6fr 0.8fr 0.8fr 0.8fr 1fr 0.7fr 0.7fr 0.6fr;
   background: #8B1C1C;
   color: white;
 }
 
 .header-cell {
-  padding: 8px 6px;
+  padding: 6px 4px;
   text-align: left;
   font-weight: bold;
-  font-size: 0.85rem;
+  font-size: 0.75rem;
   white-space: nowrap;
   border-right: 1px solid #8B1C1C;
 }
@@ -107,7 +107,7 @@
 /* Filter Row */
 .filter-row {
   display: grid;
-  grid-template-columns: 0.8fr 1.2fr 0.9fr 0.9fr 1.1fr 1fr 0.8fr 0.8fr 0.8fr 1fr 1fr 1fr 1.2fr 0.9fr 0.9fr 0.8fr;
+  grid-template-columns: 0.6fr 1fr 0.7fr 0.7fr 0.9fr 0.8fr 0.6fr 0.6fr 0.6fr 0.8fr 0.8fr 0.8fr 1fr 0.7fr 0.7fr 0.6fr;
   background: #f8f9fa;
   padding: 10px;
   gap: 10px;
@@ -121,10 +121,10 @@
 
 .filter-input {
   width: 100%;
-  padding: 6px 8px;
+  padding: 4px 6px;
   border: 1px solid #ddd;
   border-radius: 4px;
-  font-size: 0.9rem;
+  font-size: 0.8rem;
   background: white;
 }
 
@@ -150,7 +150,7 @@
 /* Data Rows */
 .event-row {
   display: grid;
-  grid-template-columns: 0.8fr 1.2fr 0.9fr 0.9fr 1.1fr 1fr 0.8fr 0.8fr 0.8fr 1fr 1fr 1fr 1.2fr 0.9fr 0.9fr 0.8fr;
+  grid-template-columns: 0.6fr 1fr 0.7fr 0.7fr 0.9fr 0.8fr 0.6fr 0.6fr 0.6fr 0.8fr 0.8fr 0.8fr 1fr 0.7fr 0.7fr 0.6fr;
   padding: 12px;
   border-bottom: 1px solid #ddd;
   transition: background-color 0.3s ease;
@@ -170,9 +170,9 @@
 }
 
 .data-cell {
-  padding: 6px 10px;
+  padding: 4px 6px;
   text-align: left;
-  font-size: 0.9rem;
+  font-size: 0.8rem;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -351,11 +351,11 @@ input[type="datetime-local"]::-moz-calendar-picker-indicator {
   background-color: white !important;
   border: 1px solid #ccc !important;
   border-radius: 4px !important;
-  padding: 6px 8px !important;
-  font-size: 0.85rem !important;
+  padding: 4px 6px !important;
+  font-size: 0.75rem !important;
   width: 100% !important;
   box-sizing: border-box !important;
-  min-height: 32px !important;
+  min-height: 28px !important;
 }
 
 /* Override global date input styles that might conflict */
@@ -366,11 +366,11 @@ input[type="datetime-local"] {
   background-color: white !important;
   border: 1px solid #ccc !important;
   border-radius: 4px !important;
-  padding: 6px 8px !important;
-  font-size: 0.85rem !important;
+  padding: 4px 6px !important;
+  font-size: 0.75rem !important;
   width: 100% !important;
   box-sizing: border-box !important;
-  min-height: 32px !important;
+  min-height: 28px !important;
   position: relative !important;
   z-index: 10 !important;
   display: block !important;
@@ -387,13 +387,20 @@ input[type="datetime-local"] {
   background-color: white !important;
   border: 1px solid #ccc !important;
   border-radius: 4px !important;
-  padding: 6px 8px !important;
-  font-size: 0.85rem !important;
+  padding: 4px 6px !important;
+  font-size: 0.75rem !important;
   width: 100% !important;
   box-sizing: border-box !important;
-  min-height: 32px !important;
+  min-height: 28px !important;
   display: block !important;
   visibility: visible !important;
   opacity: 1 !important;
   pointer-events: auto !important;
+}
+
+/* Override table-input for smaller size */
+.table-input {
+  padding: 4px 6px !important;
+  font-size: 0.75rem !important;
+  min-height: 28px !important;
 }
