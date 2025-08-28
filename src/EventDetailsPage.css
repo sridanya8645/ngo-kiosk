@@ -241,19 +241,19 @@
   background: #c82333;
 }
 
-/* Responsive Design */
+/* Responsive Design - Keep smaller columns for better table layout */
 @media (max-width: 1200px) {
   .table-header-row,
   .filter-row,
   .event-row {
-    grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
+    grid-template-columns: 0.4fr 0.8fr 0.5fr 0.5fr 0.6fr 0.5fr 0.4fr 0.4fr 0.4fr 0.5fr 0.5fr 0.5fr 0.7fr 0.5fr 0.5fr 0.4fr;
   }
   
   .header-cell,
   .filter-cell,
   .data-cell {
-    font-size: 0.8rem;
-    padding: 8px 6px;
+    font-size: 0.7rem;
+    padding: 3px 4px;
   }
 }
 
@@ -271,18 +271,20 @@
   .table-header-row,
   .filter-row,
   .event-row {
-    grid-template-columns: 1fr;
+    grid-template-columns: 0.4fr 0.8fr 0.5fr 0.5fr 0.6fr 0.5fr 0.4fr 0.4fr 0.4fr 0.5fr 0.5fr 0.5fr 0.7fr 0.5fr 0.5fr 0.4fr;
   }
   
   .header-cell,
   .filter-cell,
   .data-cell {
-    border-right: none;
-    border-bottom: 1px solid #ddd;
+    border-right: 1px solid #ddd;
+    font-size: 0.65rem;
+    padding: 2px 3px;
   }
   
   .action-buttons {
-    flex-direction: column;
+    flex-direction: row;
+    gap: 2px;
   }
 }
 
@@ -403,4 +405,32 @@ input[type="datetime-local"] {
   padding: 3px 4px !important;
   font-size: 0.65rem !important;
   min-height: 24px !important;
+}
+
+/* Force table layout to prevent breaking */
+.registrations-table-container .table-header-row,
+.registrations-table-container .filter-row,
+.registrations-table-container .event-row {
+  grid-template-columns: 0.4fr 0.8fr 0.5fr 0.5fr 0.6fr 0.5fr 0.4fr 0.4fr 0.4fr 0.5fr 0.5fr 0.5fr 0.7fr 0.5fr 0.5fr 0.4fr !important;
+  display: grid !important;
+  width: 100% !important;
+  min-width: 100% !important;
+}
+
+/* Ensure table container doesn't break */
+.registrations-table-container {
+  overflow-x: auto !important;
+  width: 100% !important;
+  min-width: 100% !important;
+}
+
+/* Force smaller text and padding */
+.registrations-table-container .header-cell,
+.registrations-table-container .data-cell,
+.registrations-table-container .filter-cell {
+  font-size: 0.7rem !important;
+  padding: 3px 4px !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
 }
