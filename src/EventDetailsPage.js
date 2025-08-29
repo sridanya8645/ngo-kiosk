@@ -79,18 +79,23 @@ function EventDetailsPage () {
       hour: '2-digit',
       minute: '2-digit',
       hour12: true,
+      timeZone: 'America/New_York', // Use EST timezone
     });
   };
 
-  // Format datetime for input fields (YYYY-MM-DDTHH:MM)
+  // Format datetime for input fields (YYYY-MM-DDTHH:MM) - Convert to EST
   const formatDateTimeForInput = (datetime) => {
     if (!datetime) return '';
     const date = new Date(datetime);
-    const year = date.getFullYear();
-    const month = String(date.getMonth() + 1).padStart(2, '0');
-    const day = String(date.getDate()).padStart(2, '0');
-    const hours = String(date.getHours()).padStart(2, '0');
-    const minutes = String(date.getMinutes()).padStart(2, '0');
+    
+    // Convert to EST timezone
+    const estDate = new Date(date.toLocaleString('en-US', { timeZone: 'America/New_York' }));
+    
+    const year = estDate.getFullYear();
+    const month = String(estDate.getMonth() + 1).padStart(2, '0');
+    const day = String(estDate.getDate()).padStart(2, '0');
+    const hours = String(estDate.getHours()).padStart(2, '0');
+    const minutes = String(estDate.getMinutes()).padStart(2, '0');
     return `${year}-${month}-${day}T${hours}:${minutes}`;
   };
 

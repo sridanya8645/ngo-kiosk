@@ -86,20 +86,24 @@
 /* Table Header Row */
 .table-header-row {
   display: grid;
-  grid-template-columns: 0.4fr 0.8fr 0.5fr 0.5fr 0.6fr 0.5fr 0.4fr 0.4fr 0.4fr 0.5fr 0.5fr 0.5fr 0.7fr 0.5fr 0.5fr 0.4fr;
+  grid-template-columns: 80px 150px 120px 120px 150px 120px 100px 100px 100px 120px 120px 120px 150px 100px 100px 100px;
   background: #8B1C1C;
   color: white;
-  gap: 0;
-  grid-gap: 0;
+  width: 100%;
+  min-width: 100%;
+  align-items: center;
 }
 
 .header-cell {
-  padding: 4px 2px;
+  padding: 10px 8px;
   text-align: left;
   font-weight: bold;
-  font-size: 0.65rem;
+  font-size: 0.8rem;
   white-space: nowrap;
   border-right: 1px solid #8B1C1C;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  box-sizing: border-box;
 }
 
 .header-cell:last-child {
@@ -109,25 +113,27 @@
 /* Filter Row */
 .filter-row {
   display: grid;
-  grid-template-columns: 0.4fr 0.8fr 0.5fr 0.5fr 0.6fr 0.5fr 0.4fr 0.4fr 0.4fr 0.5fr 0.5fr 0.5fr 0.7fr 0.5fr 0.5fr 0.4fr;
+  grid-template-columns: 80px 150px 120px 120px 150px 120px 100px 100px 100px 120px 120px 120px 150px 100px 100px 100px;
   background: #f8f9fa;
-  padding: 10px;
-  gap: 0;
-  grid-gap: 0;
+  padding: 10px 8px;
   border-bottom: 1px solid #ddd;
+  align-items: center;
 }
 
 .filter-cell {
+  padding: 8px;
   display: flex;
   align-items: center;
+  justify-content: flex-start;
+  box-sizing: border-box;
 }
 
 .filter-input {
   width: 100%;
-  padding: 3px 4px;
+  padding: 8px;
   border: 1px solid #ddd;
   border-radius: 4px;
-  font-size: 0.7rem;
+  font-size: 0.8rem;
   background: white;
 }
 
@@ -150,16 +156,14 @@
   overflow-y: auto;
 }
 
-/* Data Rows */
+/* Event Rows */
 .event-row {
   display: grid;
-  grid-template-columns: 0.4fr 0.8fr 0.5fr 0.5fr 0.6fr 0.5fr 0.4fr 0.4fr 0.4fr 0.5fr 0.5fr 0.5fr 0.7fr 0.5fr 0.5fr 0.4fr;
-  padding: 12px;
-  border-bottom: 1px solid #ddd;
-  transition: background-color 0.3s ease;
+  grid-template-columns: 80px 150px 120px 120px 150px 120px 100px 100px 100px 120px 120px 120px 150px 100px 100px 100px;
+  background: white;
+  border-bottom: 1px solid #eee;
   align-items: center;
-  gap: 0;
-  grid-gap: 0;
+  min-height: 50px;
 }
 
 .event-row:hover {

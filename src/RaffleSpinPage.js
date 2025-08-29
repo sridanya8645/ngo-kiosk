@@ -194,7 +194,7 @@ const RaffleSpinPage = () => {
   };
 
   const handleSpinClick = () => {
-    if (registrations.length === 0) {
+    if (eligibleUsers.length === 0) {
       alert('No eligible users to spin!');
       return;
     }
@@ -209,23 +209,23 @@ const RaffleSpinPage = () => {
   const handleStopSpinning = () => {
     setMustSpin(false);
 
-    // Now select the winner based on where the wheel stopped
-    const selected = registrations[prizeNumber];
-    if (selected) {
-      setWinner(selected);
+    // Select winner from ALL eligible users, not just wheel segments
+    const randomWinnerIndex = Math.floor(Math.random() * eligibleUsers.length);
+    const actualWinner = eligibleUsers[randomWinnerIndex];
+    
+    if (actualWinner) {
+      setWinner(actualWinner);
       triggerConfetti();
 
       // Persist winner to backend
       fetch('/api/raffle-winners', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ registrationId: selected.id }),
+        body: JSON.stringify({ registrationId: actualWinner.id }),
       })
         .then(() => {
           // Remove winner from eligible users
-          setEligibleUsers(prev => prev.filter(u => u.id !== selected.id));
-          // Remove winner from the wheel list so they can't win again
-          setRegistrations(prev => prev.filter(u => u.id !== selected.id));
+          setEligibleUsers(prev => prev.filter(u => u.id !== actualWinner.id));
         })
         .catch(err => console.error('Failed to save winner:', err));
     }
@@ -381,6 +381,28 @@ const RaffleSpinPage = () => {
               <h3>{selectedEvent ? selectedEvent.name : 'No Event Selected'}</h3>
               <p><em>{selectedEvent ? new Date().toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }) : 'No date available'}</em></p>
               <p>Total Checked-in: {registrations.length} participants</p>
+            </div>
+          )}
+
+          {/* Eligible Participants Count Card */}
+          {selectedEvent && eligibleUsers.length > 0 && (
+            <div className="eligible-count-card" style={{
+              margin: '10px auto 20px',
+              width: '300px',
+              maxWidth: '90%',
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              borderRadius: '8px',
+              padding: '12px 16px',
+              background: 'linear-gradient(135deg, #4CAF50, #45a049)',
+              border: '2px solid #2E7D32',
+              boxShadow: '0 4px 12px rgba(0,0,0,0.2)',
+              color: 'white',
+              fontWeight: 'bold',
+            }}>
+              <span style={{ fontSize: '1rem' }}>🎯 Eligible Participants:</span>
+              <span style={{ fontSize: '1.2rem', color: '#FFD700' }}>{eligibleUsers.length}</span>
             </div>
           )}
 
