@@ -727,7 +727,7 @@ app.post('/api/mobile-register', validate('registration'), async (req, res) => {
               <p style="margin: 8px 0;"><span style="color: #666;">📅</span> <strong>Date & Time:</strong> ${new Date(event.start_datetime).toLocaleString()}</p>
               <p style="margin: 8px 0;"><span style="color: #666;">📍</span> <strong>Venue:</strong> ${event.location}</p>
               <p style="margin: 8px 0;"><span style="color: #666;">🆔</span> <strong>Registration ID:</strong> ${registrationId}</p>
-              <p style="margin: 8px 0;"><span style="color: #666;">⏰</span> <strong>Registration Time:</strong> ${new Date().toLocaleString()}</p>
+              <p style="margin: 8px 0;"><span style="color: #666;">⏰</span> <strong>Registration Time:</strong> ${registrationTime.toLocaleString()}</p>
             </div>
             
             <p style="font-size: 16px; color: #333;">You have been automatically checked in for this event. We look forward to welcoming you!</p>
@@ -1426,6 +1426,8 @@ app.get('/api/raffle/eligible-users', async (req, res) => {
   try {
     const { eventId } = req.query;
     
+    console.log('🔍 Raffle eligible users request:', { eventId, date: new Date().toISOString() });
+    
     let query, params;
     
     if (eventId) {
@@ -1438,10 +1440,18 @@ app.get('/api/raffle/eligible-users', async (req, res) => {
       params = [];
     }
     
+    console.log('🔍 Executing query:', query, 'with params:', params);
+    
     const [rows] = await pool.execute(query, params);
+    
+    console.log(`✅ Found ${rows.length} eligible users for raffle`);
+    if (rows.length > 0) {
+      console.log('📋 Sample users:', rows.slice(0, 3).map(u => ({ id: u.id, name: u.name, checkin_date: u.checkin_date, event_id: u.event_id })));
+    }
+    
     res.json(rows);
   } catch (error) {
-    console.error('Get eligible users error:', error);
+    console.error('❌ Get eligible users error:', error);
     res.status(500).json({ error: "Failed to fetch eligible users" });
   }
 });
