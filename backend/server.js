@@ -537,6 +537,7 @@ app.post('/api/register', validate('registration'), async (req, res) => {
     const event = eventRows[0];
     
     // Insert registration with checked_in = 1 and checkin_date = NOW() for regular register
+    const registrationTime = new Date();
     const [result] = await pool.execute(
       "INSERT INTO registrations (name, phone, email, event_id, event_name, event_date, interested_to_volunteer, checked_in, checkin_date, registered_at) VALUES (?, ?, ?, ?, ?, ?, ?, 1, NOW(), NOW())",
       [name, phone, email, eventId, event.name, event.start_datetime, interested_to_volunteer]
@@ -594,7 +595,7 @@ app.post('/api/register', validate('registration'), async (req, res) => {
               <p style="margin: 8px 0;"><span style="color: #666;">📅</span> <strong>Date & Time:</strong> ${new Date(event.start_datetime).toLocaleString()}</p>
               <p style="margin: 8px 0;"><span style="color: #666;">📍</span> <strong>Venue:</strong> ${event.location}</p>
               <p style="margin: 8px 0;"><span style="color: #666;">🆔</span> <strong>Registration ID:</strong> ${registrationId}</p>
-              <p style="margin: 8px 0;"><span style="color: #666;">⏰</span> <strong>Registration Time:</strong> ${new Date().toLocaleString()}</p>
+              <p style="margin: 8px 0;"><span style="color: #666;">⏰</span> <strong>Registration Time:</strong> ${registrationTime.toLocaleString()}</p>
             </div>
             
             <p style="font-size: 16px; color: #333;">You have been automatically checked in for this event. We look forward to welcoming you!</p>
@@ -668,6 +669,7 @@ app.post('/api/mobile-register', validate('registration'), async (req, res) => {
     const event = eventRows[0];
     
     // Insert registration with checked_in = 1 and checkin_date = NOW() for mobile register (automatic check-in)
+    const registrationTime = new Date();
     const [result] = await pool.execute(
       "INSERT INTO registrations (name, phone, email, event_id, event_name, event_date, interested_to_volunteer, checked_in, checkin_date, registered_at) VALUES (?, ?, ?, ?, ?, ?, ?, 1, NOW(), NOW())",
       [name, phone, email, eventId, event.name, event.start_datetime, interested_to_volunteer]
