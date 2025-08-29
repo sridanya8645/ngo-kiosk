@@ -68,7 +68,7 @@ function EventDetailsPage () {
     { key: 'actions', label: 'Actions' },
   ];
 
-  // Format datetime for display
+  // Format datetime for display - Shows EST time like emails
   const formatDateTime = (datetime) => {
     if (!datetime) return '-';
     const date = new Date(datetime);
@@ -79,23 +79,25 @@ function EventDetailsPage () {
       hour: '2-digit',
       minute: '2-digit',
       hour12: true,
-      timeZone: 'America/New_York', // Use EST timezone
+      timeZone: 'America/New_York', // Use EST timezone for display
     });
   };
 
-  // Format datetime for input fields (YYYY-MM-DDTHH:MM) - Show EST time like emails
+  // Format datetime for input fields (YYYY-MM-DDTHH:MM) - Ensure local time is preserved
+  // This function converts the stored datetime back to local time for the input field
   const formatDateTimeForInput = (datetime) => {
     if (!datetime) return '';
     const date = new Date(datetime);
     
-    // Convert to EST timezone like the emails do
-    const estDate = new Date(date.toLocaleString('en-US', { timeZone: 'America/New_York' }));
+    // The datetime-local input expects local time, so we need to adjust for timezone
+    // This ensures that if you entered 11:00 AM, it shows as 11:00 AM in the input
+    const localDate = new Date(date.getTime() - (date.getTimezoneOffset() * 60000));
     
-    const year = estDate.getFullYear();
-    const month = String(estDate.getMonth() + 1).padStart(2, '0');
-    const day = String(estDate.getDate()).padStart(2, '0');
-    const hours = String(estDate.getHours()).padStart(2, '0');
-    const minutes = String(estDate.getMinutes()).padStart(2, '0');
+    const year = localDate.getFullYear();
+    const month = String(localDate.getMonth() + 1).padStart(2, '0');
+    const day = String(localDate.getDate()).padStart(2, '0');
+    const hours = String(localDate.getHours()).padStart(2, '0');
+    const minutes = String(localDate.getMinutes()).padStart(2, '0');
     return `${year}-${month}-${day}T${hours}:${minutes}`;
   };
 
