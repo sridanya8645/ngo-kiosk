@@ -57,27 +57,31 @@ function AdminRegistrationsPage () {
     }));
   };
 
-  const handleDeleteRegistration = async (registrationId) => {
-    if (window.confirm('Are you sure you want to delete this registration? This action cannot be undone.')) {
+  const handleDeleteAllRegistrations = async () => {
+    if (window.confirm('Are you sure you want to delete ALL registrations? This action cannot be undone and will remove all registration data.')) {
       try {
-        const response = await fetch(`/api/registrations/${registrationId}`, {
-          method: 'DELETE',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        });
-
-        if (response.ok) {
-          // Remove the deleted registration from the list
-          setRegistrations(prev => prev.filter(reg => reg.id !== registrationId));
-          alert('Registration deleted successfully!');
+        // Delete all registrations one by one
+        const deletePromises = registrations.map(registration => 
+          fetch(`/api/registrations/${registration.id}`, {
+            method: 'DELETE',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          })
+        );
+        
+        const responses = await Promise.all(deletePromises);
+        const allSuccessful = responses.every(response => response.ok);
+        
+        if (allSuccessful) {
+          setRegistrations([]);
+          alert('All registrations deleted successfully!');
         } else {
-          const errorData = await response.json();
-          alert(`Failed to delete registration: ${errorData.message}`);
+          alert('Some registrations could not be deleted. Please try again.');
         }
       } catch (error) {
-        console.error('Error deleting registration:', error);
-        alert('Failed to delete registration. Please try again.');
+        console.error('Error deleting registrations:', error);
+        alert('Failed to delete registrations. Please try again.');
       }
     }
   };
@@ -98,223 +102,144 @@ function AdminRegistrationsPage () {
       }
       if (!filters[col.key]) return true;
       return row[col.key]?.toString().toLowerCase().includes(filters[col.key].toLowerCase());
-    }),
+    })
   );
 
-  const handleLogout = () => {
-    navigate('/admin');
+  const formatDate = (dateString) => {
+    if (!dateString) return '-';
+    try {
+      return new Date(dateString).toLocaleDateString();
+    } catch {
+      return dateString;
+    }
   };
 
-  const downloadExcel = () => {
-    // Create CSV content
-    const headers = columns.map(col => col.label).join(',');
-    const csvContent = filtered.map(row => {
-      return [
-        row.id || '',
-        row.name || '',
-        row.email || '',
-        row.phone || '',
-        row.event_name || '',
-        row.event_date || '',
-        row.checked_in ? 'Yes' : 'No',
-        row.checkin_date || '',
-        row.interested_to_volunteer || 'No',
-      ].join(',');
-    }).join('\n');
-
-    const fullCsv = headers + '\n' + csvContent;
-
-    // Create and download file
-    const blob = new Blob([fullCsv], { type: 'text/csv;charset=utf-8;' });
-    const link = document.createElement('a');
-    const url = URL.createObjectURL(blob);
-    link.setAttribute('href', url);
-    link.setAttribute('download', `registrations_${new Date().toISOString().split('T')[0]}.csv`);
-    link.style.visibility = 'hidden';
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
+  const formatDateTime = (dateString) => {
+    if (!dateString) return '-';
+    try {
+      return new Date(dateString).toLocaleString();
+    } catch {
+      return dateString;
+    }
   };
 
   return (
     <div className="admin-registrations-bg">
       <div className="admin-registrations-aspect">
-        <SiteHeader navVariant="registration-details" />
-
-        {/* Admin nav handled by SiteHeader */}
-
-        {/* Main Content */}
-        <main className="admin-registrations-main">
-          <div className="admin-registrations-content">
-            <h1 className="admin-registrations-title">Registration Details</h1>
-
-            {/* Stats and Download Section */}
-            <div className="registrations-stats-section">
-              <div className="registrations-count">
-              📋 Total Registrations: {filtered.length}
-              </div>
-              <button
-                onClick={downloadExcel}
-                className="download-excel-button"
-              >
-              📊 DOWNLOAD EXCEL FILE
-              </button>
-            </div>
-
-            {/* Registrations Table */}
-            <div className="registrations-table-container">
-              {/* Table Header */}
-              <div className="table-header-row">
-                <div className="header-cell">Registration ID</div>
-                <div className="header-cell">Full Name</div>
-                <div className="header-cell">Email</div>
-                <div className="header-cell">Phone Number</div>
-                <div className="header-cell">Event Name</div>
-                <div className="header-cell">Event Date</div>
-                <div className="header-cell">Checked In</div>
-                <div className="header-cell">Checkin Date</div>
-                <div className="header-cell">Volunteer?</div>
-                <div className="header-cell">Delete</div>
+        <SiteHeader />
+        
+        <div className="admin-registrations-container">
+          <div className="admin-registrations-main">
+            <div className="admin-registrations-content">
+              <h1 className="admin-registrations-title">Registration Details</h1>
+              
+              {/* Delete All Button */}
+              <div style={{ marginBottom: '20px', textAlign: 'right' }}>
+                <button 
+                  onClick={handleDeleteAllRegistrations}
+                  style={{
+                    background: '#dc3545',
+                    color: 'white',
+                    border: 'none',
+                    padding: '10px 20px',
+                    borderRadius: '6px',
+                    fontSize: '1rem',
+                    fontWeight: '600',
+                    cursor: 'pointer',
+                    transition: 'background-color 0.3s ease'
+                  }}
+                  onMouseOver={(e) => e.target.style.background = '#c82333'}
+                  onMouseOut={(e) => e.target.style.background = '#dc3545'}
+                >
+                  🗑️ Delete All Registrations
+                </button>
               </div>
 
-              {/* Filter Row */}
-              <div className="filter-row">
-                <div className="filter-cell">
-                  <input
-                    name="id"
-                    value={filters.id}
-                    onChange={handleFilterChange}
-                    placeholder="Filter Registration ID"
-                    className="filter-input"
-                  />
-                </div>
-                <div className="filter-cell">
-                  <input
-                    name="name"
-                    value={filters.name}
-                    onChange={handleFilterChange}
-                    placeholder="Filter Full"
-                    className="filter-input"
-                  />
-                </div>
-                <div className="filter-cell">
-                  <input
-                    name="email"
-                    value={filters.email}
-                    onChange={handleFilterChange}
-                    placeholder="Filter Email"
-                    className="filter-input"
-                  />
-                </div>
-                <div className="filter-cell">
-                  <input
-                    name="phone"
-                    value={filters.phone}
-                    onChange={handleFilterChange}
-                    placeholder="Filter Phon"
-                    className="filter-input"
-                  />
-                </div>
-                <div className="filter-cell">
-                  <input
-                    name="event_name"
-                    value={filters.event_name}
-                    onChange={handleFilterChange}
-                    placeholder="Filter Eve"
-                    className="filter-input"
-                  />
-                </div>
-                <div className="filter-cell">
-                  <input
-                    name="event_date"
-                    value={filters.event_date}
-                    onChange={handleFilterChange}
-                    placeholder="Filter Ever"
-                    className="filter-input"
-                  />
-                </div>
-                <div className="filter-cell">
-                  <select
-                    name="checked_in"
-                    value={filters.checked_in}
-                    onChange={handleFilterChange}
-                    className="filter-input"
-                  >
-                    <option value="">All</option>
-                    <option value="yes">Yes</option>
-                    <option value="no">No</option>
-                  </select>
-                </div>
-                <div className="filter-cell">
-                  <input
-                    name="checkin_date"
-                    value={filters.checkin_date}
-                    onChange={handleFilterChange}
-                    placeholder="Filter Checkin Date"
-                    className="filter-input"
-                  />
-                </div>
-                <div className="filter-cell">
-                  <select
-                    name="interested_to_volunteer"
-                    value={filters.interested_to_volunteer}
-                    onChange={handleFilterChange}
-                    className="filter-input"
-                  >
-                    <option value="">All</option>
-                    <option value="yes">Yes</option>
-                    <option value="no">No</option>
-                  </select>
-                </div>
-                <div className="filter-cell">
-                  <button className="delete-filter-button">Delete</button>
-                </div>
-              </div>
-
-              {/* Data Table */}
-              <div className="data-table">
-                {filtered.length === 0 ? (
-                  <div className="no-data-message">
-                    <span className="no-data-icon">📋</span>
-                    <p>No registrations found matching the filters.</p>
-                  </div>
-                ) : (
-                  filtered.map((registration, index) => (
-                    <div key={index} className="data-row">
-                      <div className="data-cell">{registration.id || '-'}</div>
-                      <div className="data-cell">{registration.name || '-'}</div>
-                      <div className="data-cell">{registration.email || '-'}</div>
-                      <div className="data-cell">{registration.phone || '-'}</div>
-                      <div className="data-cell">{registration.event_name || '-'}</div>
-                      <div className="data-cell">{registration.event_date || '-'}</div>
-                      <div className="data-cell">
-                        <span className={`status-badge ${registration.checked_in ? 'checked-in' : 'not-checked'}`}>
-                          {registration.checked_in ? 'Yes' : 'No'}
-                        </span>
-                      </div>
-                      <div className="data-cell">{registration.checkin_date || '-'}</div>
-                      <div className="data-cell">
-                        <span className={`volunteer-badge ${registration.interested_to_volunteer === 'Yes' ? 'interested' : 'not-interested'}`}>
-                          {registration.interested_to_volunteer || 'No'}
-                        </span>
-                      </div>
-                      <div className="data-cell">
-                        <button
-                          onClick={() => handleDeleteRegistration(registration.id)}
-                          className="delete-button"
-                        >
-                          🗑️
-                        </button>
-                      </div>
+              <div className="registrations-table-container">
+                {/* Table Header */}
+                <div className="table-header-row">
+                  {columns.map((col) => (
+                    <div key={col.key} className="header-cell">
+                      {col.label}
                     </div>
-                  ))
-                )}
+                  ))}
+                </div>
+
+                {/* Filter Row */}
+                <div className="filter-row">
+                  {columns.map((col) => (
+                    <div key={col.key} className="filter-cell">
+                      {col.key === 'checked_in' ? (
+                        <select
+                          name={col.key}
+                          value={filters[col.key]}
+                          onChange={handleFilterChange}
+                          className="filter-input"
+                        >
+                          <option value="all">All</option>
+                          <option value="yes">Yes</option>
+                          <option value="no">No</option>
+                        </select>
+                      ) : col.key === 'interested_to_volunteer' ? (
+                        <select
+                          name={col.key}
+                          value={filters[col.key]}
+                          onChange={handleFilterChange}
+                          className="filter-input"
+                        >
+                          <option value="all">All</option>
+                          <option value="yes">Yes</option>
+                          <option value="no">No</option>
+                        </select>
+                      ) : (
+                        <input
+                          type="text"
+                          name={col.key}
+                          value={filters[col.key]}
+                          onChange={handleFilterChange}
+                          placeholder={`Filter ${col.label}`}
+                          className="filter-input"
+                        />
+                      )}
+                    </div>
+                  ))}
+                </div>
+
+                {/* Data Table */}
+                <div className="data-table">
+                  {filtered.length === 0 ? (
+                    <div className="no-data-message">
+                      No registrations found matching the filters.
+                    </div>
+                  ) : (
+                    filtered.map((registration) => (
+                      <div key={registration.id} className="data-row">
+                        <div className="data-cell">{registration.id}</div>
+                        <div className="data-cell">{registration.name}</div>
+                        <div className="data-cell">{registration.email}</div>
+                        <div className="data-cell">{registration.phone}</div>
+                        <div className="data-cell">{registration.event_name}</div>
+                        <div className="data-cell">{formatDate(registration.event_date)}</div>
+                        <div className="data-cell">
+                          <span className={`status-badge ${registration.checked_in ? 'checked-in' : 'not-checked-in'}`}>
+                            {registration.checked_in ? 'Yes' : 'No'}
+                          </span>
+                        </div>
+                        <div className="data-cell">{formatDateTime(registration.checkin_date)}</div>
+                        <div className="data-cell">
+                          <span className={`volunteer-badge ${registration.interested_to_volunteer === 'Yes' ? 'volunteer-yes' : 'volunteer-no'}`}>
+                            {registration.interested_to_volunteer}
+                          </span>
+                        </div>
+                      </div>
+                    ))
+                  )}
+                </div>
               </div>
             </div>
           </div>
-        </main>
-
-
+        </div>
+        
         <SiteFooter />
       </div>
     </div>

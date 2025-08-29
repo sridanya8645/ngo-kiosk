@@ -1004,23 +1004,13 @@ app.post('/api/events', upload.fields([
       console.log(`Header image uploaded: ${header_image}`);
     }
 
-    // Convert datetime strings to MySQL format - Preserve EST timezone
+    // Convert datetime strings to MySQL format - Store as UTC but display in EST
     const formatDateTime = (dateTimeStr) => {
       if (!dateTimeStr) return null;
       try {
-        // Parse the datetime string and convert to EST
+        // Parse the datetime string and store as UTC
         const date = new Date(dateTimeStr);
-        const estDate = new Date(date.toLocaleString('en-US', { timeZone: 'America/New_York' }));
-        
-        // Format as MySQL datetime in EST
-        const year = estDate.getFullYear();
-        const month = String(estDate.getMonth() + 1).padStart(2, '0');
-        const day = String(estDate.getDate()).padStart(2, '0');
-        const hours = String(estDate.getHours()).padStart(2, '0');
-        const minutes = String(estDate.getMinutes()).padStart(2, '0');
-        const seconds = String(estDate.getSeconds()).padStart(2, '0');
-        
-        return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+        return date.toISOString().slice(0, 19).replace('T', ' ');
       } catch (error) {
         console.error('Error formatting datetime:', dateTimeStr, error);
         return dateTimeStr;
@@ -1081,23 +1071,13 @@ app.put('/api/events/:id', upload.fields([
     
     console.log('Edit event request:', { id, name, start_datetime, end_datetime, location, raffle_tickets });
     
-    // Convert datetime strings to MySQL format - Preserve EST timezone
+    // Convert datetime strings to MySQL format - Store as UTC but display in EST
     const formatDateTime = (dateTimeStr) => {
       if (!dateTimeStr) return null;
       try {
-        // Parse the datetime string and convert to EST
+        // Parse the datetime string and store as UTC
         const date = new Date(dateTimeStr);
-        const estDate = new Date(date.toLocaleString('en-US', { timeZone: 'America/New_York' }));
-        
-        // Format as MySQL datetime in EST
-        const year = estDate.getFullYear();
-        const month = String(estDate.getMonth() + 1).padStart(2, '0');
-        const day = String(estDate.getDate()).padStart(2, '0');
-        const hours = String(estDate.getHours()).padStart(2, '0');
-        const minutes = String(estDate.getMinutes()).padStart(2, '0');
-        const seconds = String(estDate.getSeconds()).padStart(2, '0');
-        
-        return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+        return date.toISOString().slice(0, 19).replace('T', ' ');
       } catch (error) {
         console.error('Error formatting datetime:', dateTimeStr, error);
         return dateTimeStr;
@@ -1550,6 +1530,55 @@ app.post('/api/raffle-winners', validate('raffleWinner'), async (req, res) => {
       'INSERT INTO raffle_winners (registration_id, name, email, phone, event_name, win_date, win_time, won_at) VALUES (?, ?, ?, ?, ?, CURDATE(), CURTIME(), NOW())',
       [reg.id, reg.name || null, reg.email || null, reg.phone || null, reg.event_name || null]
     );
+
+    // Send winner confirmation email
+    try {
+      if (reg.email && GMAIL_USER && GMAIL_APP_PASSWORD) {
+        const transporter = await createVerifiedTransporter('ssl');
+        const mailOptions = {
+          from: GMAIL_USER,
+          to: reg.email,
+          subject: `🎉 Congratulations! You're a Raffle Winner!`,
+          html: `
+            <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
+              <p style="font-size: 16px; color: #333; margin-bottom: 20px;">
+                Hello ${reg.name},
+              </p>
+              
+              <p style="font-size: 16px; color: #333; margin-bottom: 20px;">
+                Congratulations! You have been selected as the winner of the raffle for the <strong>"${reg.event_name}"</strong>
+              </p>
+              
+              <div style="background: #f8f9fa; padding: 15px; border-radius: 8px; margin: 20px 0; border-left: 4px solid #28a745;">
+                <p style="margin: 8px 0;"><span style="color: #666;">🗓</span> <strong>Date:</strong> ${new Date().toLocaleDateString("en-US", {timeZone: "America/New_York"})}</p>
+                <p style="margin: 8px 0;"><span style="color: #666;">⏰</span> <strong>Time:</strong> ${new Date().toLocaleTimeString("en-US", {timeZone: "America/New_York", hour: '2-digit', minute: '2-digit'})}</p>
+                <p style="margin: 8px 0;"><span style="color: #666;">🆔</span> <strong>Registration ID:</strong> ${reg.id}</p>
+              </div>
+              
+              <p style="font-size: 16px; color: #333; margin-bottom: 20px;">
+                Please contact the event organizers to claim your prize.
+              </p>
+              
+              <p style="font-size: 16px; color: #333; margin-bottom: 10px;">
+                Warm regards,<br><strong>Indo American Fair Team</strong>
+              </p>
+              
+              <div style="border-top: 1px solid #ddd; margin-top: 20px; padding-top: 15px; font-size: 14px; color: #666;">
+                <p style="margin: 5px 0;"><span style="color: #666;">🌐</span> <a href="https://www.indoamericanfair.com/" style="color: #8B1C1C;">https://www.indoamericanfair.com/</a></p>
+                <p style="margin: 5px 0;"><span style="color: #666;">📧</span> Indoamericanfair2016@gmail.com</p>
+                <p style="margin: 5px 0;"><span style="color: #666;">📞</span> 609-937-2806 | 609-937-2800</p>
+              </div>
+            </div>
+          `
+        };
+        
+        await transporter.sendMail(mailOptions);
+        console.log('✅ Winner email sent successfully to:', reg.email);
+      }
+    } catch (emailError) {
+      console.error('❌ Failed to send winner email:', emailError);
+      // Continue even if email fails
+    }
 
     return res.json({ success: true });
   } catch (error) {

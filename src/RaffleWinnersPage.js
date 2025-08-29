@@ -55,27 +55,31 @@ export default function RaffleWinnersPage () {
     }));
   };
 
-  const handleDeleteWinner = async (winnerId) => {
-    if (window.confirm('Are you sure you want to delete this raffle winner? This action cannot be undone.')) {
+  const handleDeleteAllWinners = async () => {
+    if (window.confirm('Are you sure you want to delete ALL raffle winners? This action cannot be undone and will remove all winner data.')) {
       try {
-        const response = await fetch(`/api/raffle-winners/${winnerId}`, {
-          method: 'DELETE',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        });
-
-        if (response.ok) {
-          // Remove the deleted winner from the list
-          setWinners(prev => prev.filter(winner => winner.id !== winnerId));
-          alert('Raffle winner deleted successfully!');
+        // Delete all winners one by one
+        const deletePromises = winners.map(winner => 
+          fetch(`/api/raffle-winners/${winner.id}`, {
+            method: 'DELETE',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          })
+        );
+        
+        const responses = await Promise.all(deletePromises);
+        const allSuccessful = responses.every(response => response.ok);
+        
+        if (allSuccessful) {
+          setWinners([]);
+          alert('All raffle winners deleted successfully!');
         } else {
-          const errorData = await response.json();
-          alert(`Failed to delete raffle winner: ${errorData.message}`);
+          alert('Some winners could not be deleted. Please try again.');
         }
       } catch (error) {
-        console.error('Error deleting raffle winner:', error);
-        alert('Failed to delete raffle winner. Please try again.');
+        console.error('Error deleting winners:', error);
+        alert('Failed to delete winners. Please try again.');
       }
     }
   };
@@ -125,6 +129,28 @@ export default function RaffleWinnersPage () {
               <div className="error-message">{error}</div>
             ) : (
               <>
+                {/* Delete All Button */}
+                <div style={{ marginBottom: '20px', textAlign: 'right' }}>
+                  <button 
+                    onClick={handleDeleteAllWinners}
+                    style={{
+                      background: '#dc3545',
+                      color: 'white',
+                      border: 'none',
+                      padding: '10px 20px',
+                      borderRadius: '6px',
+                      fontSize: '1rem',
+                      fontWeight: '600',
+                      cursor: 'pointer',
+                      transition: 'background-color 0.3s ease'
+                    }}
+                    onMouseOver={(e) => e.target.style.background = '#c82333'}
+                    onMouseOut={(e) => e.target.style.background = '#dc3545'}
+                  >
+                    🗑️ Delete All Winners
+                  </button>
+                </div>
+
                 {/* Stats and Download Section */}
                 <div className="registrations-stats-section">
                   <div className="registrations-count">
@@ -150,7 +176,6 @@ export default function RaffleWinnersPage () {
                     <div className="header-cell">Event Name</div>
                     <div className="header-cell">Win Date</div>
                     <div className="header-cell">Win Time</div>
-                    <div className="header-cell">Delete</div>
                   </div>
 
                   {/* Filter Row */}
@@ -218,15 +243,6 @@ export default function RaffleWinnersPage () {
                         className="filter-input"
                       />
                     </div>
-                    <div className="filter-cell">
-                      <input
-                        name="delete"
-                        value={filters.delete}
-                        onChange={handleFilterChange}
-                        placeholder="Filter Delete"
-                        className="filter-input"
-                      />
-                    </div>
                   </div>
 
                   {/* Data Rows */}
@@ -239,14 +255,6 @@ export default function RaffleWinnersPage () {
                       <div className="data-cell">{winner.event_name}</div>
                       <div className="data-cell">{winner.win_date}</div>
                       <div className="data-cell">{winner.win_time}</div>
-                      <div className="data-cell">
-                        <button
-                          onClick={() => handleDeleteWinner(winner.id)}
-                          className="delete-button"
-                        >
-                          🗑️
-                        </button>
-                      </div>
                     </div>
                   ))}
                   </div>
