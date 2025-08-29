@@ -100,7 +100,7 @@
 /* Table Header Row */
 .table-header-row {
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr; /* 7 columns */
+  grid-template-columns: 120px 150px 200px 150px 200px 120px 120px; /* Fixed column widths */
   background: #8B1C1C;
   color: white;
   align-items: center;
@@ -109,14 +109,15 @@
 }
 
 .header-cell {
-  padding: 10px 10px;
+  padding: 10px 8px;
   text-align: left;
   font-weight: bold;
-  font-size: 1rem;
+  font-size: 0.9rem;
   white-space: nowrap;
   border-right: 1px solid #8B1C1C;
   overflow: hidden;
   text-overflow: ellipsis;
+  box-sizing: border-box;
 }
 
 .header-cell:last-child {
@@ -126,10 +127,10 @@
 /* Filter Row */
 .filter-row {
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr; /* 7 columns */
+  grid-template-columns: 120px 150px 200px 150px 200px 120px 120px; /* Same fixed column widths */
   background: #f8f9fa;
-  padding: 10px;
-  gap: 10px;
+  padding: 10px 8px;
+  gap: 0;
   border-bottom: 1px solid #ddd;
   align-items: center;
   width: 100%;
@@ -148,6 +149,7 @@
   display: flex;
   align-items: center;
   width: 100%;
+  padding: 0 4px;
 }
 
 .filter-input {
@@ -169,8 +171,8 @@
 /* Data Rows */
 .registration-row {
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr; /* 7 columns */
-  padding: 12px;
+  grid-template-columns: 120px 150px 200px 150px 200px 120px 120px; /* Same fixed column widths */
+  padding: 12px 8px;
   border-bottom: 1px solid #ddd;
   transition: background-color 0.3s ease;
   align-items: center;
@@ -191,7 +193,7 @@
 }
 
 .data-cell {
-  padding: 6px 10px;
+  padding: 6px 8px;
   text-align: left;
   font-size: 0.9rem;
   white-space: nowrap;

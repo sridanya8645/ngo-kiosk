@@ -193,55 +193,41 @@ const RaffleSpinPage = () => {
     }
   };
 
-  const spinWheel = () => {
-    if (registrations.length === 0) return;
-
-    // Select directly from the wheel - no count restrictions
+  const handleSpinClick = () => {
+    if (registrations.length === 0) {
+      alert('No eligible users to spin!');
+      return;
+    }
+    
+    // Don't select winner yet - just start spinning
     const randomIndex = Math.floor(Math.random() * registrations.length);
     setPrizeNumber(randomIndex);
     setMustSpin(true);
-    // Store the winner
-    setWinner(registrations[randomIndex]);
+    // Don't set winner here - it will be set in handleStopSpinning
   };
 
   const handleStopSpinning = () => {
     setMustSpin(false);
 
-    // If we already have a winner stored (for both large and small datasets)
-    if (winner) {
+    // Now select the winner based on where the wheel stopped
+    const selected = registrations[prizeNumber];
+    if (selected) {
+      setWinner(selected);
       triggerConfetti();
 
       // Persist winner to backend
       fetch('/api/raffle-winners', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ registrationId: winner.id }),
+        body: JSON.stringify({ registrationId: selected.id }),
       })
         .then(() => {
-        // Remove winner from eligible users
-          setEligibleUsers(prev => prev.filter(u => u.id !== winner.id));
-          setWinner(null);
+          // Remove winner from eligible users
+          setEligibleUsers(prev => prev.filter(u => u.id !== selected.id));
+          // Remove winner from the wheel list so they can't win again
+          setRegistrations(prev => prev.filter(u => u.id !== selected.id));
         })
         .catch(err => console.error('Failed to save winner:', err));
-    } else {
-      // Fallback for small datasets without stored winner
-      const selected = registrations[prizeNumber];
-      if (selected) {
-        setWinner(selected);
-        triggerConfetti();
-
-        // Persist winner to backend, then remove from wheel
-        fetch('/api/raffle-winners', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ registrationId: selected.id }),
-        })
-          .then(() => {
-          // Remove winner from the wheel list so they can't win again
-            setRegistrations(prev => prev.filter(u => u.id !== selected.id));
-          })
-          .catch(err => console.error('Failed to save winner:', err));
-      }
     }
   };
 
@@ -485,7 +471,7 @@ const RaffleSpinPage = () => {
           {/* Spin button */}
           <div className="spin-button-wrapper">
             <button
-              onClick={spinWheel}
+              onClick={handleSpinClick}
               disabled={mustSpin || registrations.length === 0}
               className="raffle-button primary"
             >

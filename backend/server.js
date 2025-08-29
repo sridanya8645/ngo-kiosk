@@ -592,7 +592,7 @@ app.post('/api/register', validate('registration'), async (req, res) => {
             
             <div style="background: #f8f9fa; padding: 20px; border-radius: 10px; margin: 20px 0;">
               <h3 style="color: #333; margin-top: 0;">Event Details:</h3>
-              <p style="margin: 8px 0;"><span style="color: #666;">📅</span> <strong>Date & Time:</strong> ${new Date(event.start_datetime).toLocaleString()}</p>
+              <p style="margin: 8px 0;"><span style="color: #666;">📅</span> <strong>Date & Time:</strong> ${new Date(event.start_datetime).toLocaleDateString()} ${event.end_datetime && new Date(event.end_datetime).toDateString() !== new Date(event.start_datetime).toDateString() ? `to ${new Date(event.end_datetime).toLocaleDateString()}` : ''} at ${new Date(event.start_datetime).toLocaleTimeString()}</p>
               <p style="margin: 8px 0;"><span style="color: #666;">📍</span> <strong>Venue:</strong> ${event.location}</p>
               <p style="margin: 8px 0;"><span style="color: #666;">🆔</span> <strong>Registration ID:</strong> ${registrationId}</p>
               <p style="margin: 8px 0;"><span style="color: #666;">⏰</span> <strong>Registration Time:</strong> ${registrationTime.toLocaleString()}</p>
@@ -604,7 +604,7 @@ app.post('/api/register', validate('registration'), async (req, res) => {
               <div style="background: #f8f9fa; padding: 20px; border-radius: 10px; margin: 15px 0; border: 2px solid #ddd;">
                 <p style="font-size: 16px; color: #333; margin: 0 0 15px 0; font-weight: bold;">📱 <strong>Registration ID:</strong> ${registrationId}</p>
                 <p style="font-size: 14px; color: #666; margin: 5px 0; font-family: monospace;">Event: ${event.name}</p>
-                <p style="font-size: 14px; color: #666; margin: 5px 0; font-family: monospace;">Date & Time: ${new Date(event.start_datetime).toLocaleString()}</p>
+                <p style="font-size: 14px; color: #666; margin: 5px 0; font-family: monospace;">Date & Time: ${new Date(event.start_datetime).toLocaleDateString()} ${event.end_datetime && new Date(event.end_datetime).toDateString() !== new Date(event.start_datetime).toDateString() ? `to ${new Date(event.end_datetime).toLocaleDateString()}` : ''} at ${new Date(event.start_datetime).toLocaleTimeString()}</p>
                 <p style="font-size: 12px; color: #999; margin: 10px 0 0 0;">You are automatically checked in</p>
               </div>
             </div>
@@ -724,7 +724,7 @@ app.post('/api/mobile-register', validate('registration'), async (req, res) => {
             
             <div style="background: #f8f9fa; padding: 20px; border-radius: 10px; margin: 20px 0;">
               <h3 style="color: #333; margin-top: 0;">Event Details:</h3>
-              <p style="margin: 8px 0;"><span style="color: #666;">📅</span> <strong>Date & Time:</strong> ${new Date(event.start_datetime).toLocaleString()}</p>
+              <p style="margin: 8px 0;"><span style="color: #666;">📅</span> <strong>Date & Time:</strong> ${new Date(event.start_datetime).toLocaleDateString()} ${event.end_datetime && new Date(event.end_datetime).toDateString() !== new Date(event.start_datetime).toDateString() ? `to ${new Date(event.end_datetime).toLocaleDateString()}` : ''} at ${new Date(event.start_datetime).toLocaleTimeString()}</p>
               <p style="margin: 8px 0;"><span style="color: #666;">📍</span> <strong>Venue:</strong> ${event.location}</p>
               <p style="margin: 8px 0;"><span style="color: #666;">🆔</span> <strong>Registration ID:</strong> ${registrationId}</p>
               <p style="margin: 8px 0;"><span style="color: #666;">⏰</span> <strong>Registration Time:</strong> ${registrationTime.toLocaleString()}</p>
@@ -736,7 +736,7 @@ app.post('/api/mobile-register', validate('registration'), async (req, res) => {
               <div style="background: #f8f9fa; padding: 20px; border-radius: 10px; margin: 15px 0; border: 2px solid #ddd;">
                 <p style="font-size: 16px; color: #333; margin: 0 0 15px 0; font-weight: bold;">📱 <strong>Registration ID:</strong> ${registrationId}</p>
                 <p style="font-size: 14px; color: #666; margin: 5px 0; font-family: monospace;">Event: ${event.name}</p>
-                <p style="font-size: 14px; color: #666; margin: 5px 0; font-family: monospace;">Date & Time: ${new Date(event.start_datetime).toLocaleString()}</p>
+                <p style="font-size: 14px; color: #666; margin: 5px 0; font-family: monospace;">Date & Time: ${new Date(event.start_datetime).toLocaleDateString()} ${event.end_datetime && new Date(event.end_datetime).toDateString() !== new Date(event.start_datetime).toDateString() ? `to ${new Date(event.end_datetime).toLocaleDateString()}` : ''} at ${new Date(event.start_datetime).toLocaleTimeString()}</p>
                 <p style="font-size: 12px; color: #999; margin: 10px 0 0 0;">You are automatically checked in</p>
               </div>
             </div>
