@@ -83,12 +83,12 @@ function EventDetailsPage () {
     });
   };
 
-  // Format datetime for input fields (YYYY-MM-DDTHH:MM) - Convert to EST
+  // Format datetime for input fields (YYYY-MM-DDTHH:MM) - Show EST time like emails
   const formatDateTimeForInput = (datetime) => {
     if (!datetime) return '';
     const date = new Date(datetime);
     
-    // Convert to EST timezone
+    // Convert to EST timezone like the emails do
     const estDate = new Date(date.toLocaleString('en-US', { timeZone: 'America/New_York' }));
     
     const year = estDate.getFullYear();
