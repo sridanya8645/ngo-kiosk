@@ -50,7 +50,36 @@ function AdminRegistrationsPage () {
   }, []);
 
   const handleFilterChange = (e) => {
-    setFilters({ ...filters, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+    setFilters(prev => ({
+      ...prev,
+      [name]: value
+    }));
+  };
+
+  const handleDeleteRegistration = async (registrationId) => {
+    if (window.confirm('Are you sure you want to delete this registration? This action cannot be undone.')) {
+      try {
+        const response = await fetch(`/api/registrations/${registrationId}`, {
+          method: 'DELETE',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        });
+
+        if (response.ok) {
+          // Remove the deleted registration from the list
+          setRegistrations(prev => prev.filter(reg => reg.id !== registrationId));
+          alert('Registration deleted successfully!');
+        } else {
+          const errorData = await response.json();
+          alert(`Failed to delete registration: ${errorData.message}`);
+        }
+      } catch (error) {
+        console.error('Error deleting registration:', error);
+        alert('Failed to delete registration. Please try again.');
+      }
+    }
   };
 
   const filtered = registrations.filter((row) =>
@@ -145,6 +174,7 @@ function AdminRegistrationsPage () {
                 <div className="header-cell">Checked In</div>
                 <div className="header-cell">Checkin Date</div>
                 <div className="header-cell">Volunteer?</div>
+                <div className="header-cell">Delete</div>
               </div>
 
               {/* Filter Row */}
@@ -236,6 +266,9 @@ function AdminRegistrationsPage () {
                     <option value="no">No</option>
                   </select>
                 </div>
+                <div className="filter-cell">
+                  <button className="delete-filter-button">Delete</button>
+                </div>
               </div>
 
               {/* Data Table */}
@@ -264,6 +297,14 @@ function AdminRegistrationsPage () {
                         <span className={`volunteer-badge ${registration.interested_to_volunteer === 'Yes' ? 'interested' : 'not-interested'}`}>
                           {registration.interested_to_volunteer || 'No'}
                         </span>
+                      </div>
+                      <div className="data-cell">
+                        <button
+                          onClick={() => handleDeleteRegistration(registration.id)}
+                          className="delete-button"
+                        >
+                          🗑️
+                        </button>
                       </div>
                     </div>
                   ))

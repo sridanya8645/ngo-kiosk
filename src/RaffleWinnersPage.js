@@ -47,7 +47,38 @@ export default function RaffleWinnersPage () {
     })();
   }, []);
 
-  const handleFilterChange = (e) => setFilters({ ...filters, [e.target.name]: e.target.value });
+  const handleFilterChange = (e) => {
+    const { name, value } = e.target;
+    setFilters(prev => ({
+      ...prev,
+      [name]: value
+    }));
+  };
+
+  const handleDeleteWinner = async (winnerId) => {
+    if (window.confirm('Are you sure you want to delete this raffle winner? This action cannot be undone.')) {
+      try {
+        const response = await fetch(`/api/raffle-winners/${winnerId}`, {
+          method: 'DELETE',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        });
+
+        if (response.ok) {
+          // Remove the deleted winner from the list
+          setWinners(prev => prev.filter(winner => winner.id !== winnerId));
+          alert('Raffle winner deleted successfully!');
+        } else {
+          const errorData = await response.json();
+          alert(`Failed to delete raffle winner: ${errorData.message}`);
+        }
+      } catch (error) {
+        console.error('Error deleting raffle winner:', error);
+        alert('Failed to delete raffle winner. Please try again.');
+      }
+    }
+  };
 
   const filtered = winners.filter((row) =>
     columns.every((col) => {
@@ -119,6 +150,7 @@ export default function RaffleWinnersPage () {
                     <div className="header-cell">Event Name</div>
                     <div className="header-cell">Win Date</div>
                     <div className="header-cell">Win Time</div>
+                    <div className="header-cell">Delete</div>
                   </div>
 
                   {/* Filter Row */}
@@ -186,6 +218,15 @@ export default function RaffleWinnersPage () {
                         className="filter-input"
                       />
                     </div>
+                    <div className="filter-cell">
+                      <input
+                        name="delete"
+                        value={filters.delete}
+                        onChange={handleFilterChange}
+                        placeholder="Filter Delete"
+                        className="filter-input"
+                      />
+                    </div>
                   </div>
 
                   {/* Data Rows */}
@@ -198,6 +239,14 @@ export default function RaffleWinnersPage () {
                       <div className="data-cell">{winner.event_name}</div>
                       <div className="data-cell">{winner.win_date}</div>
                       <div className="data-cell">{winner.win_time}</div>
+                      <div className="data-cell">
+                        <button
+                          onClick={() => handleDeleteWinner(winner.id)}
+                          className="delete-button"
+                        >
+                          🗑️
+                        </button>
+                      </div>
                     </div>
                   ))}
                   </div>

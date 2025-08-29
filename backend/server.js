@@ -679,7 +679,7 @@ app.post('/api/mobile-register', validate('registration'), async (req, res) => {
     
     // Send confirmation email without QR code for mobile register (automatic check-in)
     try {
-      console.log('🔍 Attempting to send email to:', email);
+      console.log('🔍 Attempting to send email to:', email);all
       
       if (!GMAIL_USER || !GMAIL_APP_PASSWORD) {
         console.error('❌ Gmail credentials not configured. Skipping email send.');
@@ -1859,6 +1859,50 @@ app.get('/working', (req, res) => {
     timestamp: new Date().toISOString(),
     server: 'NGO Kiosk Backend'
   });
+});
+
+// Delete registration
+app.delete('/api/registrations/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+    
+    // Check if registration exists
+    const [rows] = await pool.execute('SELECT * FROM registrations WHERE id = ?', [id]);
+    
+    if (rows.length === 0) {
+      return res.status(404).json({ success: false, message: 'Registration not found' });
+    }
+    
+    // Delete the registration
+    await pool.execute('DELETE FROM registrations WHERE id = ?', [id]);
+    
+    res.json({ success: true, message: 'Registration deleted successfully' });
+  } catch (error) {
+    console.error('Delete registration error:', error);
+    res.status(500).json({ success: false, message: 'Database error' });
+  }
+});
+
+// Delete raffle winner
+app.delete('/api/raffle-winners/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+    
+    // Check if raffle winner exists
+    const [rows] = await pool.execute('SELECT * FROM raffle_winners WHERE id = ?', [id]);
+    
+    if (rows.length === 0) {
+      return res.status(404).json({ success: false, message: 'Raffle winner not found' });
+    }
+    
+    // Delete the raffle winner
+    await pool.execute('DELETE FROM raffle_winners WHERE id = ?', [id]);
+    
+    res.json({ success: true, message: 'Raffle winner deleted successfully' });
+  } catch (error) {
+    console.error('Delete raffle winner error:', error);
+    res.status(500).json({ success: false, message: 'Database error' });
+  }
 });
 
 // Debug endpoint to check static files

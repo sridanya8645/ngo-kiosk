@@ -269,7 +269,7 @@
 /* Table Header Row */
 .table-header-row {
   display: grid;
-  grid-template-columns: 120px 150px 200px 150px 200px 120px 120px 120px 120px;
+  grid-template-columns: 100px 150px 200px 150px 200px 120px 120px 120px 120px 80px;
   background: #8B1C1C;
   color: white;
   width: 100%;
@@ -296,7 +296,7 @@
 /* Filter Row */
 .filter-row {
   display: grid;
-  grid-template-columns: 120px 150px 200px 150px 200px 120px 120px 120px 120px;
+  grid-template-columns: 100px 150px 200px 150px 200px 120px 120px 120px 120px 80px;
   background: #f8f9fa;
   padding: 10px 8px;
   border-bottom: 1px solid #ddd;
@@ -323,7 +323,7 @@
 /* Data Rows */
 .data-row {
   display: grid;
-  grid-template-columns: 120px 150px 200px 150px 200px 120px 120px 120px 120px;
+  grid-template-columns: 100px 150px 200px 150px 200px 120px 120px 120px 120px 80px;
   background: white;
   border-bottom: 1px solid #eee;
   align-items: center;
@@ -379,6 +379,37 @@
   background: rgba(220, 53, 69, 0.1);
   color: #dc3545;
   border: 1px solid #dc3545;
+}
+
+/* Delete Button Styles */
+.delete-button {
+  background: #dc3545;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  padding: 6px 10px;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  width: 100%;
+  max-width: 60px;
+}
+
+.delete-button:hover {
+  background: #c82333;
+}
+
+.delete-filter-button {
+  background: #6c757d;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  padding: 8px;
+  font-size: 0.8rem;
+  cursor: pointer;
+  width: 100%;
+  opacity: 0.5;
+  pointer-events: none;
 }
 
 .no-data-message {
@@ -791,7 +822,7 @@
 /* Data Rows */
 .data-row {
   display: grid;
-  grid-template-columns: 120px 150px 200px 150px 200px 120px 120px 120px 120px;
+  grid-template-columns: 120px 150px 200px 150px 200px 120px 120px 120px 120px 80px;
   background: white;
   border-bottom: 1px solid #eee;
   align-items: center;
