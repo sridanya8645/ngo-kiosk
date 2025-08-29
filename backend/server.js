@@ -1004,12 +1004,23 @@ app.post('/api/events', upload.fields([
       console.log(`Header image uploaded: ${header_image}`);
     }
 
-    // Convert datetime strings to MySQL format
+    // Convert datetime strings to MySQL format - Preserve EST timezone
     const formatDateTime = (dateTimeStr) => {
       if (!dateTimeStr) return null;
       try {
+        // Parse the datetime string and convert to EST
         const date = new Date(dateTimeStr);
-        return date.toISOString().slice(0, 19).replace('T', ' '); // Convert to MySQL datetime format
+        const estDate = new Date(date.toLocaleString('en-US', { timeZone: 'America/New_York' }));
+        
+        // Format as MySQL datetime in EST
+        const year = estDate.getFullYear();
+        const month = String(estDate.getMonth() + 1).padStart(2, '0');
+        const day = String(estDate.getDate()).padStart(2, '0');
+        const hours = String(estDate.getHours()).padStart(2, '0');
+        const minutes = String(estDate.getMinutes()).padStart(2, '0');
+        const seconds = String(estDate.getSeconds()).padStart(2, '0');
+        
+        return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
       } catch (error) {
         console.error('Error formatting datetime:', dateTimeStr, error);
         return dateTimeStr;
@@ -1070,12 +1081,23 @@ app.put('/api/events/:id', upload.fields([
     
     console.log('Edit event request:', { id, name, start_datetime, end_datetime, location, raffle_tickets });
     
-    // Convert datetime strings to MySQL format
+    // Convert datetime strings to MySQL format - Preserve EST timezone
     const formatDateTime = (dateTimeStr) => {
       if (!dateTimeStr) return null;
       try {
+        // Parse the datetime string and convert to EST
         const date = new Date(dateTimeStr);
-        return date.toISOString().slice(0, 19).replace('T', ' '); // Convert to MySQL datetime format
+        const estDate = new Date(date.toLocaleString('en-US', { timeZone: 'America/New_York' }));
+        
+        // Format as MySQL datetime in EST
+        const year = estDate.getFullYear();
+        const month = String(estDate.getMonth() + 1).padStart(2, '0');
+        const day = String(estDate.getDate()).padStart(2, '0');
+        const hours = String(estDate.getHours()).padStart(2, '0');
+        const minutes = String(estDate.getMinutes()).padStart(2, '0');
+        const seconds = String(estDate.getSeconds()).padStart(2, '0');
+        
+        return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
       } catch (error) {
         console.error('Error formatting datetime:', dateTimeStr, error);
         return dateTimeStr;
