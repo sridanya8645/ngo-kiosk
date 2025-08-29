@@ -779,3 +779,21 @@
   text-overflow: ellipsis;
   white-space: nowrap;
 }
+
+/* Data Table */
+.data-table {
+  background: white;
+  flex: 1 1 auto;
+  overflow-y: auto;
+  width: 100%;
+}
+
+/* Data Rows */
+.data-row {
+  display: grid;
+  grid-template-columns: 120px 150px 200px 150px 200px 120px 120px 120px 120px;
+  background: white;
+  border-bottom: 1px solid #eee;
+  align-items: center;
+  min-height: 50px;
+}

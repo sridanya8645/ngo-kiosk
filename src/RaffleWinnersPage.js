@@ -190,7 +190,7 @@ export default function RaffleWinnersPage () {
 
                   {/* Data Rows */}
                   {filtered.map((winner) => (
-                    <div key={winner.id} className="registration-row">
+                    <div key={winner.id} className="data-row">
                       <div className="data-cell">{winner.registration_id}</div>
                       <div className="data-cell">{winner.name}</div>
                       <div className="data-cell">{winner.email}</div>

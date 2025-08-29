@@ -281,7 +281,7 @@ const RegisterPage = () => {
     <div className="register-container">
       <SiteHeader navVariant="home-only" />
 
-      {/* Main Content - Animation and raffle text after title - deployment trigger */}
+      {/* Main Content - Animation and raffle text after title - new deployment trigger */}
       <main className="register-main">
         <div className="register-form-container">
           {/* Heading first */}

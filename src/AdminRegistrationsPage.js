@@ -247,7 +247,7 @@ function AdminRegistrationsPage () {
                   </div>
                 ) : (
                   filtered.map((registration, index) => (
-                    <div key={index} className="registration-row">
+                    <div key={index} className="data-row">
                       <div className="data-cell">{registration.id || '-'}</div>
                       <div className="data-cell">{registration.name || '-'}</div>
                       <div className="data-cell">{registration.email || '-'}</div>
