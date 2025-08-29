@@ -100,7 +100,7 @@
 /* Table Header Row */
 .table-header-row {
   display: grid;
-  grid-template-columns: 120px 150px 200px 150px 200px 120px 120px; /* Fixed column widths */
+  grid-template-columns: 120px 150px 200px 150px 200px 120px 120px;
   background: #8B1C1C;
   color: white;
   align-items: center;
@@ -127,79 +127,52 @@
 /* Filter Row */
 .filter-row {
   display: grid;
-  grid-template-columns: 120px 150px 200px 150px 200px 120px 120px; /* Same fixed column widths */
+  grid-template-columns: 120px 150px 200px 150px 200px 120px 120px;
   background: #f8f9fa;
   padding: 10px 8px;
-  gap: 0;
   border-bottom: 1px solid #ddd;
   align-items: center;
-  width: 100%;
-  min-width: 100%;
-}
-
-/* Data Table */
-.data-table {
-  background: white;
-  flex: 1 1 auto;
-  overflow-y: auto;
-  width: 100%;
 }
 
 .filter-cell {
+  padding: 8px;
   display: flex;
   align-items: center;
-  width: 100%;
-  padding: 0 4px;
+  justify-content: flex-start;
+  box-sizing: border-box;
 }
 
 .filter-input {
   width: 100%;
-  padding: 6px 8px;
+  padding: 8px;
   border: 1px solid #ddd;
   border-radius: 4px;
   font-size: 0.9rem;
   background: white;
-  box-sizing: border-box;
-}
-
-.filter-input:focus {
-  outline: none;
-  border-color: #8B1C1C;
-  box-shadow: 0 0 0 2px rgba(139, 28, 28, 0.2);
 }
 
 /* Data Rows */
-.registration-row {
+.data-row {
   display: grid;
-  grid-template-columns: 120px 150px 200px 150px 200px 120px 120px; /* Same fixed column widths */
-  padding: 12px 8px;
-  border-bottom: 1px solid #ddd;
-  transition: background-color 0.3s ease;
+  grid-template-columns: 120px 150px 200px 150px 200px 120px 120px;
+  background: white;
+  border-bottom: 1px solid #eee;
   align-items: center;
-  width: 100%;
-  min-width: 100%;
+  min-height: 50px;
 }
 
-.registration-row:hover {
-  background: #f0f0f0;
-}
-
-.registration-row:nth-child(even) {
+.data-row:hover {
   background: #f8f9fa;
 }
 
-.registration-row:nth-child(odd) {
-  background: white;
-}
-
 .data-cell {
-  padding: 6px 8px;
+  padding: 10px 8px;
   text-align: left;
   font-size: 0.9rem;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  border-right: 1px solid #ddd;
+  border-right: 1px solid #eee;
   box-sizing: border-box;
 }
 

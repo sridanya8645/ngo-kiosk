@@ -377,20 +377,10 @@ const RaffleSpinPage = () => {
 
           {/* Event Info and Date - show only after selection */}
           {selectedEvent && (
-            <div className="event-info-card">
-              <div className="event-name">
-                {selectedEvent.name}
-              </div>
-              <div className="event-date">
-                {(() => {
-                  const datePart = typeof selectedEvent.start_datetime === 'string' ? selectedEvent.start_datetime.split('T')[0] : new Date(selectedEvent.start_datetime).toISOString().split('T')[0];
-                  const dt = new Date(`${datePart}T00:00:00`);
-                  return dt.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' });
-                })()}
-              </div>
-              <div className="registration-count">
-                Total Checked-in: {registrations.length} participants
-              </div>
+            <div className="event-info-box">
+              <h3>{selectedEvent ? selectedEvent.name : 'No Event Selected'}</h3>
+              <p><em>{selectedEvent ? new Date().toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }) : 'No date available'}</em></p>
+              <p>Total Checked-in: {registrations.length} participants</p>
             </div>
           )}
 
