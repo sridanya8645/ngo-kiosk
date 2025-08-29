@@ -292,162 +292,162 @@ const RegisterPage = () => {
           {/* Form third - only show if not submitted */}
           {!submitSuccess && (
             <>
-              <form onSubmit={handleSubmit} className="register-form">
-                {/* Event Selection Dropdown - show only if multiple events */}
-                {events.length > 1 && (
-                  <div className="form-group">
-                    <label htmlFor="event-select" className="form-label">Select Event *</label>
-                    <select
-                      id="event-select"
-                      value={selectedEvent?.event_id || ''}
-                      onChange={handleEventChange}
-                      className={`form-input ${errors.event ? 'error' : ''}`}
-                      required
-                    >
-                      <option value="">-- Select an event --</option>
-                      {events.map((event) => (
-                        <option key={event.event_id} value={event.event_id}>
-                          {event.name} ({new Date(event.start_datetime).toLocaleDateString('en-US', {
-                            weekday: 'short',
-                            month: 'short',
-                            day: 'numeric',
-                            hour: '2-digit',
-                            minute: '2-digit',
-                            hour12: true
-                          })})
-                        </option>
-                      ))}
-                    </select>
-                    {errors.event && <span className="error-message">{errors.event}</span>}
+              {/* Two-column layout for form and animation */}
+              <div className="register-layout">
+                {/* Left side - Animation and Raffle Text */}
+                <div className="animation-section">
+                  {/* Raffle text */}
+                  <div className="raffle-text">
+                    {selectedEvent?.raffle_tickets || 'Register and get a chance to win $200 Raffle ticket!!'}
                   </div>
-                )}
-                
-                {/* Show error if no events available */}
-                {events.length === 0 && (
-                  <div className="form-group">
-                    <span className="error-message">No events available for today. Please check back later.</span>
+
+                  {/* Lottie Animation */}
+                  <div className="animation-container">
+                    <lottie-player
+                      src="/visa card.json"
+                      background="transparent"
+                      speed="1"
+                      style={{ width: '180px', height: '180px', margin: '0 auto' }}
+                      loop
+                      autoplay
+                    ></lottie-player>
                   </div>
-                )}
-                <div className="form-group">
-                  <label htmlFor="name" className="form-label">Full Name *</label>
-                  <input
-                    type="text"
-                    id="name"
-                    name="name"
-                    value={formData.name}
-                    onChange={handleInputChange}
-                    className={`form-input ${errors.name ? 'error' : ''}`}
-                    placeholder="Enter your full name"
-                    required
-                  />
-                  {errors.name && <span className="error-message">{errors.name}</span>}
                 </div>
 
-                <div className="form-group">
-                  <label htmlFor="phone" className="form-label">Phone Number *</label>
-                  <input
-                    type="tel"
-                    id="phone"
-                    name="phone"
-                    value={formData.phone}
-                    onChange={handleInputChange}
-                    className={`form-input ${errors.phone ? 'error' : ''}`}
-                    placeholder="Enter your phone number"
-                    pattern="^(\+1[\s-]?)?\(?\d{3}\)?[\s-]?\d{3}[\s-]?\d{4}$"
-                    title="Enter a valid US phone number (e.g., 555-123-4567)"
-                    required
-                  />
-                  {errors.phone && <span className="error-message">{errors.phone}</span>}
-                </div>
-
-                <div className="form-group">
-                  <label htmlFor="email" className="form-label">Email Address *</label>
-                  <input
-                    type="email"
-                    id="email"
-                    name="email"
-                    value={formData.email}
-                    onChange={handleInputChange}
-                    className={`form-input ${errors.email ? 'error' : ''}`}
-                    placeholder="Enter your email address"
-                    required
-                  />
-                  {errors.email && <span className="error-message">{errors.email}</span>}
-                </div>
-
-                {/* Volunteer field - only show if event has volunteer enabled */}
-                {selectedEvent?.volunteer_enabled && (
-                  <div className="form-group">
-                    <label className="form-label">Interested in volunteering?</label>
-                    <div className="radio-group">
-                      <label className="radio-label">
-                        <input
-                          type="radio"
-                          name="interested_to_volunteer"
-                          value="Yes"
-                          checked={formData.interested_to_volunteer === 'Yes'}
-                          onChange={handleInputChange}
-                        />
-                        <span>Yes</span>
-                      </label>
-                      <label className="radio-label">
-                        <input
-                          type="radio"
-                          name="interested_to_volunteer"
-                          value="No"
-                          checked={formData.interested_to_volunteer === 'No'}
-                          onChange={handleInputChange}
-                        />
-                        <span>No</span>
-                      </label>
+                {/* Right side - Registration Form */}
+                <div className="form-section">
+                  <form onSubmit={handleSubmit} className="register-form">
+                    {/* Event Selection Dropdown - show only if multiple events */}
+                    {events.length > 1 && (
+                      <div className="form-group">
+                        <label htmlFor="event-select" className="form-label">Select Event *</label>
+                        <select
+                          id="event-select"
+                          value={selectedEvent?.event_id || ''}
+                          onChange={handleEventChange}
+                          className={`form-input ${errors.event ? 'error' : ''}`}
+                          required
+                        >
+                          <option value="">-- Select an event --</option>
+                          {events.map((event) => (
+                            <option key={event.event_id} value={event.event_id}>
+                              {event.name} ({new Date(event.start_datetime).toLocaleDateString('en-US', {
+                                weekday: 'short',
+                                month: 'short',
+                                day: 'numeric',
+                                hour: '2-digit',
+                                minute: '2-digit',
+                                hour12: true
+                              })})
+                            </option>
+                          ))}
+                        </select>
+                        {errors.event && <span className="error-message">{errors.event}</span>}
+                      </div>
+                    )}
+                    
+                    {/* Show error if no events available */}
+                    {events.length === 0 && (
+                      <div className="form-group">
+                        <span className="error-message">No events available for today. Please check back later.</span>
+                      </div>
+                    )}
+                    <div className="form-group">
+                      <label htmlFor="name" className="form-label">Full Name *</label>
+                      <input
+                        type="text"
+                        id="name"
+                        name="name"
+                        value={formData.name}
+                        onChange={handleInputChange}
+                        className={`form-input ${errors.name ? 'error' : ''}`}
+                        placeholder="Enter your full name"
+                        required
+                      />
+                      {errors.name && <span className="error-message">{errors.name}</span>}
                     </div>
-                  </div>
-                )}
 
-                <div className="form-actions">
-                  <button
-                    type="button"
-                    onClick={() => navigate('/')}
-                    className="cancel-button"
-                    disabled={isSubmitting}
-                  >
-                    Cancel
-                  </button>
-                  <button
-                    type="submit"
-                    className="submit-button"
-                    disabled={isSubmitting}
-                  >
-                    {isSubmitting ? 'Registering...' : 'Register'}
-                  </button>
-                </div>
+                    <div className="form-group">
+                      <label htmlFor="phone" className="form-label">Phone Number *</label>
+                      <input
+                        type="tel"
+                        id="phone"
+                        name="phone"
+                        value={formData.phone}
+                        onChange={handleInputChange}
+                        className={`form-input ${errors.phone ? 'error' : ''}`}
+                        placeholder="Enter your phone number"
+                        pattern="^(\+1[\s-]?)?\(?\d{3}\)?[\s-]?\d{3}[\s-]?\d{4}$"
+                        title="Enter a valid US phone number (e.g., 555-123-4567)"
+                        required
+                      />
+                      {errors.phone && <span className="error-message">{errors.phone}</span>}
+                    </div>
 
-                {/* Raffle text after register button */}
-                <div style={{
-                  textAlign: 'center',
-                  margin: '20px 0 10px 0',
-                  color: '#8B1C1C',
-                  fontSize: '1.2rem',
-                  fontWeight: '700',
-                }}>
-                  {selectedEvent?.raffle_tickets || 'Register and get a chance to win $200 Raffle ticket!!'}
-                </div>
+                    <div className="form-group">
+                      <label htmlFor="email" className="form-label">Email Address *</label>
+                      <input
+                        type="email"
+                        id="email"
+                        name="email"
+                        value={formData.email}
+                        onChange={handleInputChange}
+                        className={`form-input ${errors.email ? 'error' : ''}`}
+                        placeholder="Enter your email address"
+                        required
+                      />
+                      {errors.email && <span className="error-message">{errors.email}</span>}
+                    </div>
 
-                {/* Lottie Animation */}
-                <div style={{
-                  textAlign: 'center',
-                  margin: '20px 0',
-                }}>
-                  <lottie-player
-                    src="/visa card.json"
-                    background="transparent"
-                    speed="1"
-                    style={{ width: '200px', height: '200px', margin: '0 auto' }}
-                    loop
-                    autoplay
-                  ></lottie-player>
+                    {/* Volunteer field - only show if event has volunteer enabled */}
+                    {selectedEvent?.volunteer_enabled && (
+                      <div className="form-group">
+                        <label className="form-label">Interested in volunteering?</label>
+                        <div className="radio-group">
+                          <label className="radio-label">
+                            <input
+                              type="radio"
+                              name="interested_to_volunteer"
+                              value="Yes"
+                              checked={formData.interested_to_volunteer === 'Yes'}
+                              onChange={handleInputChange}
+                            />
+                            <span>Yes</span>
+                          </label>
+                          <label className="radio-label">
+                            <input
+                              type="radio"
+                              name="interested_to_volunteer"
+                              value="No"
+                              checked={formData.interested_to_volunteer === 'No'}
+                              onChange={handleInputChange}
+                            />
+                            <span>No</span>
+                          </label>
+                        </div>
+                      </div>
+                    )}
+
+                    <div className="form-actions">
+                      <button
+                        type="button"
+                        onClick={() => navigate('/')}
+                        className="cancel-button"
+                        disabled={isSubmitting}
+                      >
+                        Cancel
+                      </button>
+                      <button
+                        type="submit"
+                        className="submit-button"
+                        disabled={isSubmitting}
+                      >
+                        {isSubmitting ? 'Registering...' : 'Register'}
+                      </button>
+                    </div>
+                  </form>
                 </div>
-              </form>
+              </div>
             </>
           )}
 

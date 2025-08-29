@@ -114,11 +114,25 @@
     padding-right: 0 !important;
     justify-content: center !important;
     flex-direction: column !important;
+    order: 3; /* move logo section to bottom */
   }
   .footer-icon { font-size: 0.95rem; }
-  .footer-text { font-size: 0.75rem; }
-  .powered-text { font-size: 0.75rem; }
-  .pits-logo { height: 50px !important; margin-bottom: 2px; margin-left: -5px; }
+  .footer-text { 
+    font-size: 0.75rem; 
+    line-height: 1.2;
+  }
+  .powered-text { 
+    font-size: 0.75rem; 
+    margin-bottom: 4px;
+  }
+  .pits-logo { 
+    height: 50px !important; 
+    margin-bottom: 2px; 
+    margin-left: 0 !important; /* center the logo */
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+  }
 }
 
 /* Responsive layout for tablets (iPad) */

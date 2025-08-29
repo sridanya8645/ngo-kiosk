@@ -594,6 +594,7 @@ app.post('/api/register', validate('registration'), async (req, res) => {
               <p style="margin: 8px 0;"><span style="color: #666;">📅</span> <strong>Date & Time:</strong> ${new Date(event.start_datetime).toLocaleString()}</p>
               <p style="margin: 8px 0;"><span style="color: #666;">📍</span> <strong>Venue:</strong> ${event.location}</p>
               <p style="margin: 8px 0;"><span style="color: #666;">🆔</span> <strong>Registration ID:</strong> ${registrationId}</p>
+              <p style="margin: 8px 0;"><span style="color: #666;">⏰</span> <strong>Registration Time:</strong> ${new Date().toLocaleString()}</p>
             </div>
             
             <p style="font-size: 16px; color: #333;">You have been automatically checked in for this event. We look forward to welcoming you!</p>
@@ -607,9 +608,10 @@ app.post('/api/register', validate('registration'), async (req, res) => {
               </div>
             </div>
             
-            <p style="font-size: 16px; color: #333;">Warm regards,<br><strong>${event.welcome_text ? (event.welcome_text.includes('Welcome to ') ? event.welcome_text.replace('Welcome to ', '') : event.welcome_text) : event.name} Team</strong></p>g
+            <p style="font-size: 16px; color: #333;">Warm regards,<br><strong>${event.welcome_text ? (event.welcome_text.includes('Welcome to ') ? event.welcome_text.replace('Welcome to ', '') : event.welcome_text) : event.name} Team</strong></p>
             
             <div style="border-top: 1px solid #ddd; margin-top: 30px; padding-top: 20px;">
+              <p style="margin: 5px 0;"><span style="color: #666;">🌐</span> <a href="https://www.indoamericanfair.com/" style="color: #8B1C1C;">https://www.indoamericanfair.com/</a></p>
               <p style="margin: 5px 0;"><span style="color: #666;">📧</span> <a href="mailto:${event.footer_email || 'Indoamericanexpo@gmail.com'}" style="color: #8B1C1C;">${event.footer_email || 'Indoamericanexpo@gmail.com'}</a></p>
               <p style="margin: 5px 0;"><span style="color: #666;">📞</span> <a href="tel:${event.footer_phone || '609-937-2800'}" style="color: #8B1C1C;">${event.footer_phone || '609-937-2800'}</a></p>
             </div>
@@ -723,6 +725,7 @@ app.post('/api/mobile-register', validate('registration'), async (req, res) => {
               <p style="margin: 8px 0;"><span style="color: #666;">📅</span> <strong>Date & Time:</strong> ${new Date(event.start_datetime).toLocaleString()}</p>
               <p style="margin: 8px 0;"><span style="color: #666;">📍</span> <strong>Venue:</strong> ${event.location}</p>
               <p style="margin: 8px 0;"><span style="color: #666;">🆔</span> <strong>Registration ID:</strong> ${registrationId}</p>
+              <p style="margin: 8px 0;"><span style="color: #666;">⏰</span> <strong>Registration Time:</strong> ${new Date().toLocaleString()}</p>
             </div>
             
             <p style="font-size: 16px; color: #333;">You have been automatically checked in for this event. We look forward to welcoming you!</p>
@@ -739,6 +742,7 @@ app.post('/api/mobile-register', validate('registration'), async (req, res) => {
             <p style="font-size: 16px; color: #333;">Warm regards,<br><strong>${event.welcome_text ? (event.welcome_text.includes('Welcome to ') ? event.welcome_text.replace('Welcome to ', '') : event.welcome_text) : event.name} Team</strong></p>
             
             <div style="border-top: 1px solid #ddd; margin-top: 30px; padding-top: 20px;">
+              <p style="margin: 5px 0;"><span style="color: #666;">🌐</span> <a href="https://www.indoamericanfair.com/" style="color: #8B1C1C;">https://www.indoamericanfair.com/</a></p>
               <p style="margin: 5px 0;"><span style="color: #666;">📧</span> <a href="mailto:${event.footer_email || 'Indoamericanexpo@gmail.com'}" style="color: #8B1C1C;">${event.footer_email || 'Indoamericanexpo@gmail.com'}</a></p>
               <p style="margin: 5px 0;"><span style="color: #666;">📞</span> <a href="tel:${event.footer_phone || '609-937-2800'}" style="color: #8B1C1C;">${event.footer_phone || '609-937-2800'}</a></p>
             </div>

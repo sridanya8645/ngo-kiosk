@@ -541,3 +541,91 @@
   background: linear-gradient(90deg, #CAA3EB 0%, #A566AA 100%) !important;
   background-image: linear-gradient(90deg, #CAA3EB 0%, #A566AA 100%) !important;
 }
+
+/* Two-column layout for Mobile Register page */
+.mobile-register-layout {
+  display: flex;
+  gap: 20px;
+  align-items: flex-start;
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 0 15px;
+}
+
+.mobile-animation-section {
+  flex: 0 0 250px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 15px;
+  background-color: #f8f9fa;
+  border-radius: 12px;
+  border: 2px solid #e9ecef;
+  height: fit-content;
+}
+
+.mobile-raffle-text {
+  text-align: center;
+  margin: 0 0 15px 0;
+  color: #8B1C1C;
+  font-size: 1rem;
+  font-weight: 700;
+  line-height: 1.3;
+}
+
+.mobile-animation-container {
+  text-align: center;
+}
+
+.mobile-form-section {
+  flex: 1;
+  min-width: 0;
+}
+
+/* Responsive design for mobile devices */
+@media (max-width: 768px) {
+  .mobile-register-layout {
+    flex-direction: column;
+    gap: 15px;
+    padding: 0 10px;
+  }
+  
+  .mobile-animation-section {
+    flex: none;
+    width: 100%;
+    margin-bottom: 15px;
+    padding: 12px;
+  }
+  
+  .mobile-raffle-text {
+    font-size: 0.9rem;
+    margin-bottom: 12px;
+  }
+  
+  .mobile-animation-container lottie-player {
+    width: 120px !important;
+    height: 120px !important;
+  }
+  
+  .mobile-form-section {
+    width: 100%;
+  }
+}
+
+/* Tablet responsive design */
+@media (min-width: 769px) and (max-width: 1024px) {
+  .mobile-register-layout {
+    gap: 18px;
+    max-width: 900px;
+  }
+  
+  .mobile-animation-section {
+    flex: 0 0 230px;
+    padding: 14px;
+  }
+  
+  .mobile-raffle-text {
+    font-size: 0.95rem;
+  }
+}

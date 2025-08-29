@@ -1309,3 +1309,91 @@
   background: rgba(255, 255, 255, 0.3);
   transform: translateY(-1px);
 }
+
+/* Two-column layout for Register page */
+.register-layout {
+  display: flex;
+  gap: 30px;
+  align-items: flex-start;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+.animation-section {
+  flex: 0 0 300px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  background-color: #f8f9fa;
+  border-radius: 15px;
+  border: 2px solid #e9ecef;
+  height: fit-content;
+}
+
+.raffle-text {
+  text-align: center;
+  margin: 0 0 20px 0;
+  color: #8B1C1C;
+  font-size: 1.1rem;
+  font-weight: 700;
+  line-height: 1.4;
+}
+
+.animation-container {
+  text-align: center;
+}
+
+.form-section {
+  flex: 1;
+  min-width: 0;
+}
+
+/* Responsive design for mobile devices */
+@media (max-width: 768px) {
+  .register-layout {
+    flex-direction: column;
+    gap: 20px;
+    padding: 0 15px;
+  }
+  
+  .animation-section {
+    flex: none;
+    width: 100%;
+    margin-bottom: 20px;
+    padding: 15px;
+  }
+  
+  .raffle-text {
+    font-size: 1rem;
+    margin-bottom: 15px;
+  }
+  
+  .animation-container lottie-player {
+    width: 150px !important;
+    height: 150px !important;
+  }
+  
+  .form-section {
+    width: 100%;
+  }
+}
+
+/* Tablet responsive design */
+@media (min-width: 769px) and (max-width: 1024px) {
+  .register-layout {
+    gap: 25px;
+    max-width: 1000px;
+  }
+  
+  .animation-section {
+    flex: 0 0 280px;
+    padding: 18px;
+  }
+  
+  .raffle-text {
+    font-size: 1.05rem;
+  }
+} 
