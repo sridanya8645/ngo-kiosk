@@ -257,7 +257,7 @@ const MobileRegister = () => {
     <div className="mobile-register-container">
       <SiteHeader navVariant="none" />
 
-      {/* Main Content */}
+      {/* Main Content - Two-column layout with animation on left */}
       <main className="mobile-register-main">
         <div className="mobile-register-form-container">
           {/* Heading first */}

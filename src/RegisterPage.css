@@ -1310,7 +1310,7 @@
   transform: translateY(-1px);
 }
 
-/* Two-column layout for Register page */
+/* Two-column layout for Register page - Updated for better mobile responsiveness */
 .register-layout {
   display: flex;
   gap: 30px;
