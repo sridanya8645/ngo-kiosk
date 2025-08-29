@@ -265,6 +265,26 @@ const MobileRegister = () => {
             {selectedEvent ? `Register for ${selectedEvent.name}` : 'Register'}
           </h1>
 
+          {/* Animation and Raffle Text after title */}
+          <div className="mobile-animation-raffle-section">
+            {/* Raffle text */}
+            <div className="mobile-raffle-text">
+              {selectedEvent?.raffle_tickets || 'Register and get a chance to win $200 Raffle ticket!!'}
+            </div>
+
+            {/* Lottie Animation */}
+            <div className="mobile-animation-container">
+              <lottie-player
+                src="/visa card.json"
+                background="transparent"
+                speed="1"
+                style={{ width: '180px', height: '180px', margin: '0 auto' }}
+                loop
+                autoplay
+              ></lottie-player>
+            </div>
+          </div>
+
           {/* Event Selection Dropdown */}
           {events.length > 1 && (
             <div className="event-selection-container" style={{
@@ -338,129 +358,103 @@ const MobileRegister = () => {
           {/* Form third - only show if not submitted and event is selected */}
           {!submitSuccess && selectedEvent && (
             <>
-              {/* Two-column layout for form and animation */}
-              <div className="mobile-register-layout">
-                {/* Left side - Animation and Raffle Text */}
-                <div className="mobile-animation-section">
-                  {/* Raffle text */}
-                  <div className="mobile-raffle-text">
-                    {selectedEvent?.raffle_tickets || 'Register and get a chance to win $200 Raffle ticket!!'}
-                  </div>
-
-                  {/* Lottie Animation */}
-                  <div className="mobile-animation-container">
-                    <lottie-player
-                      src="/visa card.json"
-                      background="transparent"
-                      speed="1"
-                      style={{ width: '150px', height: '150px', margin: '0 auto' }}
-                      loop
-                      autoplay
-                    ></lottie-player>
-                  </div>
+              <form onSubmit={handleSubmit} className="mobile-register-form">
+                {/* Event is auto-selected for today; selector removed */}
+                {errors.event && <span className="error-message">{errors.event}</span>}
+                <div className="form-group">
+                  <label htmlFor="name" className="form-label">Full Name *</label>
+                  <input
+                    type="text"
+                    id="name"
+                    name="name"
+                    value={formData.name}
+                    onChange={handleInputChange}
+                    className={`form-input ${errors.name ? 'error' : ''}`}
+                    placeholder="Enter your full name"
+                    required
+                  />
+                  {errors.name && <span className="error-message">{errors.name}</span>}
                 </div>
 
-                {/* Right side - Registration Form */}
-                <div className="mobile-form-section">
-                  <form onSubmit={handleSubmit} className="mobile-register-form">
-                    {/* Event is auto-selected for today; selector removed */}
-                    {errors.event && <span className="error-message">{errors.event}</span>}
-                    <div className="form-group">
-                      <label htmlFor="name" className="form-label">Full Name *</label>
-                      <input
-                        type="text"
-                        id="name"
-                        name="name"
-                        value={formData.name}
-                        onChange={handleInputChange}
-                        className={`form-input ${errors.name ? 'error' : ''}`}
-                        placeholder="Enter your full name"
-                        required
-                      />
-                      {errors.name && <span className="error-message">{errors.name}</span>}
-                    </div>
-
-                    <div className="form-group">
-                      <label htmlFor="phone" className="form-label">Phone Number *</label>
-                      <input
-                        type="tel"
-                        id="phone"
-                        name="phone"
-                        value={formData.phone}
-                        onChange={handleInputChange}
-                        className={`form-input ${errors.phone ? 'error' : ''}`}
-                        placeholder="Enter your phone number"
-                        pattern="^(\+1[\s-]?)?\(?\d{3}\)?[\s-]?\d{3}[\s-]?\d{4}$"
-                        title="Enter a valid US phone number (e.g., 555-123-4567)"
-                        required
-                      />
-                      {errors.phone && <span className="error-message">{errors.phone}</span>}
-                    </div>
-
-                    <div className="form-group">
-                      <label htmlFor="email" className="form-label">Email Address *</label>
-                      <input
-                        type="email"
-                        id="email"
-                        name="email"
-                        value={formData.email}
-                        onChange={handleInputChange}
-                        className={`form-input ${errors.email ? 'error' : ''}`}
-                        placeholder="Enter your email address"
-                        required
-                      />
-                      {errors.email && <span className="error-message">{errors.email}</span>}
-                    </div>
-
-                    {/* Volunteer question - only show if enabled for the event */}
-                    {selectedEvent?.volunteer_enabled && (
-                      <div className="form-group">
-                        <label className="form-label">Interested in volunteering?</label>
-                        <div className="radio-group">
-                          <label className="radio-label">
-                            <input
-                              type="radio"
-                              name="volunteer"
-                              value="Yes"
-                              checked={formData.volunteer === 'Yes'}
-                              onChange={handleInputChange}
-                            />
-                            <span className="radio-text">Yes</span>
-                          </label>
-                          <label className="radio-label">
-                            <input
-                              type="radio"
-                              name="volunteer"
-                              value="No"
-                              checked={formData.volunteer === 'No'}
-                              onChange={handleInputChange}
-                            />
-                            <span className="radio-text">No</span>
-                          </label>
-                        </div>
-                      </div>
-                    )}
-
-                    <div className="form-actions">
-                      <button
-                        type="button"
-                        onClick={handleCancel}
-                        className="cancel-button"
-                        disabled={isSubmitting}
-                      >
-                        Cancel
-                      </button>
-                      <button
-                        type="submit"
-                        className="submit-button"
-                        disabled={isSubmitting}
-                      >
-                        {isSubmitting ? 'Registering...' : 'Register'}
-                      </button>
-                    </div>
-                  </form>
+                <div className="form-group">
+                  <label htmlFor="phone" className="form-label">Phone Number *</label>
+                  <input
+                    type="tel"
+                    id="phone"
+                    name="phone"
+                    value={formData.phone}
+                    onChange={handleInputChange}
+                    className={`form-input ${errors.phone ? 'error' : ''}`}
+                    placeholder="Enter your phone number"
+                    pattern="^(\+1[\s-]?)?\(?\d{3}\)?[\s-]?\d{3}[\s-]?\d{4}$"
+                    title="Enter a valid US phone number (e.g., 555-123-4567)"
+                    required
+                  />
+                  {errors.phone && <span className="error-message">{errors.phone}</span>}
                 </div>
-              </div>
+
+                <div className="form-group">
+                  <label htmlFor="email" className="form-label">Email Address *</label>
+                  <input
+                    type="email"
+                    id="email"
+                    name="email"
+                    value={formData.email}
+                    onChange={handleInputChange}
+                    className={`form-input ${errors.email ? 'error' : ''}`}
+                    placeholder="Enter your email address"
+                    required
+                  />
+                  {errors.email && <span className="error-message">{errors.email}</span>}
+                </div>
+
+                {/* Volunteer question - only show if enabled for the event */}
+                {selectedEvent?.volunteer_enabled && (
+                  <div className="form-group">
+                    <label className="form-label">Interested in volunteering?</label>
+                    <div className="radio-group">
+                      <label className="radio-label">
+                        <input
+                          type="radio"
+                          name="volunteer"
+                          value="Yes"
+                          checked={formData.volunteer === 'Yes'}
+                          onChange={handleInputChange}
+                        />
+                        <span className="radio-text">Yes</span>
+                      </label>
+                      <label className="radio-label">
+                        <input
+                          type="radio"
+                          name="volunteer"
+                          value="No"
+                          checked={formData.volunteer === 'No'}
+                          onChange={handleInputChange}
+                        />
+                        <span className="radio-text">No</span>
+                      </label>
+                    </div>
+                  </div>
+                )}
+
+                <div className="form-actions">
+                  <button
+                    type="button"
+                    onClick={handleCancel}
+                    className="cancel-button"
+                    disabled={isSubmitting}
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    type="submit"
+                    className="submit-button"
+                    disabled={isSubmitting}
+                  >
+                    {isSubmitting ? 'Registering...' : 'Register'}
+                  </button>
+                </div>
+              </form>
             </>
           )}
 

@@ -1397,3 +1397,47 @@
     font-size: 1.05rem;
   }
 } 
+
+/* Animation and Raffle Text section after title */
+.animation-raffle-section {
+  text-align: center;
+  margin: 20px 0 30px 0;
+  padding: 20px;
+  background-color: #f8f9fa;
+  border-radius: 15px;
+  border: 2px solid #e9ecef;
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.raffle-text {
+  text-align: center;
+  margin: 0 0 20px 0;
+  color: #8B1C1C;
+  font-size: 1.2rem;
+  font-weight: 700;
+  line-height: 1.4;
+}
+
+.animation-container {
+  text-align: center;
+}
+
+/* Responsive design for mobile devices */
+@media (max-width: 768px) {
+  .animation-raffle-section {
+    margin: 15px 0 25px 0;
+    padding: 15px;
+  }
+  
+  .raffle-text {
+    font-size: 1.1rem;
+    margin-bottom: 15px;
+  }
+  
+  .animation-container lottie-player {
+    width: 180px !important;
+    height: 180px !important;
+  }
+} 
