@@ -679,7 +679,7 @@ app.post('/api/mobile-register', validate('registration'), async (req, res) => {
     
     // Send confirmation email without QR code for mobile register (automatic check-in)
     try {
-      console.log('🔍 Attempting to send email to:', email);all
+             console.log('🔍 Attempting to send email to:', email);
       
       if (!GMAIL_USER || !GMAIL_APP_PASSWORD) {
         console.error('❌ Gmail credentials not configured. Skipping email send.');
@@ -1004,13 +1004,22 @@ app.post('/api/events', upload.fields([
       console.log(`Header image uploaded: ${header_image}`);
     }
 
-    // Convert datetime strings to MySQL format - Store as UTC but display in EST
+    // Convert datetime strings to MySQL format - Preserve local time as entered
     const formatDateTime = (dateTimeStr) => {
       if (!dateTimeStr) return null;
       try {
-        // Parse the datetime string and store as UTC
+        // Parse the datetime string and preserve the exact time entered
         const date = new Date(dateTimeStr);
-        return date.toISOString().slice(0, 19).replace('T', ' ');
+        
+        // Format as MySQL datetime preserving the exact time
+        const year = date.getFullYear();
+        const month = String(date.getMonth() + 1).padStart(2, '0');
+        const day = String(date.getDate()).padStart(2, '0');
+        const hours = String(date.getHours()).padStart(2, '0');
+        const minutes = String(date.getMinutes()).padStart(2, '0');
+        const seconds = String(date.getSeconds()).padStart(2, '0');
+        
+        return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
       } catch (error) {
         console.error('Error formatting datetime:', dateTimeStr, error);
         return dateTimeStr;
@@ -1071,13 +1080,22 @@ app.put('/api/events/:id', upload.fields([
     
     console.log('Edit event request:', { id, name, start_datetime, end_datetime, location, raffle_tickets });
     
-    // Convert datetime strings to MySQL format - Store as UTC but display in EST
+    // Convert datetime strings to MySQL format - Preserve local time as entered
     const formatDateTime = (dateTimeStr) => {
       if (!dateTimeStr) return null;
       try {
-        // Parse the datetime string and store as UTC
+        // Parse the datetime string and preserve the exact time entered
         const date = new Date(dateTimeStr);
-        return date.toISOString().slice(0, 19).replace('T', ' ');
+        
+        // Format as MySQL datetime preserving the exact time
+        const year = date.getFullYear();
+        const month = String(date.getMonth() + 1).padStart(2, '0');
+        const day = String(date.getDate()).padStart(2, '0');
+        const hours = String(date.getHours()).padStart(2, '0');
+        const minutes = String(date.getMinutes()).padStart(2, '0');
+        const seconds = String(date.getSeconds()).padStart(2, '0');
+        
+        return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
       } catch (error) {
         console.error('Error formatting datetime:', dateTimeStr, error);
         return dateTimeStr;
@@ -1934,6 +1952,22 @@ app.delete('/api/registrations/:id', async (req, res) => {
   }
 });
 
+// Delete all registrations
+app.delete('/api/registrations', async (req, res) => {
+  try {
+    // Delete all registrations
+    const [result] = await pool.execute('DELETE FROM registrations');
+    
+    res.json({ 
+      success: true, 
+      message: `All registrations deleted successfully. ${result.affectedRows} registrations removed.` 
+    });
+  } catch (error) {
+    console.error('Delete all registrations error:', error);
+    res.status(500).json({ success: false, message: 'Database error' });
+  }
+});
+
 // Delete raffle winner
 app.delete('/api/raffle-winners/:id', async (req, res) => {
   try {
@@ -1952,6 +1986,22 @@ app.delete('/api/raffle-winners/:id', async (req, res) => {
     res.json({ success: true, message: 'Raffle winner deleted successfully' });
   } catch (error) {
     console.error('Delete raffle winner error:', error);
+    res.status(500).json({ success: false, message: 'Database error' });
+  }
+});
+
+// Delete all raffle winners
+app.delete('/api/raffle-winners', async (req, res) => {
+  try {
+    // Delete all raffle winners
+    const [result] = await pool.execute('DELETE FROM raffle_winners');
+    
+    res.json({ 
+      success: true, 
+      message: `All raffle winners deleted successfully. ${result.affectedRows} winners removed.` 
+    });
+  } catch (error) {
+    console.error('Delete all raffle winners error:', error);
     res.status(500).json({ success: false, message: 'Database error' });
   }
 });

@@ -427,7 +427,7 @@ const RegisterPage = () => {
                 <div className="form-actions">
                   <button
                     type="button"
-                    onClick={() => navigate('/')}
+                    onClick={() => window.location.reload()}
                     className="cancel-button"
                     disabled={isSubmitting}
                   >

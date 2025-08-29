@@ -58,24 +58,20 @@ export default function RaffleWinnersPage () {
   const handleDeleteAllWinners = async () => {
     if (window.confirm('Are you sure you want to delete ALL raffle winners? This action cannot be undone and will remove all winner data.')) {
       try {
-        // Delete all winners one by one
-        const deletePromises = winners.map(winner => 
-          fetch(`/api/raffle-winners/${winner.id}`, {
-            method: 'DELETE',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-          })
-        );
+        const response = await fetch('/api/raffle-winners', {
+          method: 'DELETE',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        });
         
-        const responses = await Promise.all(deletePromises);
-        const allSuccessful = responses.every(response => response.ok);
-        
-        if (allSuccessful) {
+        if (response.ok) {
+          const result = await response.json();
           setWinners([]);
-          alert('All raffle winners deleted successfully!');
+          alert(result.message || 'All raffle winners deleted successfully!');
         } else {
-          alert('Some winners could not be deleted. Please try again.');
+          const error = await response.json();
+          alert(error.message || 'Failed to delete winners. Please try again.');
         }
       } catch (error) {
         console.error('Error deleting winners:', error);

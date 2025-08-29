@@ -60,24 +60,20 @@ function AdminRegistrationsPage () {
   const handleDeleteAllRegistrations = async () => {
     if (window.confirm('Are you sure you want to delete ALL registrations? This action cannot be undone and will remove all registration data.')) {
       try {
-        // Delete all registrations one by one
-        const deletePromises = registrations.map(registration => 
-          fetch(`/api/registrations/${registration.id}`, {
-            method: 'DELETE',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-          })
-        );
+        const response = await fetch('/api/registrations', {
+          method: 'DELETE',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        });
         
-        const responses = await Promise.all(deletePromises);
-        const allSuccessful = responses.every(response => response.ok);
-        
-        if (allSuccessful) {
+        if (response.ok) {
+          const result = await response.json();
           setRegistrations([]);
-          alert('All registrations deleted successfully!');
+          alert(result.message || 'All registrations deleted successfully!');
         } else {
-          alert('Some registrations could not be deleted. Please try again.');
+          const error = await response.json();
+          alert(error.message || 'Failed to delete registrations. Please try again.');
         }
       } catch (error) {
         console.error('Error deleting registrations:', error);
@@ -123,36 +119,70 @@ function AdminRegistrationsPage () {
     }
   };
 
+  const downloadExcel = () => {
+    const headers = columns.map(col => col.label).join(',');
+    const csvContent = filtered.map(row => [
+      row.id || '',
+      row.name || '',
+      row.email || '',
+      row.phone || '',
+      row.event_name || '',
+      formatDate(row.event_date) || '',
+      row.checked_in ? 'Yes' : 'No',
+      formatDateTime(row.checkin_date) || '',
+      row.interested_to_volunteer || ''
+    ].join(',')).join('\n');
+    
+    const blob = new Blob([headers + '\n' + csvContent], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement('a');
+    link.href = URL.createObjectURL(blob);
+    link.download = `registrations_${new Date().toISOString().split('T')[0]}.csv`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
   return (
     <div className="admin-registrations-bg">
       <div className="admin-registrations-aspect">
-        <SiteHeader />
+        <SiteHeader navVariant="admin-registrations" />
         
         <div className="admin-registrations-container">
           <div className="admin-registrations-main">
             <div className="admin-registrations-content">
               <h1 className="admin-registrations-title">Registration Details</h1>
               
-              {/* Delete All Button */}
-              <div style={{ marginBottom: '20px', textAlign: 'right' }}>
-                <button 
-                  onClick={handleDeleteAllRegistrations}
-                  style={{
-                    background: '#dc3545',
-                    color: 'white',
-                    border: 'none',
-                    padding: '10px 20px',
-                    borderRadius: '6px',
-                    fontSize: '1rem',
-                    fontWeight: '600',
-                    cursor: 'pointer',
-                    transition: 'background-color 0.3s ease'
-                  }}
-                  onMouseOver={(e) => e.target.style.background = '#c82333'}
-                  onMouseOut={(e) => e.target.style.background = '#dc3545'}
-                >
-                  🗑️ Delete All Registrations
-                </button>
+              {/* Stats and Download Section */}
+              <div className="registrations-stats-section">
+                <div className="registrations-count">
+                  Total Registrations: {registrations.length} | Filtered: {filtered.length}
+                </div>
+                <div style={{ display: 'flex', gap: '10px' }}>
+                  <button
+                    onClick={downloadExcel}
+                    className="download-excel-button"
+                  >
+                    📊 Download Excel
+                  </button>
+                  <button 
+                    onClick={handleDeleteAllRegistrations}
+                    style={{
+                      background: '#dc3545',
+                      color: 'white',
+                      border: 'none',
+                      padding: '10px 20px',
+                      borderRadius: '6px',
+                      fontSize: '1rem',
+                      fontWeight: '600',
+                      cursor: 'pointer',
+                      transition: 'background-color 0.3s ease'
+                    }}
+                    onMouseOver={(e) => e.target.style.background = '#c82333'}
+                    onMouseOut={(e) => e.target.style.background = '#dc3545'}
+                  >
+                    🗑️ Delete All
+                  </button>
+                </div>
               </div>
 
               <div className="registrations-table-container">

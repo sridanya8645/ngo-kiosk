@@ -297,7 +297,7 @@
 /* Filter Row */
 .filter-row {
   display: grid;
-  grid-template-columns: 100px 150px 200px 150px 200px 120px 120px 120px 120px 80px;
+  grid-template-columns: 100px 150px 200px 150px 200px 120px 120px 120px 120px;
   background: #f8f9fa;
   padding: 10px 8px;
   border-bottom: 1px solid #ddd;
@@ -325,7 +325,7 @@
 /* Data Rows */
 .data-row {
   display: grid;
-  grid-template-columns: 100px 150px 200px 150px 200px 120px 120px 120px 120px 80px;
+  grid-template-columns: 100px 150px 200px 150px 200px 120px 120px 120px 120px;
   background: white;
   border-bottom: 1px solid #eee;
   align-items: center;
