@@ -1,6 +1,7 @@
 // Load environment variables
 require('dotenv').config();
 
+// Trigger new deployment - ensure all fixes are live
 // Import middleware and configurations
 const { corsMiddleware, handlePreflight } = require('./middleware/cors');
 const { errorHandler, notFoundHandler, asyncHandler } = require('./middleware/errorHandler');
