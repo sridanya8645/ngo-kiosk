@@ -74,6 +74,11 @@ function EventDetailsPage () {
   // Format datetime for display using dayjs
   const formatDateTime = (datetime) => {
     if (!datetime) return '-';
+    // If datetime is already a dayjs object, use it directly
+    if (dayjs.isDayjs(datetime)) {
+      return datetime.format('MMM DD, YYYY, h:mm A');
+    }
+    // Otherwise, parse it as a string
     return dayjs(datetime).format('MMM DD, YYYY, h:mm A');
   };
 
@@ -92,7 +97,15 @@ function EventDetailsPage () {
           throw new Error(`HTTP error! status: ${res.status}`);
         }
         const data = await res.json();
-        setEvents(data);
+        // Normalize data to convert datetime strings to dayjs objects
+        const normalized = data.map(ev => ({
+          ...ev,
+          start_datetime: ev.start_datetime ? dayjs(ev.start_datetime) : null,
+          end_datetime: ev.end_datetime ? dayjs(ev.end_datetime) : null,
+          created_at: ev.created_at ? dayjs(ev.created_at) : null,
+          modified_at: ev.modified_at ? dayjs(ev.modified_at) : null,
+        }));
+        setEvents(normalized);
       } catch (error) {
         console.error('Error fetching events:', error);
         setError('Failed to fetch events.');
@@ -106,8 +119,10 @@ function EventDetailsPage () {
     return (
       (filters.event_id === '' || event.event_id?.toString().includes(filters.event_id)) &&
       (filters.name === '' || event.name?.toLowerCase().includes(filters.name.toLowerCase())) &&
-      (filters.start_datetime === '' || formatDateTime(event.start_datetime).toLowerCase().includes(filters.start_datetime.toLowerCase())) &&
-      (filters.end_datetime === '' || formatDateTime(event.end_datetime).toLowerCase().includes(filters.end_datetime.toLowerCase())) &&
+      (filters.start_datetime === '' || 
+       (event.start_datetime && event.start_datetime.format('MMM DD, YYYY').toLowerCase().includes(filters.start_datetime.toLowerCase()))) &&
+      (filters.end_datetime === '' || 
+       (event.end_datetime && event.end_datetime.format('MMM DD, YYYY').toLowerCase().includes(filters.end_datetime.toLowerCase()))) &&
       (filters.location === '' || event.location?.toLowerCase().includes(filters.location.toLowerCase())) &&
       (filters.raffle_tickets === '' || event.raffle_tickets?.toLowerCase().includes(filters.raffle_tickets.toLowerCase())) &&
       (filters.volunteer_enabled === '' || filters.volunteer_enabled === 'all' || 
@@ -119,8 +134,10 @@ function EventDetailsPage () {
       (filters.footer_phone === '' || (event.footer_phone && event.footer_phone.toLowerCase().includes(filters.footer_phone.toLowerCase()))) &&
       (filters.footer_email === '' || (event.footer_email && event.footer_email.toLowerCase().includes(filters.footer_email.toLowerCase()))) &&
       (filters.welcome_text === '' || (event.welcome_text && event.welcome_text.toLowerCase().includes(filters.welcome_text.toLowerCase()))) &&
-      (filters.created_at === '' || formatDateTime(event.created_at).toLowerCase().includes(filters.created_at.toLowerCase())) &&
-      (filters.modified_at === '' || formatDateTime(event.modified_at).toLowerCase().includes(filters.modified_at.toLowerCase()))
+      (filters.created_at === '' || 
+       (event.created_at && event.created_at.format('MMM DD, YYYY').toLowerCase().includes(filters.created_at.toLowerCase()))) &&
+      (filters.modified_at === '' || 
+       (event.modified_at && event.modified_at.format('MMM DD, YYYY').toLowerCase().includes(filters.modified_at.toLowerCase())))
     );
   });
 

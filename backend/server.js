@@ -1005,24 +1005,21 @@ app.post('/api/events', upload.fields([
       console.log(`Header image uploaded: ${header_image}`);
     }
 
-    // Convert datetime strings to MySQL format - Preserve local time as entered (CREATE EVENT)
+    // Convert datetime strings to MySQL format - DatePicker sends proper format
     const formatDateTime = (dateTimeStr) => {
       if (!dateTimeStr) return null;
       try {
-        // Parse the datetime string and preserve the exact time entered
+        // DatePicker sends format like "2025-08-30 11:00" - this is already in local time
+        // Just ensure it's properly formatted for MySQL
         const date = new Date(dateTimeStr);
         
-        // The datetime-local input sends time in local timezone, but new Date() interprets it as UTC
-        // We need to adjust for the timezone offset to preserve the local time
-        const localDate = new Date(date.getTime() + (date.getTimezoneOffset() * 60000));
-        
-        // Format as MySQL datetime preserving the exact local time
-        const year = localDate.getFullYear();
-        const month = String(localDate.getMonth() + 1).padStart(2, '0');
-        const day = String(localDate.getDate()).padStart(2, '0');
-        const hours = String(localDate.getHours()).padStart(2, '0');
-        const minutes = String(localDate.getMinutes()).padStart(2, '0');
-        const seconds = String(localDate.getSeconds()).padStart(2, '0');
+        // Format as MySQL datetime preserving the exact time
+        const year = date.getFullYear();
+        const month = String(date.getMonth() + 1).padStart(2, '0');
+        const day = String(date.getDate()).padStart(2, '0');
+        const hours = String(date.getHours()).padStart(2, '0');
+        const minutes = String(date.getMinutes()).padStart(2, '0');
+        const seconds = String(date.getSeconds()).padStart(2, '0');
         
         return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
       } catch (error) {
@@ -1085,24 +1082,21 @@ app.put('/api/events/:id', upload.fields([
     
     console.log('Edit event request:', { id, name, start_datetime, end_datetime, location, raffle_tickets });
     
-    // Convert datetime strings to MySQL format - Preserve local time as entered (EDIT EVENT)
+    // Convert datetime strings to MySQL format - DatePicker sends proper format
     const formatDateTime = (dateTimeStr) => {
       if (!dateTimeStr) return null;
       try {
-        // Parse the datetime string and preserve the exact time entered
+        // DatePicker sends format like "2025-08-30 11:00" - this is already in local time
+        // Just ensure it's properly formatted for MySQL
         const date = new Date(dateTimeStr);
         
-        // The datetime-local input sends time in local timezone, but new Date() interprets it as UTC
-        // We need to adjust for the timezone offset to preserve the local time
-        const localDate = new Date(date.getTime() + (date.getTimezoneOffset() * 60000));
-        
-        // Format as MySQL datetime preserving the exact local time
-        const year = localDate.getFullYear();
-        const month = String(localDate.getMonth() + 1).padStart(2, '0');
-        const day = String(localDate.getDate()).padStart(2, '0');
-        const hours = String(localDate.getHours()).padStart(2, '0');
-        const minutes = String(localDate.getMinutes()).padStart(2, '0');
-        const seconds = String(localDate.getSeconds()).padStart(2, '0');
+        // Format as MySQL datetime preserving the exact time
+        const year = date.getFullYear();
+        const month = String(date.getMonth() + 1).padStart(2, '0');
+        const day = String(date.getDate()).padStart(2, '0');
+        const hours = String(date.getHours()).padStart(2, '0');
+        const minutes = String(date.getMinutes()).padStart(2, '0');
+        const seconds = String(date.getSeconds()).padStart(2, '0');
         
         return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
       } catch (error) {
