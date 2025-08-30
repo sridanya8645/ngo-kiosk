@@ -1,4 +1,4 @@
-/* Main Container */
+/* Main Container - Cache busting: Force refresh deployment */
 .admin-registrations-bg {
   height: 100vh;
   display: flex;
@@ -279,10 +279,10 @@
   min-width: 1000px;
 }
 
-/* Table Header Row - 9 columns: ID, Name, Email, Phone, Event Name, Event Date, Checked In, Checkin Date, Volunteer */
+/* Table Header Row - 9 columns: Registration ID, Full Name, Email, Phone Number, Event Name, Event Date, Checked In, Checkin Date, Volunteer */
 .table-header-row {
   display: grid;
-  grid-template-columns: 100px 150px 200px 150px 200px 120px 120px 120px 120px;
+  grid-template-columns: 120px 150px 200px 150px 200px 120px 120px 150px 120px;
   background: #8B1C1C;
   color: white;
   width: 100%;
@@ -307,10 +307,10 @@
   border-right: none;
 }
 
-/* Filter Row - 9 columns: ID, Name, Email, Phone, Event Name, Event Date, Checked In, Checkin Date, Volunteer */
+/* Filter Row - 9 columns: Registration ID, Full Name, Email, Phone Number, Event Name, Event Date, Checked In, Checkin Date, Volunteer */
 .filter-row {
   display: grid;
-  grid-template-columns: 100px 150px 200px 150px 200px 120px 120px 120px 120px;
+  grid-template-columns: 120px 150px 200px 150px 200px 120px 120px 150px 120px;
   background: #f8f9fa;
   padding: 10px 8px;
   border-bottom: 1px solid #ddd;
@@ -335,10 +335,10 @@
   background: white;
 }
 
-/* Data Rows - 9 columns: ID, Name, Email, Phone, Event Name, Event Date, Checked In, Checkin Date, Volunteer */
+/* Data Rows - 9 columns: Registration ID, Full Name, Email, Phone Number, Event Name, Event Date, Checked In, Checkin Date, Volunteer */
 .data-row {
   display: grid;
-  grid-template-columns: 100px 150px 200px 150px 200px 120px 120px 120px 120px;
+  grid-template-columns: 120px 150px 200px 150px 200px 120px 120px 150px 120px;
   background: white;
   border-bottom: 1px solid #eee;
   align-items: center;
