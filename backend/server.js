@@ -596,7 +596,7 @@ app.post('/api/register', validate('registration'), async (req, res) => {
               <p style="margin: 8px 0;"><span style="color: #666;">📅</span> <strong>Date & Time:</strong> ${new Date(event.start_datetime).toLocaleDateString()} ${event.end_datetime && new Date(event.end_datetime).toDateString() !== new Date(event.start_datetime).toDateString() ? `to ${new Date(event.end_datetime).toLocaleDateString()}` : ''} at ${new Date(event.start_datetime).toLocaleTimeString()}</p>
               <p style="margin: 8px 0;"><span style="color: #666;">📍</span> <strong>Venue:</strong> ${event.location}</p>
               <p style="margin: 8px 0;"><span style="color: #666;">🆔</span> <strong>Registration ID:</strong> ${registrationId}</p>
-              <p style="margin: 8px 0;"><span style="color: #666;">⏰</span> <strong>Registration Time:</strong> ${registrationTime.toLocaleString("en-US")}</p>
+              <p style="margin: 8px 0;"><span style="color: #666;">⏰</span> <strong>Registration Time:</strong> ${registrationTime.toLocaleString("en-US", {timeZone: "America/New_York"})}</p>
             </div>
             
             <p style="font-size: 16px; color: #333;">You have been automatically checked in for this event. We look forward to welcoming you!</p>
@@ -728,7 +728,7 @@ app.post('/api/mobile-register', validate('registration'), async (req, res) => {
               <p style="margin: 8px 0;"><span style="color: #666;">📅</span> <strong>Date & Time:</strong> ${new Date(event.start_datetime).toLocaleDateString()} ${event.end_datetime && new Date(event.end_datetime).toDateString() !== new Date(event.start_datetime).toDateString() ? `to ${new Date(event.end_datetime).toLocaleDateString()}` : ''} at ${new Date(event.start_datetime).toLocaleTimeString()}</p>
               <p style="margin: 8px 0;"><span style="color: #666;">📍</span> <strong>Venue:</strong> ${event.location}</p>
               <p style="margin: 8px 0;"><span style="color: #666;">🆔</span> <strong>Registration ID:</strong> ${registrationId}</p>
-              <p style="margin: 8px 0;"><span style="color: #666;">⏰</span> <strong>Registration Time:</strong> ${registrationTime.toLocaleString("en-US")}</p>
+              <p style="margin: 8px 0;"><span style="color: #666;">⏰</span> <strong>Registration Time:</strong> ${registrationTime.toLocaleString("en-US", {timeZone: "America/New_York"})}</p>
             </div>
             
             <p style="font-size: 16px; color: #333;">You have been automatically checked in for this event. We look forward to welcoming you!</p>

@@ -5,7 +5,13 @@ import SiteFooter from './components/SiteFooter';
 import { useNavigate } from 'react-router-dom';
 import DatePicker from 'react-datepicker';
 import dayjs from 'dayjs';
+import utc from 'dayjs/plugin/utc';
+import timezone from 'dayjs/plugin/timezone';
 import 'react-datepicker/dist/react-datepicker.css';
+
+// Extend dayjs with timezone plugins
+dayjs.extend(utc);
+dayjs.extend(timezone);
 
 function EventDetailsPage () {
   const [events, setEvents] = useState([]);
@@ -71,15 +77,15 @@ function EventDetailsPage () {
     { key: 'actions', label: 'Actions' },
   ];
 
-  // Format datetime for display using dayjs
+  // Format datetime for display using dayjs with EST timezone
   const formatDateTime = (datetime) => {
     if (!datetime) return '-';
     // If datetime is already a dayjs object, use it directly
     if (dayjs.isDayjs(datetime)) {
-      return datetime.format('MMM DD, YYYY, h:mm A');
+      return datetime.tz('America/New_York').format('MMM DD, YYYY, h:mm A');
     }
     // Otherwise, parse it as a string
-    return dayjs(datetime).format('MMM DD, YYYY, h:mm A');
+    return dayjs(datetime).tz('America/New_York').format('MMM DD, YYYY, h:mm A');
   };
 
   // Convert datetime string to dayjs object for DatePicker
