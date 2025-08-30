@@ -282,7 +282,7 @@
 /* Table Header Row - 9 columns: Registration ID, Full Name, Email, Phone Number, Event Name, Event Date, Checked In, Checkin Date, Volunteer */
 .table-header-row {
   display: grid;
-  grid-template-columns: 120px 150px 200px 150px 200px 120px 120px 150px 120px;
+  grid-template-columns: 140px 150px 200px 160px 200px 120px 130px 160px 120px;
   background: #8B1C1C;
   color: white;
   width: 100%;
@@ -310,7 +310,7 @@
 /* Filter Row - 9 columns: Registration ID, Full Name, Email, Phone Number, Event Name, Event Date, Checked In, Checkin Date, Volunteer */
 .filter-row {
   display: grid;
-  grid-template-columns: 120px 150px 200px 150px 200px 120px 120px 150px 120px;
+  grid-template-columns: 140px 150px 200px 160px 200px 120px 130px 160px 120px;
   background: #f8f9fa;
   padding: 10px 8px;
   border-bottom: 1px solid #ddd;
@@ -338,7 +338,7 @@
 /* Data Rows - 9 columns: Registration ID, Full Name, Email, Phone Number, Event Name, Event Date, Checked In, Checkin Date, Volunteer */
 .data-row {
   display: grid;
-  grid-template-columns: 120px 150px 200px 150px 200px 120px 120px 150px 120px;
+  grid-template-columns: 140px 150px 200px 160px 200px 120px 130px 160px 120px;
   background: white;
   border-bottom: 1px solid #eee;
   align-items: center;
@@ -523,7 +523,7 @@
   .table-header-row,
   .filter-row,
   .data-row {
-    grid-template-columns: repeat(9, 1fr);
+    grid-template-columns: 140px 150px 200px 160px 200px 120px 130px 160px 120px;
     min-width: 800px;
   }
   

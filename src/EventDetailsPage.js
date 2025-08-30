@@ -68,7 +68,7 @@ function EventDetailsPage () {
     { key: 'actions', label: 'Actions' },
   ];
 
-  // Format datetime for display - Shows EST time like emails
+  // Format datetime for display - Shows the exact time as stored (no timezone conversion)
   const formatDateTime = (datetime) => {
     if (!datetime) return '-';
     const date = new Date(datetime);
@@ -79,7 +79,7 @@ function EventDetailsPage () {
       hour: '2-digit',
       minute: '2-digit',
       hour12: true,
-      timeZone: 'America/New_York', // Use EST timezone for display
+      // No timezone conversion - show exact time as stored
     });
   };
 
