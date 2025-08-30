@@ -83,7 +83,7 @@
   width: 100%;
 }
 
-/* Table Header Row */
+/* Table Header Row - 16 columns: Event ID, Event Name, Start Date, End Date, Location, Raffle Text, Volunteer Enabled, Banner, Header Image, Footer Location, Footer Phone, Footer Email, Welcome Text, Created, Modified, Actions */
 .table-header-row {
   display: grid;
   grid-template-columns: 80px 150px 120px 120px 150px 120px 100px 100px 100px 120px 120px 120px 150px 100px 100px 100px;
@@ -115,7 +115,7 @@
   border-right: none;
 }
 
-/* Filter Row */
+/* Filter Row - 16 columns: Event ID, Event Name, Start Date, End Date, Location, Raffle Text, Volunteer Enabled, Banner, Header Image, Footer Location, Footer Phone, Footer Email, Welcome Text, Created, Modified, Actions */
 .filter-row {
   display: grid;
   grid-template-columns: 80px 150px 120px 120px 150px 120px 100px 100px 100px 120px 120px 120px 150px 100px 100px 100px;
@@ -166,7 +166,7 @@
   overflow-y: auto;
 }
 
-/* Event Rows */
+/* Event Rows - 16 columns: Event ID, Event Name, Start Date, End Date, Location, Raffle Text, Volunteer Enabled, Banner, Header Image, Footer Location, Footer Phone, Footer Email, Welcome Text, Created, Modified, Actions */
 .event-row {
   display: grid;
   grid-template-columns: 80px 150px 120px 120px 150px 120px 100px 100px 100px 120px 120px 120px 150px 100px 100px 100px;

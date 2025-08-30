@@ -3,6 +3,9 @@ import './EventDetailsPage.css';
 import SiteHeader from './components/SiteHeader';
 import SiteFooter from './components/SiteFooter';
 import { useNavigate } from 'react-router-dom';
+import DatePicker from 'react-datepicker';
+import dayjs from 'dayjs';
+import 'react-datepicker/dist/react-datepicker.css';
 
 function EventDetailsPage () {
   const [events, setEvents] = useState([]);
@@ -26,8 +29,8 @@ function EventDetailsPage () {
   const [editingEvent, setEditingEvent] = useState(null);
   const [newEvent, setNewEvent] = useState({
     name: '',
-    start_datetime: '',
-    end_datetime: '',
+    start_datetime: null,
+    end_datetime: null,
     location: '',
     raffle_tickets: '',
     banner: null,
@@ -68,37 +71,16 @@ function EventDetailsPage () {
     { key: 'actions', label: 'Actions' },
   ];
 
-  // Format datetime for display - Shows the exact time as stored (no timezone conversion)
+  // Format datetime for display using dayjs
   const formatDateTime = (datetime) => {
     if (!datetime) return '-';
-    const date = new Date(datetime);
-    return date.toLocaleString('en-US', {
-      year: 'numeric',
-      month: 'short',
-      day: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit',
-      hour12: true,
-      // No timezone conversion - show exact time as stored
-    });
+    return dayjs(datetime).format('MMM DD, YYYY, h:mm A');
   };
 
-  // Format datetime for input fields (YYYY-MM-DDTHH:MM) - Ensure local time is preserved
-  // This function converts the stored datetime back to local time for the input field
-  const formatDateTimeForInput = (datetime) => {
-    if (!datetime) return '';
-    const date = new Date(datetime);
-    
-    // The datetime-local input expects local time, so we need to adjust for timezone
-    // This ensures that if you entered 11:00 AM, it shows as 11:00 AM in the input
-    const localDate = new Date(date.getTime() - (date.getTimezoneOffset() * 60000));
-    
-    const year = localDate.getFullYear();
-    const month = String(localDate.getMonth() + 1).padStart(2, '0');
-    const day = String(localDate.getDate()).padStart(2, '0');
-    const hours = String(localDate.getHours()).padStart(2, '0');
-    const minutes = String(localDate.getMinutes()).padStart(2, '0');
-    return `${year}-${month}-${day}T${hours}:${minutes}`;
+  // Convert datetime string to dayjs object for DatePicker
+  const parseDateTime = (datetime) => {
+    if (!datetime) return null;
+    return dayjs(datetime).toDate();
   };
 
   // Fetch events
@@ -222,6 +204,23 @@ function EventDetailsPage () {
     }
   };
 
+  // Handle date picker changes
+  const handleDateChange = (date, fieldName, isEditing = false) => {
+    const dayjsDate = date ? dayjs(date) : null;
+    
+    if (isEditing) {
+      setEditingEvent(prev => ({
+        ...prev,
+        [fieldName]: dayjsDate,
+      }));
+    } else {
+      setNewEvent(prev => ({
+        ...prev,
+        [fieldName]: dayjsDate,
+      }));
+    }
+  };
+
 
   // Add new event
   const handleAddEvent = async (e) => {
@@ -229,8 +228,8 @@ function EventDetailsPage () {
     try {
       const formData = new FormData();
       formData.append('name', newEvent.name);
-      formData.append('start_datetime', newEvent.start_datetime);
-      formData.append('end_datetime', newEvent.end_datetime);
+      formData.append('start_datetime', newEvent.start_datetime ? newEvent.start_datetime.format('YYYY-MM-DD HH:mm') : '');
+      formData.append('end_datetime', newEvent.end_datetime ? newEvent.end_datetime.format('YYYY-MM-DD HH:mm') : '');
       formData.append('location', newEvent.location);
       formData.append('raffle_tickets', newEvent.raffle_tickets || '');
 
@@ -261,8 +260,8 @@ function EventDetailsPage () {
         setEvents(prev => [data.event, ...prev]);
         setNewEvent({
           name: '',
-          start_datetime: '',
-          end_datetime: '',
+          start_datetime: null,
+          end_datetime: null,
           location: '',
           raffle_tickets: '',
           banner: null,
@@ -294,8 +293,8 @@ function EventDetailsPage () {
     try {
       const formData = new FormData();
       formData.append('name', editingEvent.name);
-      formData.append('start_datetime', editingEvent.start_datetime);
-      formData.append('end_datetime', editingEvent.end_datetime);
+      formData.append('start_datetime', editingEvent.start_datetime ? editingEvent.start_datetime.format('YYYY-MM-DD HH:mm') : '');
+      formData.append('end_datetime', editingEvent.end_datetime ? editingEvent.end_datetime.format('YYYY-MM-DD HH:mm') : '');
       formData.append('location', editingEvent.location);
       formData.append('raffle_tickets', editingEvent.raffle_tickets || '');
 
@@ -644,23 +643,27 @@ function EventDetailsPage () {
                   />
                 </div>
                                  <div className="data-cell">
-                   <input
-                     type="datetime-local"
-                     name="start_datetime"
-                     value={newEvent.start_datetime}
-                     onChange={(e) => handleInputChange(e)}
+                   <DatePicker
+                     selected={newEvent.start_datetime ? newEvent.start_datetime.toDate() : null}
+                     onChange={(date) => handleDateChange(date, 'start_datetime')}
+                     showTimeSelect
+                     timeFormat="HH:mm"
+                     timeIntervals={15}
+                     dateFormat="MMM dd, yyyy h:mm aa"
+                     placeholderText="Select start date & time"
                      className="table-input"
-                     placeholder="Select start date & time"
                    />
                  </div>
                  <div className="data-cell">
-                   <input
-                     type="datetime-local"
-                     name="end_datetime"
-                     value={newEvent.end_datetime}
-                     onChange={(e) => handleInputChange(e)}
+                   <DatePicker
+                     selected={newEvent.end_datetime ? newEvent.end_datetime.toDate() : null}
+                     onChange={(date) => handleDateChange(date, 'end_datetime')}
+                     showTimeSelect
+                     timeFormat="HH:mm"
+                     timeIntervals={15}
+                     dateFormat="MMM dd, yyyy h:mm aa"
+                     placeholderText="Select end date & time"
                      className="table-input"
-                     placeholder="Select end date & time"
                    />
                  </div>
                 <div className="data-cell">
@@ -798,11 +801,13 @@ function EventDetailsPage () {
                   </div>
                   <div className="data-cell">
                     {editingEvent && editingEvent.event_id === event.event_id ? (
-                      <input
-                        type="datetime-local"
-                        name="start_datetime"
-                        value={formatDateTimeForInput(editingEvent.start_datetime)}
-                        onChange={(e) => handleInputChange(e, true)}
+                      <DatePicker
+                        selected={editingEvent.start_datetime ? editingEvent.start_datetime.toDate() : null}
+                        onChange={(date) => handleDateChange(date, 'start_datetime', true)}
+                        showTimeSelect
+                        timeFormat="HH:mm"
+                        timeIntervals={15}
+                        dateFormat="MMM dd, yyyy h:mm aa"
                         className="table-input"
                       />
                     ) : (
@@ -811,11 +816,13 @@ function EventDetailsPage () {
                   </div>
                   <div className="data-cell">
                     {editingEvent && editingEvent.event_id === event.event_id ? (
-                      <input
-                        type="datetime-local"
-                        name="end_datetime"
-                        value={formatDateTimeForInput(editingEvent.end_datetime)}
-                        onChange={(e) => handleInputChange(e, true)}
+                      <DatePicker
+                        selected={editingEvent.end_datetime ? editingEvent.end_datetime.toDate() : null}
+                        onChange={(date) => handleDateChange(date, 'end_datetime', true)}
+                        showTimeSelect
+                        timeFormat="HH:mm"
+                        timeIntervals={15}
+                        dateFormat="MMM dd, yyyy h:mm aa"
                         className="table-input"
                       />
                     ) : (
@@ -985,7 +992,11 @@ function EventDetailsPage () {
                       ) : (
                         <>
                           <button
-                            onClick={() => setEditingEvent(event)}
+                            onClick={() => setEditingEvent({
+                              ...event,
+                              start_datetime: event.start_datetime ? dayjs(event.start_datetime) : null,
+                              end_datetime: event.end_datetime ? dayjs(event.end_datetime) : null,
+                            })}
                             className="edit-button"
                           >
                             Edit
